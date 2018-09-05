@@ -1,0 +1,35 @@
+-- VERSION_4
+-- START DISKCACHE_2
+C:\Users\ssleep\workspace\.metadata\.plugins\org.eclipse.core.resources\.projects\Barcodes\com.python.pydev.analysis\v2_indexcache
+Paster.__init__|1531417568811541000|C:\Users\ssleep\workspace\Barcodes\Paster\__init__.py
+-- END DISKCACHE
+-- START DICTIONARY
+6
+6=Input
+1=Paster.__init__
+2=KeyBdInput
+3=HardwareInput
+5=Input_I
+4=MouseInput
+-- END DICTIONARY
+-- START TREE 1
+14
+bar|1|barcodeCol!11@
+cod|2|codeBook!11@codeSheet!11@
+fir|1|first!11@
+har|1|HardwareInput!9@
+inp|2|Input!9@Input_I!9@
+ite|1|itemCol!11@
+key|3|KEYEVENTF_UNICODE!11@KEYEVENTF_KEYUP!11@KeyBdInput!9@
+mou|1|MouseInput!9@
+par|2|pars!11@parsX!11@
+pre|1|PressKey!10@
+pul|1|PUL!11@
+rel|1|ReleaseKey!10@
+s|1|s!11@
+sen|1|SendInput!11@
+-- END TREE
+-- START TREE 2
+1
+_fi|5|_fields_!2&11@_fields_!3&11@_fields_!4&11@_fields_!5&11@_fields_!6&11@
+-- END TREE

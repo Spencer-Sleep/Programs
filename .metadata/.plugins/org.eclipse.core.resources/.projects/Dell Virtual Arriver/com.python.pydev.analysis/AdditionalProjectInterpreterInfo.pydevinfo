@@ -1,0 +1,24 @@
+-- VERSION_4
+-- START DISKCACHE_2
+C:\Users\ssleep\workspace\.metadata\.plugins\org.eclipse.core.resources\.projects\Dell Virtual Arriver\com.python.pydev.analysis\v2_indexcache
+Automator.__init__|1528474915842480000|C:\Users\ssleep\workspace\Dell Virtual Arriver\Automator\__init__.py
+-- END DISKCACHE
+-- START DICTIONARY
+2
+2=Container
+1=Automator.__init__
+-- END DICTIONARY
+-- START TREE 1
+6
+arr|1|arrive!10@
+con|2|containers!11@Container!9@
+dri|1|driver!11@
+loa|1|loadInfo!10@
+set|1|setupEterm!10@
+spe|1|specificPath!11@
+-- END TREE
+-- START TREE 2
+2
+num|1|number!2&11@
+siz|1|size!2&11@
+-- END TREE

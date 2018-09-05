@@ -1,0 +1,541 @@
+from pywinauto.win32structures import RECT
+from pyautogui import click
+from pyautogui import moveTo, press, typewrite, hotkey, position
+
+from pywinauto import Application
+from pywinauto import handleprops
+
+from win32api import GetKeyState
+
+import win32gui
+from win32con import SWP_SHOWWINDOW
+
+from tkinter import Button, Tk, Label, Entry, Text
+
+from sys import argv
+
+from os import listdir
+from openpyxl import load_workbook
+from openpyxl.styles.fills import FILL_NONE
+from _datetime import date, timedelta, datetime
+
+import sys
+
+from time import sleep, strptime
+from openpyxl.styles.colors import Color, RGB
+
+class Driver(object):
+    DOdriver = ""
+    PUdriver = ""
+    DOname=""
+    PUname=""
+    PARS = ""
+    deliveryDate = ""
+    pickupDate = ""
+    containerNumber = ""
+    
+def popUp(top, top2 = "", w=300, h=90, widget=""):
+    if not top2=="":
+        top2.lift()
+        top2.attributes('-topmost',True)
+        top2.after_idle(top2.attributes,'-topmost',False)
+        
+        # get screen width and height
+        ws = top2.winfo_screenwidth() # width of the screen
+        hs = top2.winfo_screenheight() # height of the screen
+        
+        # calculate x and y coordinates for the Tk root window
+        x = (ws/2) - (w/2)
+        y = (hs/2) - (h/2)
+        
+        # set the dimensions of the screen 
+        # and where it is placed
+        top2.geometry('%dx%d+%d+%d' % (w, h, x, y))
+        
+        if widget !="":
+            top2.wait_visibility(widget)
+            click(widget.winfo_rootx()+widget.winfo_width()/2, widget.winfo_rooty()+5+widget.winfo_height()/2)
+        top.wait_window(top2)
+    else:
+        top.lift()
+        top.attributes('-topmost',True)
+        top.after_idle(top.attributes,'-topmost',False)
+        
+        # get screen width and height
+        ws = top.winfo_screenwidth() # width of the screen
+        hs = top.winfo_screenheight() # height of the screen
+        
+        # calculate x and y coordinates for the Tk root window
+        x = (ws/2) - (w/2)
+        y = (hs/2) - (h/2)
+        
+        # set the dimensions of the screen 
+        # and where it is placed
+        top.geometry('%dx%d+%d+%d' % (w, h, x, y))
+        
+        if widget !="":
+            top.wait_visibility(widget)
+            moveTo(widget.winfo_rootx()+widget.winfo_width()/2, widget.winfo_rooty()+5+widget.winfo_height()/2)
+        top.mainloop()
+
+def setupDM(drivers):
+#     app = Application(backend="win32").connect(path = r"C:\DM54_W16\DM54_W16.exe")
+#     
+# #     top_windows = []
+# #     EnumWindows(windowEnumerationHandler, top_windows)
+# #     for i in top_windows:
+# #         if 'Dispatch-Mate' in i[1]:
+# #             SetWindowPos(i[0], None, 0, 0, 1920, 1080, SWP_SHOWWINDOW)
+# #             SetForegroundWindow(i[0])
+#             
+#     
+#     winChildren = ""
+#      
+#     dialogs = app.windows()
+#     
+#     for x in dialogs:
+#         if handleprops.classname(x) == "WinDevObject":
+#             winChildren = handleprops.children(x)
+#             topWindow = x
+#             break
+    
+    
+    click(50, 350)
+    fore = win32gui.GetForegroundWindow()
+    DMFore = "Dispatch-Mate" in win32gui.GetWindowText(fore)
+    while not DMFore:
+        top = Tk()
+        L1 = Label(top, text="Please maximize DispatchMate and the PB in the left monitor")
+        L1.grid(row=0, column=0)
+         
+        def callbackDM():
+            top.destroy()
+         
+        MyButton4 = Button(top, text="OK", width=10, command=callbackDM)
+        MyButton4.grid(row=1, column=0)
+     
+        popUp(top, w=350, h=50, widget = MyButton4)
+         
+        click(50, 350)
+        fore = win32gui.GetForegroundWindow()
+        DMFore = "Dispatch-Mate" in win32gui.GetWindowText(fore)
+        
+#     i=0
+    for driver in drivers:
+#         if i<1: 
+    
+        click(327, 33)
+         
+        sleep(1)
+         
+        click(399, 281)
+        
+        if driver.PARS[-1]=="A" or driver.PARS[-1]=="B" or driver.PARS[-1]=="C":
+            typewrite(driver.PARS[-7:-1])
+        else:
+            typewrite(driver.PARS[-6:])
+         
+        press("enter")
+         
+        sleep(3)
+         
+        click(1857, 100)
+        
+        sleep(0.5)
+         
+        click(18, 351)
+        press("tab", 9)
+        typewrite(driver.containerNumber) 
+        print(driver.containerNumber)
+        
+        click(569, 900)
+         
+        click(569, 900)
+        month = str(driver.deliveryDate.month)
+        if len(month)<2:
+            month = "0" + month
+        typewrite(month)
+        day = str(driver.deliveryDate.day)
+        if len(day)<2:
+            day = "0" + day
+        typewrite(day)
+        typewrite(str(driver.deliveryDate.year))
+         
+#         click(569, 926)
+          
+#         typewrite(str(driver.pickupDate.month))
+#         typewrite(str(driver.pickupDate.day))
+#         typewrite(str(driver.pickupDate.year))
+#          
+        click(695, 100)
+         
+        sleep(0.1)
+        
+        click(300, 144)
+        
+        click(1542, 730)
+         
+        typewrite(str(driver.DOdriver))
+         
+        press('enter') 
+        
+        if str(driver.DOdriver)[:3]!="801":
+            click(1558,679)
+            
+            typewrite(driver.DOname)
+         
+            press('enter')
+                
+            sleep(0.5)    
+            
+            click(189, 854)
+            hotkey('ctrl', 'a')
+                
+            typewrite("TRUCK")
+            press('tab')
+            typewrite("1")
+            press('tab')
+            press('delete')
+            press('tab')
+            typewrite("0.01")
+        
+        sleep(0.3)
+        
+        if GetKeyState(145) < 0:
+            exit()  
+        
+        click(1857, 120)
+        click(1857, 120)
+        
+        sleep(3)
+        
+        click(1845, 200, button="right")
+        
+        sleep(1)
+        
+        click(1826, 312)
+        
+        sleep(0.3)
+        
+        click(1600, 316)
+         
+        sleep(5)
+        
+    
+#         click(350, 160)
+#         
+#         click(1542, 730)
+#                     
+#         typewrite(str(driver.PUdriver))
+#          
+#         press('enter') 
+#         
+#         if str(driver.PUdriver)[:3]!="801":
+#             click(1558,679)
+#             
+#             typewrite(driver.PUname)
+#          
+#             press('enter')
+#                 
+#             sleep(0.5)    
+#             
+#             click(189, 854)
+#             hotkey('ctrl', 'a')
+#                 
+#             typewrite("TRUCK")
+#             press('tab')
+#             typewrite("1")
+#             press('tab')
+#             press('delete')
+#             press('tab')
+#             typewrite("0.01")
+#             
+#         
+#         
+#         sleep(0.3)
+#         
+#               
+#         click(1857, 120)
+#         click(1857, 120)
+#         
+#         sleep(7)
+#         
+#         click(1845, 200, button="right")
+#         
+#         sleep(1)
+#         
+#         click(1826, 312)
+#         
+#         sleep(0.3)
+#         
+#         click(1600, 316)
+#         
+#         sleep(7)
+        
+        if GetKeyState(145) < 0:
+            exit()  
+            
+            
+#             sleep(1)
+            
+#         i = i+1
+    
+                
+
+def loadinfo(folderPath):
+    parkFarm = load_workbook(folderPath)
+    activeSheet = parkFarm['Put Drivers On']
+    driverSheet = parkFarm['Drivers']
+    
+    containerNumberCol = ""
+    deliveryCol = ""
+    parsCol = ""
+    DOdriverCol = ""
+    pickupCol = ""
+    
+    for cell in next(activeSheet.rows):
+        if cell.value == "Container#":
+            containerNumberCol = cell.col_idx - 1
+        elif cell.value == "Delivery date":
+            deliveryCol = cell.col_idx - 1
+#         elif cell.value == "CN Rail Date ":
+#             pickupCol = cell.col_idx - 1
+        elif cell.value == "PB # ":
+            parsCol = cell.col_idx - 1
+        elif cell.value == "Driver #":
+            DOdriverCol = cell.col_idx - 1
+#         elif cell.value == "RV Date":
+#             RVCol = cell.col_idx - 1
+            
+    drivers = []
+    #RGB 173,216,230
+#     activeColor = RGB("add8e6")
+#     i=0
+    first = True
+    for row in activeSheet.rows:
+        if first:
+            first = False
+            continue
+#         i+=1
+#         print(i)
+#         if i>300:
+#             break
+#         print(row)
+#         print(row[2].fill.fgColor.rgb)
+#         print(row[2].value)
+        if not row[0].value == None and not row[0].value == "":
+            driver = Driver()
+            driver.DOdriver = str(row[DOdriverCol].value)
+            
+            if driver.DOdriver != None:
+                if len(driver.DOdriver) < 6:
+                    prefix = "801"
+                    while len(prefix)+len(driver.DOdriver)<6:
+                        prefix+="0"
+                    driver.DOdriver = prefix+driver.DOdriver
+                    
+            
+#             if row[PUdriverCol].value!= None:
+#                 driver.PUdriver = str(row[PUdriverCol].value)
+#             else:
+#                 driver.PUdriver = str(row[DOdriverCol].value)
+                
+#             if driver.PUdriver != None:
+#                 if len(driver.PUdriver) < 6:
+#                     prefix = "801"
+#                     while len(prefix)+len(driver.PUdriver)<6:
+#                         prefix+="0"
+#                     driver.PUdriver = prefix+driver.PUdriver
+                    
+            driver.PARS = str(row[parsCol].value)
+            driver.deliveryDate = row[deliveryCol].value
+#             driver.pickupDate = row[pickupCol].value
+#             if row[RVCol].value != None:
+#                 driver.pickupDate = row[RVCol].value
+#             if row[pickupCol].value != None:
+#                 driver.pickupDate = row[pickupCol].value
+#             else:
+#                 driver.pickupDate = driver.deliveryDate
+            driver.containerNumber = str(row[containerNumberCol].value)
+            drivers.append(driver)
+    
+    nameDict = {}
+    
+    
+    
+    for row in driverSheet:
+        if not row[0].value==None:
+            nameDict[str(row[0].value)] = str(row[2].value)
+#     driverNameSorted = list(nameDict.keys())
+#     driverNameSorted.sort()
+#     print(driverNameSorted)
+    noName = ""
+    noNameCount=1
+    noPARS=""
+    noPARSCount=1
+    badDate = ""
+    badDateCount = 1
+    for driver in drivers:
+        if not str(driver.DOdriver)[:3]=="801":
+#                 print(driver.name)
+            if not driver.DOdriver in nameDict:
+                noNameCount=noNameCount+1
+                if noNameCount%6==0:
+                    noName += "\n"
+                noName += str(driver.DOdriver) + ", "
+        if driver.PARS==None or driver.PARS=="" or len(driver.PARS)<6:
+            noPARS += str(driver.containerNumber) + ", "
+            noPARSCount+=1
+            if noPARSCount%4==0:
+                noPARS += "\n"
+                
+        try:
+            driver.deliveryDate.day
+            driver.deliveryDate.month
+            driver.deliveryDate.year
+#             driver.pickupDate.day
+#             driver.pickupDate.month
+#             driver.pickupDate.year
+        except:
+            badDate += str(driver.containerNumber) + ", "
+            badDateCount+=1
+            if badDateCount%4==0:
+                badDate += "\n"
+#         if not driver.pickupDate:
+            
+#         if driver.PARS==None or driver.PARS=="":
+#             noPARS += str(driver.containerNumber) + ", "
+#             noPARSCount+=1
+#             if noPARSCount%4==0:
+#                 noPARS += "\n"
+                
+    
+    if not noName =="":
+        top = Tk()
+        L1 = Label()
+        L1 = Label(top, text="No driver name for \"" + noName + "\". \nPlease fill out the driver columns and start again. \nAlso ensure that the \"Drivers\" tab is filled out")
+        L1.config(font=("Courier", 16))
+        L1.grid(row=0, column=0)
+        
+        def callbackOK():
+            sys.exit()
+            top.destroy()
+        
+        MyButton = Button(top, text="OK", command=callbackOK, width=40)
+        MyButton.grid(row=1, column=0)
+        
+        w = 750 # width for the Tk root
+        h = 300 # height for the Tk root
+        ws = top.winfo_screenwidth() # width of the screen
+        hs = top.winfo_screenheight() # height of the screen
+        x = (ws/2) - (w/2)
+        y = (hs/2) - (h/2)
+        top.geometry('%dx%d+%d+%d' % (w, h, x, y))
+       
+        top.mainloop()
+
+    if not noPARS=="":
+        top = Tk()
+        L1 = Label()
+        L1 = Label(top, text="Invalid PARS for \"" + noPARS + "\". \nPlease fill out the PARS column and start again.")
+        L1.config(font=("Courier", 16))
+        L1.grid(row=0, column=0)
+        
+        def callbackOK():
+            sys.exit()
+            top.destroy()
+            
+        MyButton = Button(top, text="OK", command=callbackOK, width=40)
+        MyButton.grid(row=1, column=0)
+          
+        w = 700 # width for the Tk root
+        h = 300 # height for the Tk root
+           
+        ws = top.winfo_screenwidth() # width of the screen
+        hs = top.winfo_screenheight() # height of the screen
+        x = (ws/2) - (w/2)
+        y = (hs/2) - (h/2)
+        top.geometry('%dx%d+%d+%d' % (w, h, x, y))
+        top.mainloop()
+        
+    if not badDate=="":
+        top = Tk()
+        L1 = Label()
+        L1 = Label(top, text="Invalid Dates for \"" + badDate + "\". \nPlease fill out the dates columns and \n(and ensure they're formatted as dates with M/D/Y)\nand start again.")
+        L1.config(font=("Courier", 16))
+        L1.grid(row=0, column=0)
+        
+        def callbackOK():
+            sys.exit()
+            top.destroy()
+            
+        MyButton = Button(top, text="OK", command=callbackOK, width=40)
+        MyButton.grid(row=1, column=0)
+          
+        w = 700 # width for the Tk root
+        h = 300 # height for the Tk root
+           
+        ws = top.winfo_screenwidth() # width of the screen
+        hs = top.winfo_screenheight() # height of the screen
+        x = (ws/2) - (w/2)
+        y = (hs/2) - (h/2)
+        top.geometry('%dx%d+%d+%d' % (w, h, x, y))
+        top.mainloop()
+
+                
+    for driver in drivers:
+        if not str(driver.DOdriver)[:3]=="801":
+            driver.DOname = nameDict[driver.DOdriver]
+                    
+    return drivers
+
+
+if __name__ == '__main__':
+    
+    folderPath = r"J:\LOCAL DEPARTMENT\Commercial Alcohols.xlsx"
+    
+#     folderPath = ''
+#     for i in range(len(argv)):
+#         if i!=0:
+#             folderPath+=argv[i]
+#             if i != len(argv) - 1:
+#                 folderPath+=" "
+    
+    drivers = loadinfo(folderPath)
+    
+    exit()
+#     for driver in drivers:
+#         print(driver.PARS)
+#         print(driver.DOdriver)
+#         print(driver.PUdriver)
+#         print(driver.DOname)
+#         print(driver.PUname)
+#         print(driver.deliveryDate)
+#         print(driver.pickupDate)
+#     
+#     
+    setupDM(drivers)
+    
+    top = Tk()
+    L1 = Label(top, text="DONE")
+    L1.config(font=("Courier", 60))
+    L1.grid(row=0, column=0)
+    
+    def callbackOK():
+        top.destroy()
+        
+    MyButton = Button(top, text="OK", command=callbackOK, width=30)
+    MyButton.grid(row=1, column=0)
+      
+    w = 250 # width for the Tk root
+    h = 148 # height for the Tk root
+       
+    ws = top.winfo_screenwidth() # width of the screen
+    hs = top.winfo_screenheight() # height of the screen
+    x = (ws/2) - (w/2)
+    y = (hs/2) - (h/2)
+    top.geometry('%dx%d+%d+%d' % (w, h, x, y))
+    popUp(top, w, h)
+    
+    
+# pyinstaller "C:\Users\ssleep\workspace\Commercial Drivers on PBs\Automator\__init__.py" --distpath "J:\Spencer\Commercial Drivers on PBs" --noconsole -y

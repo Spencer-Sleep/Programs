@@ -1,0 +1,51 @@
+-- VERSION_4
+-- START DISKCACHE_2
+C:\Users\ssleep\workspace\.metadata\.plugins\org.eclipse.core.resources\.projects\CNLister\com.python.pydev.analysis\v2_indexcache
+Lister.__init__|1535718125116166000|C:\Users\ssleep\workspace\CNLister\Lister\__init__.py
+-- END DISKCACHE
+-- START DICTIONARY
+4
+2=Container
+3=constants
+4=Container.__init__
+1=Lister.__init__
+-- END DICTIONARY
+-- START TREE 1
+17
+L1|1|L1!11@
+cal|1|callbackOK!10@
+con|3|constants!9@containers!11@Container!9@
+dri|1|driver!11@
+fil|1|filePath!11@
+h|1|h!11@
+hs|1|hs!11@
+myb|1|MyButton5!11@
+put|1|putInfoinExcel!10@
+rea|1|readContainerInfo!10@
+sav|1|saved!11@
+set|2|setupExcel!10@setupCn!10@
+top|1|top!11@
+w|1|w!11@
+ws|1|ws!11@
+x|1|x!11@
+y|1|y!11@
+-- END TREE
+-- START TREE 2
+16
+__i|1|__init__!2&10@
+app|1|APPOINTMENTTIMECOL!3&11@
+con|1|CONTAINERCOL!3&11@
+cus|2|customs!4&11@CUSTOMSCOL!3&11@
+doc|2|DOCUMENTSCOL!3&11@documents!4&11@
+eta|2|ETACOL!3&11@eta!4&11@
+num|1|number!4&11@
+oth|2|other!4&11@OTHERCOL!3&11@
+pbc|1|PBCOL!3&11@
+pic|2|pickupNumber!4&11@PICKUPCOL!3&11@
+rvn|2|RVNUMBERCOL!3&11@rvnumber!4&11@
+rvt|2|RVTIMECOL!3&11@rvtime!4&11@
+siz|2|size!4&11@SIZECOL!3&11@
+sta|2|status!4&11@STATUSCOL!3&11@
+ste|2|steamship!4&11@STEAMSHIPCOL!3&11@
+sto|4|STORAGEDATECOL!3&11@storageDate!4&11@storageAmount!4&11@STORAGEAMOUNTCOL!3&11@
+-- END TREE

@@ -1,0 +1,21 @@
+-- VERSION_4
+-- START DISKCACHE_2
+C:\Users\ssleep\workspace\.metadata\.plugins\org.eclipse.core.resources\.projects\Hapag Cargo Docs\com.python.pydev.analysis\v2_indexcache
+Automater.__init__|1528909487205935000|C:\Users\ssleep\workspace\Hapag Cargo Docs\Automater\__init__.py
+-- END DISKCACHE
+-- START DICTIONARY
+1
+1=Automater.__init__
+-- END DICTIONARY
+-- START TREE 1
+6
+car|1|cargoDoc!10@
+ext|1|extract!10@
+pag|1|pages!11@
+rec|1|recursiveCargoDoc!10@
+set|1|setupPortal!10@
+spe|1|specificPath!11@
+-- END TREE
+-- START TREE 2
+0
+-- END TREE

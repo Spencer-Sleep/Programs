@@ -1,0 +1,64 @@
+-- VERSION_4
+-- START DISKCACHE_2
+C:\Users\ssleep\workspace\.metadata\.plugins\org.eclipse.core.resources\.projects\Hamburg Virtual Arrivals\com.python.pydev.analysis\v2_indexcache
+Arriver.__init__|1535734051330681000|C:\Users\ssleep\workspace\Hamburg Virtual Arrivals\Arriver\__init__.py
+-- END DISKCACHE
+-- START DICTIONARY
+3
+2=Container
+1=Arriver.__init__
+3=Container.__init__
+-- END DICTIONARY
+-- START TREE 1
+27
+L1|1|L1!11@
+L2|1|L2!11@
+L3|1|L3!11@
+R1|1|R1!11@
+R2|1|R2!11@
+R3|1|R3!11@
+S1|1|S1!11@
+S2|1|S2!11@
+T1|1|T1!11@
+arr|1|arrive!10@
+cal|1|callbackArrive!10@
+con|1|Container!9@
+dri|1|driver!11@
+f|1|f!11@
+h|1|h!11@
+hs|1|hs!11@
+myb|1|MyButton5!11@
+pop|1|popUp!10@
+res|1|reserve!10@
+set|4|setupLine!10@setupEterm!10@setupText!10@setupContainers!10@
+ste|1|steamShipLine!11@
+tes|1|testfile!11@
+top|1|top!11@
+w|1|w!11@
+ws|1|ws!11@
+x|1|x!11@
+y|1|y!11@
+-- END TREE
+-- START TREE 2
+20
+__i|1|__init__!2&10@
+alr|1|alreadyReservation!2&11@
+bol|2|BOL!2&11@BOL!3&11@
+con|3|consignee!2&11@containerNumber!2&11@containerNumber!3&11@
+des|1|description!2&11@
+eta|1|eta!2&11@
+oth|1|otherInfo!2&11@
+ove|2|overweightTier!2&11@overweight!2&11@
+pac|1|packageType!2&11@
+por|2|portOfLoading!2&11@portOfDischarge!2&11@
+qua|1|quantity!2&11@
+ree|1|reefer!2&11@
+shi|1|shipper!2&11@
+siz|2|size!2&11@size!3&11@
+tem|2|temp!2&11@temp!3&11@
+unk|1|unknownSize!2&11@
+ves|1|vessel!2&11@
+voy|1|voyage!2&11@
+wei|2|weight!2&11@weight!3&11@
+wor|1|workOrder!2&11@
+-- END TREE

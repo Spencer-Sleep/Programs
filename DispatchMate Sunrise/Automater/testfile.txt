@@ -1,0 +1,261 @@
+02F687
+1. Business no.
+N° d'entreprise 
+Licence
+Authorization. ID 
+N° d'autorisation
+3.
+Exporter information (includes non-resident) - Renseignements sur l'exportateur (y compris les non-résidents)
+Name - Nom
+No. and street - N° et rue
+City - ville
+Province/state, country - Province/État, pays
+Postal/Zip code - Code postal/ZIP
+4. Ultimate consignee information - Renseignements sur le destinataire final
+Name - Nom
+No. and street - N° et rue
+City - Ville
+5.
+Country of final destination - Pays de destination finale
+6. Name of exporting carrier, freight forwarder, or consolidator - Nom du transporteur, du transitaire ou du 
+goupeur de marchandises à exporter
+7.
+Transportation document no. - N° du document de transport
+8. Mode of transport from place of exit - Mode de transport à partir du lieu de sortie
+Highway
+Rail
+Marine
+Air
+Routier
+Ferroviaire
+Maritime
+Aérien
+Other (specify) - Autre (Précisez)
+10. Vessel name (if applicable) - Nom du bateau (s'il y a lieu)
+12. No. packages - Nbre de colis
+Type of packages - Genre de colis
+Province/state, country - Province/État, pays
+Postal/Zip code - Code postal/Zip
+Customs proof of report no. - N° de la preuve  de déclaration des douanes
+yyyy/mm/dd., time - 24hr ., export reporting office code, reference no.
+aaaa/mm/ jj., heure - 24h., code du bureau de déclaration d 'exportation, n° de référence
+Goods inspected by customs - Marchandises inspectées par les douanes
+PUNJAB
+9(a)
+9(b)
+FOR CUSTOMS USE ONLY - RÉSERVÉ AU DOUANES
+Yes
+Oui
+11. Date of export (yyyy/mm/dd) - Date d 'exportation (aaaa/mm/ jj)
+13.
+Place of exit - Bureau de sortie
+PROTECTED (WHEN COMPLETED)
+PROTÉGÉ (UNE FOIS REMPLI)
+Page
+of - de
+1
+2
+CAED EXPORT DECLARATION
+DÉCLARATION D'EXPORTATION DECA
+Canada Border
+Services Agency
+Agence des services
+frontaliers du Canada
+Original
+Amended - Modifié
+Void - Nul
+Draft - Ébauche
+X
+Transmitted - Transmis
+X
+Yes
+Oui
+No
+Non
+B
+BC8634
+Form ID - N° formulaire
+SUNRISE METALS INC.
+HAMILTON
+500 SHERMAN AVENUE NORTH, 2ND FLOOR
+INDIAN IRON AND METALS PVT.LTD.
+AMLOH ROAD, BACKSIDE BHAMBRI KANDA GODOWN NO.9
+MANDI GOBINDGARH
+CMA CGM
+INDUS
+1
+loose
+20170500067
+Ontario
+Canada
+L8L 8J6
+India
+9558CAN0356268
+02F687BC863420170500067
+India
+X
+2017/05/27
+ON-Fort Erie - Peace Bridge
+876442609RM0001
+16.
+Origin - Origine
+Country
+Pays
+Province
+17.
+Item description - Description d'article
+18. HS Commodity Code
+Code de marchandise
+ du SH 
+19.
+Qty. and unit of measure
+Qté et unité de mesure
+20. Value F.O.B place of exit
+Valeur f .à.b. bureau de sortie
+HEAVY MELTING SCRAP
+72044900
+TNE
+27.200
+4,080.00
+Canada
+Ontario
+21. Currency used for declared value - Devise de la valeur déclarée
+22. Gross weight - Poids brut 
+23. Total value F.O.B. place
+of exit - Valeur totale f .à.b.
+bureau de sortie
+4,080.00
+KGM
+U.S. Dollar
+27,200.000
+CAED/DECA 2017 (B13A)
+Exporter
+Exportateur 
+Other
+Autre
+24. Freight charges to place of exit, estimated if unknown (included in field 20) - Frais de transport jusqu'au 
+bureau de sortie, estimatifs si inconnus (compris dans le champ 20).
+$
+26. Customs service provider information (if applicable) - Renseignements sur le fournisseur de services douaniers (s'il y a lieu)
+Name - Nom
+Area code and tel. no.
+Indicatif régional et n° de tél.
+Province/state, country - Province/État, pays
+No. and street - N° et rue
+City - Ville
+25.
+If goods are not sold, state reason for export (if applicable). If a lease or rental, state period. - Si les 
+marchandises ne sont pas vendues, motivez l 'exportation (s'il y a lieu). S'il s'agit d 'une location ou d 'un 
+bail, précisez la période.
+Postal/Zip code - Code postal/ZIP
+27.
+I hereby certify that the information given above and on the continuation sheet (s), if any, is true and complete.
+Je certifie que les renseignements inscrits ci-dessus et sur les feuilles supplémentaires, s'il en est, sont exacts et complets.
+Name of person responsible for completion - Nom de la personne responsable de remplir le formulaire .
+Company name - Nom de l'entreprise
+City - Ville
+No. and street - N° et rue
+Area code and tel. no.
+Indicatif régional et n° de tél.
+Signature
+Province/state - Province/État
+Postal/Zip code - Code postal/ZIP
+28. Status - Statut
+Date
+Authorization. ID - N° d'autorisation
+1,500.00
+AMANDEEP KALOTI
+500 SHERMAN AVENUE NORTH, 2ND FLOORHAMILTON
+SUNRISE METALS INC
+Ontario
+(905)544-4687
+L8L 8J6
+X
+CAED EXPORT DECLARATION - CONTINUATION SHEET
+DÉCLARATION D'EXPORTATION DECA - FEUILLE 
+PROTECTED (WHEN COMPLETED)
+PROTÉGÉ (UNE FOIS REMPLI)
+B
+1.
+Business no.
+N° d'entreprise 
+876442609RM0001
+Additional Information - Renseignements additionnels
+Page
+2
+of - de
+2
+Licence
+02F687
+Authorization. ID 
+N° d'autorisation
+BC8634
+Form ID - N° formulaire
+20170500067
+2.
+Export permit, licence or certificate no. (if applicable) - N° du permis, 
+du certificat ou de la licence d'exportation (s'il y a lieu)
+12.
+Container no. - N° de conteneur
+TRHU3267880
+14.
+Exporter reference no. (if applicable) - N° de référence 
+de l'exportateur (s'il y a lieu)
+15.
+Conveyance identification no. (if applicable)  - N° d'identification du moyen 
+de transport (s'il y a lieu)
+Information from this declaration will be used for customs control purposes, and may be shared with other 
+government departments to enforce Canadian laws. Details are available in the Treasury Board of Canada 
+publication called Info Source. Info Source is available at public libraries, government public reading rooms, and 
+on the Internet at: http://infosource.gc.ca
+Les renseignements fournis dans cette déclaration serviront à des fins de contrôle douanier et pourront être 
+partagés avec d 'autres ministères afin de faire respecter les lois canadiennes. Vous trouverez des détails à ce 
+sujet dans la publication du Conseil du Trésor du Canada, Info Source. Info Source est disponible dans les 
+bibliothèques publiques, les salles de lecture publiques du gouvernement et sur Internet à http://infosource .gc.ca
+For information on how to report exports and 
+how to code export commodities, contact :
+For statistical information, contact :
+For information on exports refer to
+D20-1-1 or contact:
+>
+International Trade Unit, 
+Operations and Integration Division, Statistics Canada
+Tel: (613) 951-6291 or 1-800-257-2434
+Fax: (613) 951-6823 or 1-888-269-5305
+E-Mail: export@statcan.gc.ca
+> Marketing and Client Services Section
+International Trade Division, Statistics Canada
+Tel: (613) 951-9647 or 1-800-294-5583
+E-Mail: trade@statcan.gc.ca
+>
+Tel: 1-800-461-9999
+From outside Canada
+Tel: (204) 983-3500 or (506) 636-5064 or
+visit the CBSA web site at www.cbsa.gc.ca
+E-mail: exports@cbsa-asfc.gc.ca
+Pour des renseignements sur la façon de
+déclarer vos exportations et sur la
+codification des marchandises exportées, 
+communiquez avec:
+Pour des renseignements statistiques, 
+communiquez avec:
+Pour des renseignements sur les 
+exportations, voir le D20-1-1 ou
+communiquer avec:
+>
+>
+>
+Unité de Commerce International
+Division des opérations et de l'intégration, Statistique Canada
+Tél: (613) 951-6291 ou 1-800-257-2434
+Télécopieur: (613) 951-6823 ou 1-888-269-5305
+Courriel: export@statcan.gc.ca
+Section du Marketing et Services  à la clientèle
+Division du commerce international, Statistique Canada
+Tél.: (613) 951-9647 or 1-800-294-5583
+Courriel: commerce@statcan.gc.ca
+Tél: 1-800-959-2036
+De l'extérieur du Canada
+Tél: (204) 983-3700 ou (506) 636-5067 ou, visitez
+le site web de l'ASFC au: www.asfc.gc.ca
+Courriel: export@cbsa-asfc.gc.ca

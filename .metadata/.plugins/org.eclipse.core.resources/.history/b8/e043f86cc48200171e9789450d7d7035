@@ -1,0 +1,422 @@
+import PyPDF2
+from fdfgen import forge_fdf
+import re
+import subprocess
+import sys
+import os
+# import shutil
+
+# j=0
+#sys.argv = "a C:\\Users\\ssleep\\Documents\\Programming\\Hapag-Lloyd_Automation\\Gen 2\\601143974.pdf".split()
+workOrderLocation = ''
+for i in range(len(sys.argv)):
+    if i!=0:
+        workOrderLocation+=sys.argv[i]
+        if i != len(sys.argv) - 1:
+            workOrderLocation+=" "
+destinationOfFiles = workOrderLocation[:workOrderLocation.rfind('\\')] + "\\"
+templateLocation = "J:\\Spencer\\Hapag-Lloyd_Automation\\Templates\\HL_TEMPLATETIER"
+fileLocations = []
+# f=open(("testfile21.txt"), "w")
+# f.write("RAN\n\n")
+# f.write(destinationOfFiles)
+# f.close()
+
+class Container(object):
+    
+    eta = ''
+    vessel=''
+    voyage=''
+    workOrder=''
+    portOfLoading=""
+    portOfDischarge=""
+    description=""
+    containerCode=""
+    quantity=""
+    packageType=""
+    size=""
+    unknownSize=False
+    weight=""
+    otherInfo=""
+    shipper=""
+    consignee=""
+    reefer=""
+    overweight=""
+    overweightTier=0
+    
+    
+#def __init__()
+    
+    
+
+
+    
+if __name__ == '__main__':
+    pdfFileObj = open(workOrderLocation, 'rb')
+    pdfReader = PyPDF2.PdfFileReader(pdfFileObj)
+    
+    text = ''
+    discharge = ''
+    if pdfReader.isEncrypted:
+        pdfReader.decrypt('')
+    for i in range(pdfReader.getNumPages()):
+        pageObj = pdfReader.getPage(i)
+        text += pageObj.extractText()
+    routingInfo = text.find('R o u t i n g - I n f o r m a t i o n 1a2b3n4m5k Pick up 1a2b3n4m5k ')
+    #TODO IF NONE OF THESE FLAG IT AND DISPLAY AT END
+    if 'GCT NEW YORK' in text[routingInfo+68:routingInfo+110]:
+        discharge = 'NYCT'
+    elif 'GCT BAYONNE' in text[routingInfo+68:routingInfo+110]:
+        discharge = 'GLOBAL'
+    elif 'GREENWICH TERMINALS LLC' in text[routingInfo+68:routingInfo+110]:
+        discharge = 'PACKER'
+    elif 'PORT NEWARK CONTAINER TERMINAL' in text[routingInfo+68:routingInfo+110]:
+        discharge = 'PNCT'
+    elif 'MAHER' in text[routingInfo+68:routingInfo+110]:
+        discharge = 'MAHER'
+    else:
+        discharge=text[routingInfo+68:routingInfo+100]
+     
+    workOrder = text.find("Work Order:")
+    m=re.compile('\D').search(text[workOrder+23:])
+    y=m.start(0) + workOrder + 23
+    workOrder=text[workOrder+23:y]
+    
+#     f=open(("testfile" + str(i) + ".txt"), "w")
+#     f.write(text[routingInfo+44:routingInfo+84])
+#     f.close()
+    
+    containerText = re.compile("CONTAINER 1a2b3n4m5k \\d+ 1a2b3n4m5k ").split(text)
+    
+    #for i in range(len(containerText)):
+#         f=open(("testfile" + str(i) + ".txt"), "w")
+#         f.write(containerText[i])
+#         f.close()
+    
+    
+    
+    containerList = []
+
+
+    for containerTextX in containerText:
+        
+        if containerTextX[:10] != "Container:":
+            continue
+        
+        containerX = Container()
+        pageBreakLocation=0
+        while(pageBreakLocation != -1):
+            pageBreakLocation = containerTextX.find("HAPAG-LLOYD (CANADA) INC 1a2b3n4m5k 3400 BLVD. DE MAISONNEUVE WEST")
+            
+            if pageBreakLocation != -1:
+                containerTextX = containerTextX[:pageBreakLocation] + containerTextX[pageBreakLocation+597:]
+        
+        x = containerTextX.find("Cargo Gross 1a2b3n4m5k DG 1a2b3n4m5k ")+37
+        #m=re.compile("[a-zA-Z]").search(containerTextX[x:])
+        #y=m.start(0) + x
+        
+        
+        
+        
+        m = re.search("\\d+ 1a2b3n4m5k ", containerTextX[x:])
+        y=containerTextX[m.end()+x:].find(" ")+ x + m.end() 
+        containerX.packageType=containerTextX[m.end()+x:y]
+#         containerTextX[x:]
+        q=0
+#         stringThing = re.compile("8 1a2b3n4m5k " + containerX.packageType + " 1a2b3n4m5k ")
+#         m=re.search(stringThing, ' 8 1a2b3n4m5k CARTON 1a2b3n4m5k ')
+#         f=open(("testfile22.txt"), "w+")
+#         f.write(containerX.packageType)
+#         f.write(str(m.start(0)) + "    " + str(m.end(0)))
+#         f.write("\\d* 1a2b3n4m5k " + containerX.packageType + " 1a2b3n4m5k \n")
+#         f.write("8 1a2b3n4m5k CARTON 1a2b3n4m5k ")
+#         f.close()
+        for m in re.finditer("\\d+ 1a2b3n4m5k " + containerX.packageType + " 1a2b3n4m5k ", containerTextX[x:]):                    
+            q += int(containerTextX[m.start(0)+x:containerTextX[m.start(0)+x:].find(" ")+x+m.start(0)])
+#           f=open(("testfile" + str(j) + ".txt"), "w+")
+#           f.write(str(m.start()) + "      " + str(containerTextX[m.start():].find(" ")+x))
+#           f.write(str(containerTextX[m.start()+x:containerTextX[m.start():].find(" ")+x]))
+#           f.write(str(q))
+#           f.close()
+#           j+=1
+               
+            
+        
+#         f=open(("testfile33.txt"), "w")
+#         f.write(q)
+#         f.close()
+#         y=containerTextX[x:].find(" ") + x
+        
+        if(q!=0):
+            containerX.quantity=str(q)
+        
+        
+        
+        
+        descX = y
+        
+        q=0
+        #FIX ThiS
+        for m in re.finditer("\\d+.\\d* 1a2b3n4m5k KGM 1a2b3n4m5k N", containerTextX[x:]):
+            #print(m.start(0)+x)
+            #print(m.end(0)-28+x)
+           # print(containerTextX[m.start(0)+x:m.end(0)-28+x])
+            q += float(containerTextX[m.start(0)+x:m.end(0)-28+x])
+            descY=m.start(0)+x
+        
+
+        containerX.weight=str(q)
+#         m=re.compile('\\d+.\\d* 1a2b3n4m5k KGM 1a2b3n4m5k N').search(containerTextX)
+#         x=m.start(0)
+#         y=containerTextX.find(" 1a2b3n4m5k KGM 1a2b3n4m5k N")
+#         containerX.weight=containerTextX[x:y]
+        
+     #   descY = x
+        
+        descriptionMessy = containerTextX[descX:descY]
+        containerX.description=descriptionMessy.replace(" 1a2b3n4m5k ", " ")
+        
+        
+        
+        coffee=False
+    
+        
+        if containerX.description.find(" WINE ") != -1:
+            containerX.description = "WINE"
+        elif containerX.description.find(" WINES ") != -1:
+            containerX.description = "WINE"
+        elif containerX.description.find(" MEAT ") != -1:
+            containerX.description = "MEAT"
+        elif containerX.description.find(" MOTOR ") != -1:
+            containerX.description = "MOTORS"
+        elif containerX.description.find("SOLUBLE COFFEE") != -1:
+            containerX.description = "SOLUBLE COFFEE"
+        elif containerX.description.find("INSTANT COFFEE") != -1:
+            containerX.description = "INSTANT COFFEE"
+        elif containerX.description.find("COFFEE BEANS") != -1:
+            containerX.description = "COFFEE"
+            coffee=True
+        elif containerX.description.find("GREEN COFFEE") != -1:
+            containerX.description = "COFFEE"
+            coffee=True
+        elif containerX.description.find(" LAMB ") != -1:
+            containerX.description = "LAMB"        
+        elif containerX.description.find(" PEARS ") != -1:
+            containerX.description = "PEARS"
+        elif containerX.description.find(" LEMON ") != -1:
+            containerX.description = "LEMONS"   
+        elif containerX.description.find(" LEMONS ") != -1:
+            containerX.description = "LEMONS"
+        elif containerX.description.find(" MANDARINS ") != -1:
+            containerX.description = "MANDARINS"
+        elif containerX.description.find(" MANDARINES ") != -1:
+            containerX.description = "MANDARINES"      
+        elif containerX.description.find(" ORANGES ") != -1:
+            containerX.description = "ORANGES"
+        elif containerX.description.find(" BEEF ") != -1:
+            containerX.description = "BEEF"  
+        elif containerX.description.find("\nMOTOR ") != -1:
+            containerX.description = "MOTORS"    
+			
+			
+        x=containerTextX.find("Consignee") + 22
+        y=containerTextX.find("Packages")
+        
+        containerX.consignee=containerTextX[x:y].replace(" 1a2b3n4m5k ", "\n")
+        
+        otherInfoMessy=containerTextX[containerTextX.find("Seal - No:"):containerTextX.find("Shipper:")]
+        containerX.otherInfo=otherInfoMessy.replace(" 1a2b3n4m5k ", " ")
+        
+        containerTextX=containerTextX.replace(" 1a2b3n4m5k ", "")
+   
+        
+        containerX.containerCode=containerTextX[10:14]+containerTextX[16:23]
+        w = float(containerX.weight)
+        if containerTextX[27:36] == "20'X8'6\"G":
+            containerX.size = "20D86"
+            if w>19050:
+                containerX.overweight='OW'
+            if w<19640:
+                containerX.overweightTier=0
+            elif w<20774:
+                containerX.overweightTier=1
+            elif w<21908:
+                containerX.overweightTier=2
+            elif w<24176:
+                containerX.overweightTier=3
+            else:
+                containerX.overweightTier=4
+        elif containerTextX[27:36] == "20'X8'6\"R":    
+            containerX.size = "20R86"
+            containerX.reefer = "R"
+            if w>18143:
+                containerX.overweight='OW'
+            if w<18778:
+                containerX.overweightTier=0
+            elif w<19912:
+                containerX.overweightTier=1
+            elif w<21046:
+                containerX.overweightTier=2
+            elif w<23314:
+                containerX.overweightTier=3
+            else:
+                containerX.overweightTier=4
+        elif containerTextX[27:36] == "40'X8'6\"G":    
+            containerX.size = "40D86"
+            if w>19958:
+                containerX.overweight='OW'
+            if w<18189:
+                containerX.overweightTier=0
+            elif w<19323:
+                containerX.overweightTier=1
+            elif w<20457:
+                containerX.overweightTier=2
+            elif w<22725:
+                containerX.overweightTier=3
+            else:
+                containerX.overweightTier=4
+        elif containerTextX[27:36] == "40'X9'6\"H":    
+            containerX.size = "40D96"
+            if w>19958:
+                containerX.overweight='OW'
+            if w<17962:
+                containerX.overweightTier=0
+            elif w<19096:
+                containerX.overweightTier=1
+            elif w<20230:
+                containerX.overweightTier=2
+            elif w<22498:
+                containerX.overweightTier=3
+            else:
+                containerX.overweightTier=4
+        elif containerTextX[27:36] == "40'X9'6\"R":    
+            containerX.size = "40R96"
+            containerX.reefer="R"
+            if w>19958:
+                containerX.overweight='OW'
+            if w<17418:
+                containerX.overweightTier=0
+            elif w<18552:
+                containerX.overweightTier=1
+            elif w<19686:
+                containerX.overweightTier=2
+            elif w<21954:
+                containerX.overweightTier=3
+            else:
+                containerX.overweightTier=4
+        else:
+            unknownSize = True
+            
+        
+        
+        #If it's coffee it's treated like a tier 1 load with no customer overweight    
+        if coffee:
+            containerX.overweightTier=1
+            containerX.overweight=''
+            
+        x=containerTextX.find("Voyage:") + 6
+        m=re.compile("[a-zA-Z]").search(containerTextX[x:])
+        y=m.start(0) + x
+        z=containerTextX[y:].find('From:') + y
+        
+        containerX.vessel = containerTextX[y:z]
+        
+        x=containerTextX.find("From:") + 5
+        y=containerTextX.find("Arrival Date:")
+
+        containerX.portOfLoading = containerTextX[x:y]
+        
+        x=y + 13
+        y = containerTextX.find("Sched. Voy:")
+        
+        containerX.eta = containerTextX[x:y]
+        
+        x=y +11
+        m=re.compile("[a-zA-Z]").search(containerTextX[x:])
+        y=m.start(0) + x + 1
+        
+        containerX.voyage = containerTextX[x:y]
+        
+        x=containerTextX.find("Shipper:")+8
+        y=containerTextX.find("Consignee:")
+        
+        containerX.shipper=containerTextX[x:y]
+        
+#         x=y+10
+#         y=containerTextX.find("Packages")
+#         
+#         containerX.consignee=containerTextX[x:y]
+#         
+        
+        #TODO: MAYBE ADD IN DETECTION OF COMMON PACKAGE TYPES AND CARGOS
+        
+        
+        
+        
+         # print(containerTextX + "\n\n\n\n\n\n")
+#         print(len(containerTextX))
+#         print(str(containerTextX.find("Seal - No:")) + "     " + str(containerTextX.find("Shipper:")))
+        #TODO: ADD SPACES IN THE OTHER INFO TO IMPROVE READABILITY
+        #datas = {
+    #        'ETA DATE': str(containerX.eta),
+#            'Vessel': str(containerX.vessel)
+        #}
+        
+        
+        #generated_pdf = pypdftk.fill_form("C:\\Users\\ssleep\\Documents\\Programming\\Hapag-Lloyd_Automation\\Gen\\HL TEMPLATE.pdf", datas, str('C:\\Users\\ssleep\\Documents\\Programming\\Hapag-Lloyd_Automation\\Gen\\HL TEMPLATE' + str(i) + '.pdf'))
+        
+        
+        fields =     [('ETA DATE', containerX.eta),
+                    ('Vessel', containerX.vessel),
+                    ('Voy', containerX.voyage),
+                    ('WO', workOrder),
+                    ('undefined', containerX.portOfLoading),
+                    ('Port of discharge', discharge),
+                    ('Description of goods', containerX.description),
+                    ('Container Row1', containerX.containerCode),
+                    ('QtyRow1', containerX.quantity),
+                    ('Pkg typeRow1', containerX.packageType),
+                    ('SizeRow1', containerX.size),
+                    ('Weight KGRow1', containerX.weight),
+                    ('Other info', containerX.otherInfo),
+                    ('Shipper', containerX.shipper),
+                    ('Consignee', containerX.consignee)]
+        fdf = forge_fdf("",fields,[],[],[])
+        fdf_file = open(destinationOfFiles + str(containerX.containerCode) ,"wb")
+        fdf_file.write(fdf)
+        fdf_file.close()
+
+        if not containerX.unknownSize: 
+            subprocess.Popen("pdftk \"" + templateLocation + str(containerX.overweightTier) + containerX.overweight + containerX.reefer + ".pdf\" fill_form \"" + destinationOfFiles + str(containerX.containerCode) + "\" output \"" + destinationOfFiles + str(containerX.containerCode) + ".pdf\"").wait()
+            fileLocations.append("\"" + destinationOfFiles + str(containerX.containerCode) + ".pdf\"")
+        else:
+            subprocess.Popen("pdftk \"" + templateLocation + str(containerX.overweightTier) + containerX.overweight + containerX.reefer + ".pdf\" fill_form \"" + destinationOfFiles + str(containerX.containerCode) + "\" output \"" + destinationOfFiles + str(containerX.containerCode) + "NON-STANDARD SIZE, PLEASE FIX" + ".pdf\"").wait()
+            fileLocations.append("\"" + destinationOfFiles + str(containerX.containerCode) + "NON-STANDARD SIZE, PLEASE FIX" + ".pdf\"")
+        os.remove(destinationOfFiles + str(containerX.containerCode))
+        
+        #C:\\Users\\ssleep\\Documents\\Programming\\Hapag-Lloyd_Automation\\Gen\\
+        #check_output("pdftk C:\\Users\\ssleep\\Documents\\Programming\\Hapag-Lloyd_Automation\\HL TEMPLATE.pdf fill_form C:\\Users\\ssleep\\Documents\\Programming\\Hapag-Lloyd_Automation\\Temp" + str(containerX.containerCode) + " C:\\Users\\ssleep\\Documents\\Programming\\Hapag-Lloyd_Automation\\Gen\\" + str(containerX.containerCode), True)
+#         i+=1
+    if len(fileLocations) > 0:
+        commandString = "pdftk"
+        for s in fileLocations:
+            commandString+=" "
+            commandString+=s
+        commandString+= " cat output"
+        commandString+= " \"" + destinationOfFiles + workOrder + " PARS MANIFESTS.pdf\""
+#         f=open(("testfile.txt"), "w")
+#         f.write(str(commandString))
+#         f.close()
+        subprocess.Popen(commandString).wait()
+        for s in fileLocations:
+            os.remove(s[1:len(s)-1])
+#     shutil.rmtree(destinationOfFiles + "\\temp")
+        #f=open(("testfileX" + str(i) + ".txt"), "w")
+        #f.write(containerX.vessel)
+        #f.write(str(x) + "    " + str(y) + "    " + str(z))
+        #f.close()
+        #i+=1
+        
+    #f=open("testfile2.txt", "w+")
+    #f.write(discharge)
+    #f.close()

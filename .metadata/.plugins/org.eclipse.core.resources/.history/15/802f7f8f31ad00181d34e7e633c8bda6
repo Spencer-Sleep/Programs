@@ -1,0 +1,33 @@
+import email
+import imaplib
+import os
+from exchangelib import DELEGATE, Account, Credentials
+from exchangelib.attachments import FileAttachment, ItemAttachment
+from exchangelib.items import Message
+from time import sleep
+import datetime
+import img2pdf
+    
+if __name__ == '__main__':
+    credentials = Credentials(
+    username='ssleep@seaportint.com',  # Or myusername@example.com for O365
+    password='mp#99PASS'
+    )
+    account = Account(
+        primary_smtp_address='@seaportint.com', 
+        credentials=credentials, 
+        autodiscover=True, 
+        access_type=DELEGATE
+    )
+    
+    
+    
+
+
+    while(True):
+        for item in account.inbox.filter(is_read=False, sender="cadex@custombroker.com"):
+
+            item.is_read=True
+            item.save()
+        sleep(30)
+        account.inbox.refresh()

@@ -1,0 +1,30 @@
+-- VERSION_4
+-- START DISKCACHE_2
+C:\Users\ssleep\workspace\.metadata\.plugins\org.eclipse.core.resources\.projects\Maersk DM\com.python.pydev.analysis\v2_indexcache
+DMAutomater.__init__|1529603291854788000|C:\Users\ssleep\workspace\Maersk DM\DMAutomater\__init__.py
+-- END DISKCACHE
+-- START DICTIONARY
+3
+2=Container
+1=DMAutomater.__init__
+3=Container.__init__
+-- END DICTIONARY
+-- START TREE 1
+11
+boo|3|BOOKING!11@bookPars!10@bookA8A!10@
+con|2|CONTAINERNUMBER!11@Container!9@
+haz|1|HAZ!11@
+las|1|lastHaz!11@
+loa|1|loadInfo!10@
+par|1|PARS!11@
+pie|1|PIECES!11@
+siz|1|SIZE!11@
+ves|1|VESSEL!11@
+wei|1|WEIGHT!11@
+wor|1|workbookPath!11@
+-- END TREE
+-- START TREE 2
+2
+__i|1|__init__!2&10@
+pro|1|properties!3&11@
+-- END TREE

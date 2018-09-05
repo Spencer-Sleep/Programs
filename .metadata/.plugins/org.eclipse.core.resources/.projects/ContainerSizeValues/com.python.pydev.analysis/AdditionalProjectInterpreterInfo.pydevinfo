@@ -1,0 +1,33 @@
+-- VERSION_4
+-- START DISKCACHE_2
+C:\Users\ssleep\workspace\.metadata\.plugins\org.eclipse.core.resources\.projects\ContainerSizeValues\com.python.pydev.analysis\v2_indexcache
+ContainerSizeValues.__init__|1528396826316780000|C:\Users\ssleep\workspace\ContainerSizeValues\ContainerSizeValues\__init__.py
+-- END DISKCACHE
+-- START DICTIONARY
+3
+1=ContainerSizeValues.__init__
+2=ContainerSizeInfo
+3=ContainerSizeInfo.__init__
+-- END DICTIONARY
+-- START TREE 1
+2
+con|1|ContainerSizeInfo!9@
+loa|1|loadValues!10@
+-- END TREE
+-- START TREE 2
+14
+__i|1|__init__!2&10@
+cod|1|code!3&11@
+com|1|CompTHRUpayout!2&11@
+owp|1|OWpayout!2&11@
+p1w|1|P1weight!3&11@
+p2w|1|P2weight!3&11@
+t1p|1|T1payout!2&11@
+t1w|1|T1weight!3&11@
+t2p|1|T2payout!2&11@
+t2w|1|T2weight!3&11@
+t3p|1|T3payout!2&11@
+t3w|1|T3weight!3&11@
+t4w|1|T4weight!3&11@
+thr|1|THRUpayout!2&11@
+-- END TREE

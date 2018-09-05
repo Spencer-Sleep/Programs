@@ -1,0 +1,1036 @@
+from pywinauto.win32structures import RECT
+from pyautogui import click
+from pyautogui import moveTo, press, typewrite, hotkey, position
+
+from pywinauto import Application
+from pywinauto import handleprops
+
+from win32api import GetKeyState
+
+import win32gui
+from win32con import SWP_SHOWWINDOW
+
+from tkinter import Button, Tk, Label, Entry, Text
+
+from sys import argv
+
+from os import listdir
+from openpyxl import load_workbook
+from openpyxl.styles.fills import FILL_NONE
+from _datetime import date, timedelta, datetime
+
+import sys
+
+from time import sleep, strptime
+from openpyxl.styles.colors import Color, RGB
+
+
+# normal resolution
+SHIPPERCODELOC = (48,301)
+CONSIGNEECODELOC = (301,301)
+CUSTOMERCODELOC = (564,301)
+  
+  
+DESCRIPTIONLOC = (20,354)
+# 30, 432
+  
+EQUIPMENTLOC = (327, 900)
+DIRECTIONLOC = (400,922)
+DIVISIONLOC = (550,944)
+LANECODELOC = (568, 967)
+  
+HOUSELOC = (1807, 1000)
+  
+OKLOC = (1857, 127)
+# 1859, 155
+DUPLICATELOC = (1845, 273)
+  
+ROUTINGTABLOC = (688, 96)
+# 695, 115
+DRIVERPAYOUTLOC = (132, 858)
+# 76, 800
+   
+RATINGTABLOC = (1153, 98)
+CUSTOMERCHARGELOC = (49,144)
+  
+NEWLOC = (1850,100)
+  
+HELPLOC = (328, 33)
+#         (386, 40)
+FINDLOC = (382, 284)
+#          (424, 330)
+MAXIMIZELOC = (1859, 102)
+#         1851, 118)
+PUDATELOC = (544, 901)
+#         687, 859
+DODATELOC = (538, 928)
+# 700, 890
+DRIVERNAMELOC = (1526, 680)
+# 1487, 590
+DRIVERNUMLOC = (1519, 728) 
+#         1448, 644
+PRINTLOC = (1848, 199)
+CARRIERLOC = (1822, 312)
+PRINTCARRIERLOC = (1604, 317)
+
+
+
+# CUSTOMERCODELOC = (732, 372)
+# DESCRIPTIONLOC = (30, 432)
+# # 
+#  
+# # EQUIPMENTLOC = (327, 900)
+# # DIRECTIONLOC = (400,922)
+# # DIVISIONLOC = (550,944)
+# # LANECODELOC = (568, 967)
+#  
+# # HOUSELOC = (1807, 1000)
+#  
+# OKLOC = (1859, 155)
+#  
+# ROUTINGTABLOC = (695, 115)
+# DRIVERPAYOUTLOC = (76, 800)
+#   
+# CUSTOMERCHARGELOC = (49,144)
+#  
+# NEWLOC = (1850,100)
+#  
+# HELPLOC = (386, 40)
+# FINDLOC = (424, 330)
+# MAXIMIZELOC =(1851, 118) 
+# PUDATELOC = (687, 859)
+# DODATELOC = (700, 890)
+# DRIVERNAMELOC = (1487, 590)
+# DRIVERNUMLOC = (1448, 644) 
+#  
+# PRINTLOC = (1830, 243)
+# CARRIERLOC = (1763, 372)
+# PRINTCARRIERLOC = (1530, 372)
+
+
+class Driver(object):
+    driver = ""
+    name = ""
+    PARS = ""
+    containerNumber = ""
+    payout = ""
+    sunrise = False
+    bareframe = False
+    
+def popUp(top, top2 = "", w=300, h=90, widget=""):
+    if not top2=="":
+        top2.lift()
+        top2.attributes('-topmost',True)
+        top2.after_idle(top2.attributes,'-topmost',False)
+        
+        # get screen width and height
+        ws = top2.winfo_screenwidth() # width of the screen
+        hs = top2.winfo_screenheight() # height of the screen
+        
+        # calculate x and y coordinates for the Tk root window
+        x = (ws/2) - (w/2)
+        y = (hs/2) - (h/2)
+        
+        # set the dimensions of the screen 
+        # and where it is placed
+        top2.geometry('%dx%d+%d+%d' % (w, h, x, y))
+        
+        if widget !="":
+            top2.wait_visibility(widget)
+            click(widget.winfo_rootx()+widget.winfo_width()/2, widget.winfo_rooty()+5+widget.winfo_height()/2)
+        top.wait_window(top2)
+    else:
+        top.lift()
+        top.attributes('-topmost',True)
+        top.after_idle(top.attributes,'-topmost',False)
+        
+        # get screen width and height
+        ws = top.winfo_screenwidth() # width of the screen
+        hs = top.winfo_screenheight() # height of the screen
+        
+        # calculate x and y coordinates for the Tk root window
+        x = (ws/2) - (w/2)
+        y = (hs/2) - (h/2)
+        
+        # set the dimensions of the screen 
+        # and where it is placed
+        top.geometry('%dx%d+%d+%d' % (w, h, x, y))
+        if widget !="":
+            top.wait_visibility(widget)
+            moveTo(widget.winfo_rootx()+widget.winfo_width()/2, widget.winfo_rooty()+5+widget.winfo_height()/2)
+        top.mainloop()
+
+def setupDM(drivers, date, sunriseRate):
+#     app = Application(backend="win32").connect(path = r"C:\DM54_W16\DM54_W16.exe")
+#     
+# #     top_windows = []
+# #     EnumWindows(windowEnumerationHandler, top_windows)
+# #     for i in top_windows:
+# #         if 'Dispatch-Mate' in i[1]:
+# #             SetWindowPos(i[0], None, 0, 0, 1920, 1080, SWP_SHOWWINDOW)
+# #             SetForegroundWindow(i[0])
+#             
+#     
+#     winChildren = ""
+#      
+#     dialogs = app.windows()
+#     
+#     for x in dialogs:
+#         if handleprops.classname(x) == "WinDevObject":
+#             winChildren = handleprops.children(x)
+#             topWindow = x
+#             break
+    clickTuple = False
+    
+    click(DESCRIPTIONLOC)
+    fore = win32gui.GetForegroundWindow()
+    DMFore = "Dispatch-Mate" in win32gui.GetWindowText(fore)
+    while not DMFore:
+        top = Tk()
+        L1 = Label(top, text="Please maximize DispatchMate and the PB in the left monitor")
+        L1.grid(row=0, column=0)
+         
+        def callbackDM():
+            top.destroy()
+         
+        MyButton4 = Button(top, text="OK", width=10, command=callbackDM)
+        MyButton4.grid(row=1, column=0)
+     
+        popUp(top, w=350, h=50, widget = MyButton4)
+         
+        click(DESCRIPTIONLOC)
+        fore = win32gui.GetForegroundWindow()
+        DMFore = "Dispatch-Mate" in win32gui.GetWindowText(fore)
+        
+#     i=0
+    for driver in drivers:
+#         if i<3: 
+#             i+=1
+
+
+
+        click(HELPLOC)
+         
+        sleep(1)
+         
+        click(FINDLOC)
+        
+        if driver.PARS[-1]=="A" or driver.PARS[-1]=="B" or driver.PARS[-1]=="C":
+            typewrite(driver.PARS[-7:-1])
+        else:
+            typewrite(driver.PARS[-6:])
+         
+        press("enter")
+         
+        sleep(5)
+        
+        click(MAXIMIZELOC)
+        
+        sleep(0.5)
+        
+        click(DESCRIPTIONLOC)
+        press("tab", 9)
+        hotkey('ctrl', 'a')
+        hotkey('ctrl', 'c')
+        
+#             print(driver.containerNumber[:3])
+#             print(Tk().clipboard_get()[:3])
+#             print(driver.containerNumber[4:8])
+#             print(Tk().clipboard_get()[5:9])
+        tk=False
+        
+        clipTk = Tk()
+        
+        if not str(driver.containerNumber[:4])==clipTk.clipboard_get()[:4] or not str(driver.containerNumber[4:10])==clipTk.clipboard_get()[5:11]:
+            tk=True
+            contPB = clipTk.clipboard_get()[:4] + clipTk.clipboard_get()[5:11]
+        clipTk.destroy()
+        if tk:
+            top = Tk()
+            L1 = Label(top, text="Container numbers " + contPB + " (PB) and " + driver.containerNumber[:10] + " (spreadsheet) do not match." +
+            "\n Please navigate to the correct PB and hit \"CONTINUE\"")
+            L1.grid(row=0, column=0, columnspan=2)
+             
+            def callbackDM():
+                top.destroy()
+            
+            def callbackDMSTOP():
+                sys.exit()
+             
+            MyButton4 = Button(top, text="CONTINUE", width=10, command=callbackDM)
+            MyButton4.grid(row=1, column=0)
+            
+            MyButton4 = Button(top, text="STOP", width=10, command=callbackDMSTOP)
+            MyButton4.grid(row=1, column=1)
+            popUp(top, w=700, h=100, widget = MyButton4)
+            
+        
+#         
+#         click(CUSTOMERCODELOC)
+#         hotkey('ctrl', 'c')
+#         
+# #             print(driver.containerNumber[:3])
+# #             print(Tk().clipboard_get()[:3])
+# #             print(driver.containerNumber[4:8])
+# #             print(Tk().clipboard_get()[5:9])
+#         tk=False
+#         
+#         clipTk = Tk()
+#         
+#         if clipTk.clipboard_get()=="1779" and driver.bareframe:
+#             press("tab")
+#             press("end")
+#             typewrite(" HOLD RT")
+#         clipTk.destroy()
+#         
+#         sleep(0.1)
+        
+
+        click(PUDATELOC)
+        
+        month = str(date.month)
+        if len(month)<2:
+            month = "0" + month
+        typewrite(month)
+        day = str(date.day)
+        if len(day)<2:
+            day = "0" + day
+        typewrite(day)
+        typewrite(str(date.year))
+        
+#         typewrite(str(date.month))
+#         typewrite(str(date.day))
+#         typewrite(str(date.year))
+         
+        click(DODATELOC)
+          
+        month = str(date.month)
+        if len(month)<2:
+            month = "0" + month
+        typewrite(month)
+        day = str(date.day)
+        if len(day)<2:
+            day = "0" + day
+        typewrite(day)
+        typewrite(str(date.year))
+         
+        click(ROUTINGTABLOC)
+         
+        sleep(0.1)
+        
+#             click(300, 144)
+        
+
+        click(DRIVERNUMLOC)
+         
+        typewrite(str(driver.driver))
+         
+        press('enter') 
+        
+        sleep(0.5)
+        
+        if str(driver.driver)[:3]!="801":
+            click(DRIVERNAMELOC)
+            
+            typewrite(driver.name)
+         
+            press('enter')
+                
+            sleep(0.5)    
+            
+        click(DRIVERPAYOUTLOC)
+        hotkey('ctrl', 'a')
+        
+        hotkey('ctrl', 'c')
+        
+        clickheight = 17
+        clipTk = Tk()
+        if clipTk.clipboard_get()=="HAZARDOUS COST":
+            clickheight+=19
+            click(DRIVERPAYOUTLOC[0], DRIVERPAYOUTLOC[1]+17)
+        clipTk.destroy()
+        
+        if str(driver.driver)[:3]!="801":        
+            typewrite("TRUCK")
+        else:
+            typewrite("DRAY")
+            
+        press('tab')
+        typewrite("1")
+        press('tab')
+        press('delete')
+        press('tab')
+        typewrite(driver.payout)
+        
+        if driver.sunrise:
+            click(DRIVERPAYOUTLOC[0], DRIVERPAYOUTLOC[0]+clickheight)
+            hotkey('ctrl', 'a')
+            typewrite("STOP OFF")
+            press('tab')
+            typewrite("3")
+            press('tab')
+            press('delete')
+            press('tab')
+            typewrite(sunriseRate)
+    
+        sleep(0.5)
+        
+        if GetKeyState(145) < 0:
+            exit()  
+        
+        click(OKLOC[0], OKLOC[1], 2)
+#         click(1859, 155)
+        
+        sleep(2)
+
+        click(PRINTLOC, button="right")
+        
+        sleep(1)
+        
+        click(CARRIERLOC)
+        
+        sleep(0.3)
+
+#        PRINT:        
+        click(PRINTCARRIERLOC)
+          
+        sleep(7)
+        
+#         exit()
+        
+
+#EMAIL:
+#         click(1539, 442)
+#         sleep(0.3)
+#         click(1735, 190)
+#              
+# #         sleep(5)
+# #         sleep(5)
+#         done=False
+#         while not done:
+#             try:
+#                 app = Application(backend="win32").connect(path = r"C:\Program Files\Microsoft Office 15\root\office15\outlook.exe")
+#                 done=True
+#             except:
+#                 pass
+# #             top_windows = []
+# #             EnumWindows(windowEnumerationHandler, top_windows)
+# #             for i in top_windows:
+# #                 if 'Dispatch-Mate' in i[1]:
+# #                     SetWindowPos(i[0], None, 0, 0, 1920, 1080, SWP_SHOWWINDOW)
+# #                     SetForegroundWindow(i[0])
+#                   
+#         winChildren = ""
+#             
+#         done = False
+#         
+#         while not done:
+#             dialogs = app.windows()
+#             topWindow = None
+#             for x in dialogs:
+#                 if isinstance(handleprops.text(x), str) and not handleprops.text(x)==None:
+#                     try:
+#                         if "Carrier Confirmation" in handleprops.text(x):
+#                             winChildren = handleprops.children(x)
+#                             topWindow = x
+#                             break
+#                     except:
+#                         pass
+#                 
+#             send = ""
+#             if topWindow==None:
+#                 continue
+#                 
+#             topWindowWrap = app.window(handle=topWindow)
+#             
+#             for x in winChildren:
+# #                 print(handleprops.text(x) + "   " + handleprops.classname(x))
+#                 if handleprops.text(x)=="&Send":
+#                     send = x
+#                 if handleprops.text(x)=="Fro&m":
+#                     buttonWrap = topWindowWrap.child_window(handle=x).wrapper_object()
+#                     buttonWrap.click()
+#                     
+#                     done = True
+#                     
+#                     if not clickTuple:
+#                         moveTo(114, 221)
+#                         
+#                         while not GetKeyState(145)<0:
+#                             True
+#                         
+#                         clickTuple = position()
+#                     
+# #                         else:                        
+#                     click(clickTuple)
+#             
+#             if done==True:            
+#                 buttonWrap = topWindowWrap.child_window(handle=send).wrapper_object()
+#                 buttonWrap.click()
+#         
+#         
+#     
+#         
+#         if GetKeyState(145) < 0:
+#             exit()  
+#             
+#             
+#         sleep(1)
+#         
+# #     1530, 443
+#         
+#         if GetKeyState(145) < 0:
+#             exit()  
+            
+            
+#             sleep(1)
+            
+#         i = i+1
+    
+                
+
+def loadinfo(folderPath):
+    CSXMOVES = load_workbook(folderPath)
+    activeSheet = CSXMOVES['CSX MOVES']
+    driverSheet = CSXMOVES['Drivers']
+    rateSheet = CSXMOVES['Rates']
+    colorSheet = CSXMOVES['COLOUR KEY']
+    
+    drivers = []
+    #RGB 173,216,230
+#     activeColor = RGB("add8e6")
+    
+#     print('aaa')
+#     print(colorSheet.max_row)
+    colors = ["","","","","",""]
+    for xRow in colorSheet.rows:
+        for xCell in xRow:
+            if xCell.value=="MONDAY":
+                colors[0]=xCell.fill
+                break
+            elif xCell.value=="TUESDAY":
+                colors[1]=xCell.fill
+                break
+            elif xCell.value=="WEDNESDAY":
+                colors[2]=xCell.fill
+                break
+            elif xCell.value=="THURSDAY":
+                colors[3]=xCell.fill
+                break
+            elif xCell.value=="FRIDAY":
+                colors[4]=xCell.fill
+                break
+            elif xCell.value=="SATURDAY":
+                colors[5]=xCell.fill
+                break
+    
+    dayOfTheWeek = [-1]
+    startAt = [""]
+    top = Tk()
+    L1 = Label(top, text="Please select which driver to start at (optional) \n as well as which day of the week to run on \n ")
+    L1.config(font=("Courier", 16))
+    L1.grid(row=0, column=0, columnspan=6)
+    L2 = Label(top, text="Start at driver #:")
+    L2.config(font=("Courier", 10))
+    L2.grid(row=1, column=0, columnspan = 2)
+    E1 = Entry(top, bd = 5, width = 39)
+    E1.grid(row=1, column=2, columnspan = 2)
+    L3 = Label(top, text="OR")
+    L3.grid(row=2, column=1, columnspan=2)
+    L3.config(font=("Courier", 20))
+    top.lift()
+    top.attributes('-topmost',True)
+    top.after_idle(top.attributes,'-topmost',False)
+      
+    def callbackDay(day):
+        startAt[0]=E1.get().strip()
+        dayOfTheWeek[0] = day
+        top.destroy()
+      
+    
+    MyButton5 = Button(top, text="MONDAY", command=lambda: callbackDay(0))
+    MyButton5.grid(row=4, column=0)
+    MyButton5.config(font=("Courier", 16))
+    MyButton6 = Button(top, text="TUESDAY", command=lambda: callbackDay(1))
+    MyButton6.grid(row=4, column=1)
+    MyButton6.config(font=("Courier", 16))
+    MyButton7 = Button(top, text="WEDNESDAY",  command=lambda: callbackDay(2))
+    MyButton7.grid(row=4, column=2)
+    MyButton7.config(font=("Courier", 16))
+    MyButton8 = Button(top, text="THURSDAY", command=lambda: callbackDay(3))
+    MyButton8.grid(row=4, column=3)
+    MyButton8.config(font=("Courier", 16))
+    MyButton9 = Button(top, text="FRIDAY", command=lambda: callbackDay(4))
+    MyButton9.grid(row=4, column=4)
+    MyButton9.config(font=("Courier", 16))
+    MyButton10 = Button(top, text="SATURDAY", command=lambda: callbackDay(5))
+    MyButton10.grid(row=4, column=5)
+    MyButton10.config(font=("Courier", 16)) 
+    
+    w = 900 # width for the Tk root
+    h = 260 # height for the Tk root
+       
+    # get screen width and height
+    ws = top.winfo_screenwidth() # width of the screen
+    hs = top.winfo_screenheight() # height of the screen
+       
+    # calculate x and y coordinates for the Tk root window
+    x = (ws/2) - (w/2)
+    y = (hs/2) - (h/2)
+       
+    # set the dimensions of the screen 
+    # and where it is placed
+    top.geometry('%dx%d+%d+%d' % (w, h, x, y))
+   
+    top.mainloop()
+    
+    todaysFill = colors[dayOfTheWeek[0]]
+    
+    year = folderPath.split("\\")[-2]
+    week = folderPath.split("\\")[-1].split(" ")[3]
+    pickupDate = date(int(year), 1, 1)
+    
+    oneDay = timedelta(1)
+    oneWeek = timedelta(7)
+    
+    while pickupDate.weekday() != 0:
+        pickupDate = pickupDate+oneDay
+    
+    pickupDate = pickupDate + (int(week)-1)*oneWeek
+    
+    pickupDate = pickupDate + (dayOfTheWeek[0])*oneDay
+    
+    containerNumberCol = ""
+    containerNumber2Col = ""
+    parsCol = ""
+    pars2Col = ""
+    driverCol = ""
+    notesCol = ""
+    notes2Col=""
+    
+    
+    for cell in next(activeSheet.rows):
+        if cell.value == "PB":
+            parsCol = cell.col_idx - 1
+        elif cell.value == "Container":
+            containerNumberCol = cell.col_idx - 1
+        elif cell.value == "EX BP":
+            notesCol = cell.col_idx - 1
+        elif cell.value == "NOTES":
+            notes2Col = cell.col_idx - 1
+        elif cell.value == "DRIVER":
+            driverCol = cell.col_idx - 1
+        elif cell.value == "Container IMPORT":
+            containerNumber2Col = cell.col_idx - 1
+        elif cell.value == "IM BP":
+            pars2Col = cell.col_idx - 1
+    
+    rates=[] 
+    
+    matchWords = ["Owner Operator",
+                  "Owner Operator BAREFRAME",
+                  "Owner Operator 2 containers roundtrip",
+                  "Owner Operator 3 containers roundtrip",
+                  "Owner Operator 4 containers roundtrip",
+                  "Owner Operator  Round trip 5/6 containers",
+                  
+                  "Company Driver",
+                  "Company Driver BAREFRAME",
+                  "Company Driver Round trip 2 Containers",
+                  "Company Driver  Round trip 3 Containers",
+                  "Company Driver  Round trip 4 Containers",
+                  "Company Driver  Round trip +4 CONTAINERS",
+                  
+                  "Sunrise Stop-off (x3)"
+                  ]
+    match = 0
+    for row in rateSheet:
+        for cell in row:
+            if str(cell.value)==matchWords[match] or (matchWords[match]=="Company Driver  Round trip 5/6 containers" and str(cell.value)=="Company Driver  Round trip +4 CONTAINERS"):
+                rates.append(str(row[cell.col_idx+1].value))
+                match+=1
+                break
+            
+    print(rates)
+    startFound= False
+    if startAt[0] != "":
+        for row in activeSheet.rows:
+            if row[0].fill.fgColor == todaysFill.fgColor:
+                if (not row[driverCol].value == None) and (not row[driverCol].value == "") and row[0].row>2 and (not startFound) and str(row[driverCol].value)==startAt[0]:
+                    startFound = True
+                if startFound:
+                    if (not row[driverCol].value == None) and (not row[driverCol].value == "") and row[0].row>2:
+                        driver1 = None
+                        driver2 = None
+                        if not "BAREFRAME" in row[containerNumberCol].value:
+                            driver1 = Driver()
+                            driver1.driver = str(row[driverCol].value).strip()
+                        if not "BAREFRAME" in row[containerNumber2Col].value:
+                            driver2 = Driver()
+                            driver2.driver = str(row[driverCol].value).strip()
+                        
+                        numberOfMoves = 0
+                        
+                        currentRow = row[0].row
+            #             print(currentRow)
+                        for i in range(-2,3):
+            #                 print(i)
+                            if not i==0:
+            #                     print("here")
+            #                     print(str(activeSheet[currentRow+i][driverCol].value))
+                                if str(activeSheet[currentRow+i][driverCol].value)==str(row[driverCol].value):
+            #                         print(activeSheet[containerNumberCol][currentRow+i].value)
+            #                         print(activeSheet[containerNumber2Col][currentRow+i].value)
+                                    if "BAREFRAME" in str(activeSheet[currentRow+i][containerNumberCol].value) or "BAREFRAME" in str(activeSheet[currentRow+i][containerNumber2Col].value):
+                                        numberOfMoves+=1
+            #                             print("+1")
+                                    else:
+            #                             print("+2") 
+                                        numberOfMoves+=2
+                                        
+                        if numberOfMoves>0:
+                            if "BAREFRAME" in row[containerNumber2Col].value or "BAREFRAME" in  row[containerNumberCol].value:
+                                numberOfMoves+=1
+                            else:
+                                numberOfMoves+=2
+                        
+            #             print(numberOfMoves)
+                        if numberOfMoves==6:
+                            numberOfMoves=5
+                        
+                        if driver1 != None:
+                            driver1.PARS = str(row[parsCol].value)
+                            
+                            if "BAREFRAME" in row[containerNumber2Col].value:
+                                driver1.bareframe=True
+                            
+                            numberOfMoves1=numberOfMoves
+                            numberOfMoves2=numberOfMoves+6          
+                            if driver1.driver[:3]=="801":
+                                if numberOfMoves1==0 and "BAREFRAME" in row[containerNumber2Col].value:
+                                    numberOfMoves1+=1
+                                driver1.payout=rates[numberOfMoves1]
+                            else:
+                                if numberOfMoves2==6 and "BAREFRAME" in row[containerNumber2Col].value:
+                                    numberOfMoves2+=1
+                                driver1.payout=rates[numberOfMoves2]
+                            
+                            if len(driver1.driver) < 6:
+                                prefix = "801"
+                                while len(prefix)+len(driver1.driver)<6:
+                                    prefix+="0"
+                                driver1.driver = prefix+driver1.driver
+                            
+                            driver1.containerNumber = str(row[containerNumberCol].value).strip()
+                            if row[notesCol].value == "SUNRISE METALS":
+                                driver1.sunrise=True
+                            drivers.append(driver1)
+                            
+                        if driver2 != None:
+                            driver2.PARS = str(row[pars2Col].value)
+                            
+                            if "BAREFRAME" in row[containerNumberCol].value:
+                                driver2.bareframe=True
+                            
+                            numberOfMoves1=numberOfMoves
+                            numberOfMoves2=numberOfMoves+6             
+                            if driver2.driver[:3]=="801":
+                                if numberOfMoves1==0 and "BAREFRAME" in row[containerNumberCol].value:
+                                    numberOfMoves1+=1
+                                driver2.payout=rates[numberOfMoves1]
+                            else:
+                                if numberOfMoves2==6 and "BAREFRAME" in row[containerNumberCol].value:
+                                    numberOfMoves2+=1
+                                driver2.payout=rates[numberOfMoves2]
+                            
+                            if len(driver2.driver) < 6:
+                                prefix = "801"
+                                while len(prefix)+len(driver2.driver)<6:
+                                    prefix+="0"
+                                driver2.driver = prefix+driver2.driver
+                            
+                            driver2.containerNumber = str(row[containerNumber2Col].value).strip()
+                            if row[notes2Col].value == "SUNRISE METALS":
+                                driver2.sunrise=True
+                            drivers.append(driver2)
+    else:
+        for row in activeSheet.rows:
+            if row[0].fill.fgColor == todaysFill.fgColor:
+                    if (not row[driverCol].value == None) and (not row[driverCol].value == "") and row[0].row>2:
+                        driver1 = None
+                        driver2 = None
+                        if not "BAREFRAME" in row[containerNumberCol].value:
+                            driver1 = Driver()
+                            driver1.driver = str(row[driverCol].value).strip()
+                        if not "BAREFRAME" in row[containerNumber2Col].value:
+                            driver2 = Driver()
+                            driver2.driver = str(row[driverCol].value).strip()
+                        
+                        numberOfMoves = 0
+                        
+                        currentRow = row[0].row
+            #             print(currentRow)
+                        for i in range(-2,3):
+            #                 print(i)
+                            if not i==0:
+            #                     print("here")
+            #                     print(str(activeSheet[currentRow+i][driverCol].value))
+                                if str(activeSheet[currentRow+i][driverCol].value)==str(row[driverCol].value):
+            #                         print(activeSheet[containerNumberCol][currentRow+i].value)
+            #                         print(activeSheet[containerNumber2Col][currentRow+i].value)
+                                    if "BAREFRAME" in str(activeSheet[currentRow+i][containerNumberCol].value) or "BAREFRAME" in str(activeSheet[currentRow+i][containerNumber2Col].value):
+                                        numberOfMoves+=1
+            #                             print("+1")
+                                    else:
+            #                             print("+2") 
+                                        numberOfMoves+=2
+                                        
+                        if numberOfMoves>0:
+                            if "BAREFRAME" in row[containerNumber2Col].value or "BAREFRAME" in row[containerNumberCol].value:
+                                numberOfMoves+=1
+                            else:
+                                numberOfMoves+=2
+                        
+            #             print(numberOfMoves)
+                        if numberOfMoves==6:
+                            numberOfMoves=5
+                        
+                        if driver1 != None:
+                            driver1.PARS = str(row[parsCol].value)
+                            
+                            if "BAREFRAME" in row[containerNumber2Col].value:
+                                driver1.bareframe=True
+                            
+                            numberOfMoves1=numberOfMoves
+                            numberOfMoves2=numberOfMoves+6          
+                            if driver1.driver[:3]=="801":
+                                if numberOfMoves1==0 and "BAREFRAME" in row[containerNumber2Col].value:
+                                    numberOfMoves1+=1
+                                driver1.payout=rates[numberOfMoves1]
+                            else:
+                                if numberOfMoves2==6 and "BAREFRAME" in row[containerNumber2Col].value:
+                                    numberOfMoves2+=1
+                                driver1.payout=rates[numberOfMoves2]
+                                
+                            
+                            if len(driver1.driver) < 6:
+                                prefix = "801"
+                                while len(prefix)+len(driver1.driver)<6:
+                                    prefix+="0"
+                                driver1.driver = prefix+driver1.driver
+                            
+                            driver1.containerNumber = str(row[containerNumberCol].value).strip()
+                            if row[notesCol].value == "SUNRISE METALS":
+                                driver1.sunrise=True
+                            drivers.append(driver1)
+                            
+                        if driver2 != None:
+                            driver2.PARS = str(row[pars2Col].value)
+                            
+                            if "BAREFRAME" in row[containerNumberCol].value:
+                                driver2.bareframe=True
+                            
+                            numberOfMoves1=numberOfMoves
+                            numberOfMoves2=numberOfMoves+6             
+                            if driver2.driver[:3]=="801":
+                                if numberOfMoves1==0 and "BAREFRAME" in row[containerNumberCol].value:
+                                    numberOfMoves1+=1
+                                driver2.payout=rates[numberOfMoves1]
+                            else:
+                                if numberOfMoves2==6 and "BAREFRAME" in row[containerNumberCol].value:
+                                    numberOfMoves2+=1
+                                print(numberOfMoves2)
+                                print(driver2.containerNumber)
+                                driver2.payout=rates[numberOfMoves2]
+                            
+                            if len(driver2.driver) < 6:
+                                prefix = "801"
+                                while len(prefix)+len(driver2.driver)<6:
+                                    prefix+="0"
+                                driver2.driver = prefix+driver2.driver
+                            
+                            driver2.containerNumber = str(row[containerNumber2Col].value).strip()
+                            if row[notes2Col].value == "SUNRISE METALS":
+                                driver2.sunrise=True
+                            drivers.append(driver2)
+    
+    nameDict = {}
+    
+    for row in driverSheet:
+        if not row[0].value==None:
+            nameDict[str(row[0].value)] = str(row[2].value)
+#     driverNameSorted = list(nameDict.keys())
+#     driverNameSorted.sort()
+#     print(driverNameSorted)
+    noName = ""
+    noNameCount=1
+    noPARS=""
+    noPARSCount=1
+    badDate = ""
+    badDateCount = 1
+    for driver in drivers:
+        if not str(driver.driver)[:3]=="801":
+#                 print(driver.name)
+            if not driver.driver in nameDict:
+                noNameCount=noNameCount+1
+                if noNameCount%6==0:
+                    noName += "\n"
+                noName += str(driver.driver) + ", "
+        if driver.PARS==None or driver.PARS=="" or len(driver.PARS)<6:
+            noPARS += str(driver.containerNumber) + ", "
+            noPARSCount+=1
+            if noPARSCount%4==0:
+                noPARS += "\n"
+                
+        try:
+            pickupDate.day
+            pickupDate.month
+            pickupDate.year
+#             driver.pickupDate.day
+#             driver.pickupDate.month
+#             driver.pickupDate.year
+        except:
+            badDate += str(driver.containerNumber) + ", "
+            badDateCount+=1
+            if badDateCount%4==0:
+                badDate += "\n"
+#         if not driver.pickupDate:
+            
+#         if driver.PARS==None or driver.PARS=="":
+#             noPARS += str(driver.containerNumber) + ", "
+#             noPARSCount+=1
+#             if noPARSCount%4==0:
+#                 noPARS += "\n"
+                
+    
+    if not noName =="":
+        top = Tk()
+        L1 = Label()
+        L1 = Label(top, text="No driver name for \"" + noName + "\". \nPlease fill out the driver columns and start again. \nAlso ensure that the \"Drivers\" tab is filled out")
+        L1.config(font=("Courier", 16))
+        L1.grid(row=0, column=0)
+        
+        def callbackOK():
+            sys.exit()
+            top.destroy()
+        
+        MyButton = Button(top, text="OK", command=callbackOK, width=40)
+        MyButton.grid(row=1, column=0)
+        
+        w = 750 # width for the Tk root
+        h = 300 # height for the Tk root
+        ws = top.winfo_screenwidth() # width of the screen
+        hs = top.winfo_screenheight() # height of the screen
+        x = (ws/2) - (w/2)
+        y = (hs/2) - (h/2)
+        top.geometry('%dx%d+%d+%d' % (w, h, x, y))
+       
+        top.mainloop()
+
+    if not noPARS=="":
+        top = Tk()
+        L1 = Label()
+        L1 = Label(top, text="Invalid PARS for \"" + noPARS + "\". \nPlease fill out the PARS column and start again.")
+        L1.config(font=("Courier", 16))
+        L1.grid(row=0, column=0)
+        
+        def callbackOK():
+            sys.exit()
+            top.destroy()
+            
+        MyButton = Button(top, text="OK", command=callbackOK, width=40)
+        MyButton.grid(row=1, column=0)
+          
+        w = 700 # width for the Tk root
+        h = 300 # height for the Tk root
+           
+        ws = top.winfo_screenwidth() # width of the screen
+        hs = top.winfo_screenheight() # height of the screen
+        x = (ws/2) - (w/2)
+        y = (hs/2) - (h/2)
+        top.geometry('%dx%d+%d+%d' % (w, h, x, y))
+        top.mainloop()
+        
+    if not badDate=="":
+        top = Tk()
+        L1 = Label()
+        L1 = Label(top, text="Invalid date. Make sure the spreadsheet is named\n\"Word Word Week X ...\"\n and is in a folder named the year")
+        L1.config(font=("Courier", 16))
+        L1.grid(row=0, column=0)
+        
+        def callbackOK():
+            sys.exit()
+            top.destroy()
+            
+        MyButton = Button(top, text="OK", command=callbackOK, width=40)
+        MyButton.grid(row=1, column=0)
+          
+        w = 700 # width for the Tk root
+        h = 300 # height for the Tk root
+           
+        ws = top.winfo_screenwidth() # width of the screen
+        hs = top.winfo_screenheight() # height of the screen
+        x = (ws/2) - (w/2)
+        y = (hs/2) - (h/2)
+        top.geometry('%dx%d+%d+%d' % (w, h, x, y))
+        top.mainloop()
+
+                
+    for driver in drivers:
+        if not str(driver.driver)[:3]=="801":
+            driver.name = nameDict[driver.driver]
+                    
+    return drivers, pickupDate, rates[-1]
+
+
+if __name__ == '__main__':
+    
+#     folderPath = r"C:\Users\ssleep\Documents\Programming\2018\CSX Moves WEEK 10 Mar 4 to Mar 10 local.xlsx"
+    
+    argv = r"a J:\Buffalo Weekly Reports\2018\CSX Moves WEEK 33 AUGUST 12 TO AUGUST 18.xlsx".split()
+    
+    folderPath = ''
+    for i in range(len(argv)):
+        if i!=0:
+            folderPath+=argv[i]
+            if i != len(argv) - 1:
+                folderPath+=" "
+#    
+#     print(folderPath)
+    drivers, date, sunriseRate = loadinfo(folderPath)
+#     print(date)
+#     for driver in drivers:
+#         print(driver.PARS)
+#         print(driver.driver)
+#         print(driver.name)
+#         print(driver.payout)
+#     
+#     
+#     for driver in drivers:
+#         print(driver.containerNumber)
+    setupDM(drivers, date, sunriseRate)
+    
+    top = Tk()
+    L1 = Label(top, text="DONE")
+    L1.config(font=("Courier", 60))
+    L1.grid(row=0, column=0)
+    
+    def callbackOK():
+        sys.exit()
+        top.destroy()
+        
+    MyButton = Button(top, text="OK", command=callbackOK, width=30)
+    MyButton.grid(row=1, column=0)
+      
+    w = 250 # width for the Tk root
+    h = 148 # height for the Tk root
+       
+    ws = top.winfo_screenwidth() # width of the screen
+    hs = top.winfo_screenheight() # height of the screen
+    x = (ws/2) - (w/2)
+    y = (hs/2) - (h/2)
+    top.geometry('%dx%d+%d+%d' % (w, h, x, y))
+    top.mainloop()
+    
+# pyinstaller "C:\Users\ssleep\workspace\Buffalo Drivers on PBs\Automator\__init__.py" --distpath "J:\Spencer\Buffalo Drivers on PBs" --noconsole -y
+# pyinstaller "C:\Users\ssleep\workspace\Buffalo Drivers on PBs\Automator\__init__.py" --distpath "J:\Spencer\Buffalo Drivers on PBS - Magnified" --noconsole -y

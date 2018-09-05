@@ -1,0 +1,19 @@
+-- VERSION_4
+-- START DISKCACHE_2
+C:\Users\ssleep\workspace\.metadata\.plugins\org.eclipse.core.resources\.projects\pdfFlattener\com.python.pydev.analysis\v2_indexcache
+flattener.__init__|1498594856000000000|C:\Users\ssleep\workspace\pdfFlattener\flattener\__init__.py
+-- END DISKCACHE
+-- START DICTIONARY
+1
+1=flattener.__init__
+-- END DICTIONARY
+-- START TREE 1
+4
+cur|1|currentprinter!11@
+pat|1|path!11@
+rec|1|recursivePrint!10@
+sen|1|sendPath!11@
+-- END TREE
+-- START TREE 2
+0
+-- END TREE

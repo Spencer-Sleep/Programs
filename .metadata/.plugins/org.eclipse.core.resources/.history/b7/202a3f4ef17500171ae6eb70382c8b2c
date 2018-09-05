@@ -1,0 +1,418 @@
+from selenium import webdriver
+from selenium.webdriver import firefox
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import Select
+from selenium.webdriver.firefox.firefox_profile import FirefoxProfile
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.common.by import By
+from os import devnull
+
+import re
+
+from pyautogui import click
+from pyautogui import press
+
+from os import listdir
+from openpyxl import load_workbook
+
+from itertools import islice
+
+from tkinter import Button, Tk, Label, Entry
+# from pyautogui import click
+from time import sleep
+
+from datetime import datetime
+
+from win32api import GetKeyState
+from future.backports.http.client import GONE
+
+from sys import argv
+
+class AnyEc:
+    """ Use with WebDriverWait to combine expected_conditions
+        in an OR.
+    """
+    def __init__(self, *args):
+        self.ecs = args
+    def __call__(self, driver):
+        for fn in self.ecs:
+            try:
+                if fn(driver): return True
+            except:
+                pass
+
+class Container(object):
+    containerNumber = ""
+    PARS = ""
+    driver = ""
+    chassis = ""
+
+def setupPortal():
+    fp = FirefoxProfile();
+    fp.set_preference("webdriver.load.strategy", "unstable");
+    
+    driver = webdriver.Firefox(firefox_profile=fp, log_path=devnull)
+    driver.get("http://www.cbsa-asfc.gc.ca/prog/manif/portal-portail/menu-eng.html")
+    driver.maximize_window()
+    driver.implicitly_wait(6000)
+    
+    elem = driver.find_element_by_css_selector('a[href*="https://apps-cbsa-asfc.fjgc-gccf.gc.ca/LCS/?l=eng&t=https://apps.cbsa-asfc.gc.ca/GCKey"]')
+    elem.click()
+    
+    elem = driver.find_element_by_id("token1")
+    f=open(r"C:\Automation\CBSA Login.txt", 'r')
+    read = f.readline()
+    m = re.search("username: *", read)
+    read = read[m.end():]
+    elem.send_keys(read)
+    
+    elem = driver.find_element_by_id("token2")
+    read = f.readline()
+    m = re.search("password: *", read)
+    read = read[m.end():]
+    elem.send_keys(read)
+    f.close()
+    
+    elem = driver.find_element_by_css_selector('[title="Connect to the GCKey service"]')
+    elem.click()
+    
+    
+    elem = driver.find_element_by_id("continue")
+    elem.click()
+    
+    
+    elem = driver.find_element_by_name("_acceptEvent")
+    elem.click()
+    
+    return driver
+
+def loadInfo(folderPath):
+    linehaul =""
+    imports = ""
+    
+    containers = []
+    
+    for x in listdir(folderPath):
+        if not x[0]=="~":
+            if "Linehaul" in x:
+                linehaul = x
+            if "Imports" in x and "aci" in x:
+#             if "Imports" in x:
+                imports = x
+            
+    
+    imports = load_workbook(folderPath+"\\"+imports)
+    colorSheet = imports['COLOUR KEY']
+    imports = imports['Imports Sheet']
+    
+    containerCol = ""
+    driverCol = ""
+    parsCol = ""
+    
+    for cell in next(imports.rows):
+        if cell.value == "Container":
+            containerCol = cell.col_idx - 1
+        elif cell.value == "DRIVER":
+            driverCol = cell.col_idx - 1
+        elif cell.value == "PARS NUMBER":
+            parsCol = cell.col_idx - 1
+    
+    colors = ["","","","",""]
+#     print('aaa')
+#     print(colorSheet.max_row)
+    for xRow in colorSheet.rows:
+        for xCell in xRow:
+#             print("a")
+#             print(xCell.value)
+            if xCell.value=="MONDAY":
+                colors[0]=xCell.offset(0,2).fill
+                break
+            elif xCell.value=="TUESDAY":
+                colors[1]=xCell.offset(0,2).fill
+                break
+            elif xCell.value=="WEDNESDAY":
+                colors[2]=xCell.offset(0,2).fill
+                break
+            elif xCell.value=="THURSDAY":
+                colors[3]=xCell.offset(0,2).fill
+                break
+            elif xCell.value=="FRIDAY":
+                colors[4]=xCell.offset(0,2).fill
+                break
+    
+    todaysFill = colors[datetime.today().weekday()]
+    #CHANGE THIS BACK
+    for row in imports.rows:
+        if row[0].fill.fgColor == todaysFill.fgColor:
+            container = Container()
+            container.containerNumber = row[containerCol].value
+            container.driver = row[driverCol].value
+            container.PARS = row[parsCol].value
+            containers.append(container)
+    
+    linehaul = load_workbook(folderPath+"\\"+linehaul)
+    linehaul = linehaul['MASTER SHEET']
+    
+    chassisCol = ""
+    driverLineCol = ""
+    currentChassisCol = ''
+#     next(linehaul.rows)
+    for cell in next(islice(linehaul.rows, 1, 2)):
+        if cell.value == "UNIT #":
+            driverLineCol = cell.col_idx - 1
+        elif cell.value == "ASSIGNED CHASSIS":
+            chassisCol = cell.col_idx - 1
+        elif cell.value == "CURRENTLY USING":
+            currentChassisCol = cell.col_idx - 1
+    
+    containersToMatch = list(containers)
+    
+    for row in linehaul.rows:
+        for container in containersToMatch:
+            if str(row[driverLineCol].value) == container.driver or row[driverLineCol].value == container.driver:
+                if str(row[currentChassisCol].value) != "" and str(row[currentChassisCol].value) != 'None':
+                    container.chassis = str(row[currentChassisCol].value)
+                    containersToMatch.remove(container)
+                    break
+                else:
+                    container.chassis = str(row[chassisCol].value)
+                    containersToMatch.remove(container)
+                    break
+    
+    return containers
+#     for container in containers:
+#         print(container.containerNumber)
+#         print(container.PARS)
+#         print(container.driver)
+#         print(container.chassis)
+#     for i in range(imports.max_row):
+        
+            
+def makeACI(driver, container, saved, failed):
+    if (container.chassis=="" or
+        container.driver=="" or
+        container.containerNumber=="" or
+        container.PARS==""):
+        failed.append(container)
+        return
+    
+    while not "Filter Submitted Documents list to view the following:" in driver.page_source:
+        driver.find_element_by_id("tradeDocumentsTab").click()
+    
+    elem = driver.find_element_by_name("_create")
+    elem.click()
+    
+    select = Select(driver.find_element_by_id("docTypeSelected"))
+    select.select_by_visible_text("Highway Conveyance Document")
+    
+    elem = driver.find_element_by_id("submitButton")
+    elem.click()
+    
+    driver.find_element_by_name("crnDocumentNumberForm.documentNumberWithoutClientCode").send_keys(container.containerNumber + '-2017')
+#     driver.find_element_by_id("datePicker").click()
+    click(683, 431)
+    driver.find_element_by_name("conveyanceGeneralForm.estimatedDateOfArrival").click()
+#     opened = False
+#     while not opened:
+#         try: 
+#             driver.find_element_by_css_selector("td[class=' ui-datepicker-days-cell-over  ui-datepicker-today']")
+#             opened = True
+#         except:
+#             driver.find_element_by_name("conveyanceGeneralForm.estimatedDateOfArrival").click()
+    driver.find_element_by_css_selector("td[class=' ui-datepicker-days-cell-over  ui-datepicker-today']").click()
+    
+    driver.find_element_by_id("conveyanceGeneralForm.estimatedTimeOfArrivalHour").send_keys("17")
+    driver.find_element_by_id("conveyanceGeneralForm.estimatedTimeOfArrivalMinute").send_keys("00")
+    
+    driver.find_element_by_id("portOfReport").send_keys("427")
+    
+    Select(driver.find_element_by_id("conveyanceGeneralForm.emptyLoadedStatusCode")).select_by_visible_text("Loaded")
+    driver.find_element_by_id("conveyanceTractorTabTop").click()
+    
+    
+    driver.find_element_by_id("lookupName").send_keys(str(container.driver))
+#     driver.find_element_by_id("lookupName").click()
+#     WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "ul[class='ui-autocomplete ui-menu ui-widget ui-widget-content ui-corner-all']")))
+#     elem =driver.find_element_by_css_selector("ul[class='ui-autocomplete ui-menu ui-widget ui-widget-content ui-corner-all']") 
+    
+#     elem.send_keys(Keys.RETURN)
+    click(911, 468)
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "ul[class='ui-autocomplete ui-menu ui-widget ui-widget-content ui-corner-all']")))
+    press("down")
+    press("enter")
+#     PROBLEM MAYBE TRAVERSE THE TREE
+#     driver.find_element_by_css_selector("a[innertext='" + str(container.driver) + "']").click()
+#     sleep(1)
+#     elem.click()
+    while "Tractor Lookup Name" in driver.page_source:
+        driver.find_element_by_id("conveyanceTrailerTabTop").click()
+    driver.find_element_by_name("_enterTrailerInfo").click()
+    
+    driver.find_element_by_id("lookupName").send_keys(container.chassis)
+#     driver.find_element_by_id("lookupName").click()
+    
+#     elem =driver.find_element_by_css_selector("ul[class='ui-autocomplete ui-menu ui-widget ui-widget-content ui-corner-all']") 
+#     WebDriverWait(driver, 10).until(EC.element_to_be_clickable(elem))
+#     elem.click()
+    
+    click(891, 355)
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "ul[class='ui-autocomplete ui-menu ui-widget ui-widget-content ui-corner-all']")))
+    press("down")
+    press("enter")
+    
+    while "Trailer Lookup Name" in driver.page_source:
+        driver.find_element_by_name("_enterContainerInfo").click()
+    driver.find_element_by_name("id").send_keys(container.containerNumber)
+    driver.find_element_by_name("ccns").send_keys(container.PARS)
+    
+    
+    elem = driver.find_element_by_name("_save")
+    elem.click()
+    
+    WebDriverWait(driver, 10).until(lambda driver: "Trailer Lookup Name" in driver.page_source)
+    WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.NAME, "_save")))
+#         sleep(5)
+
+#         STILL A TIMING ISSUE
+    
+#     print("found")
+#         WebDriverWait(driver, 10).until(EC.visibility_of_all_elements_located((By.CLASS_NAME, "buttonclass")))
+#         print("found2")
+#         if driver.current_url=="https://apps.cbsa-asfc.gc.ca/manif/services/eng/hb21006.html":
+    while "Trailer Lookup Name" in driver.page_source:
+        elem = driver.find_element_by_name("_save")
+        elem.click()
+#         else:
+#             sleep(0.1)
+    
+    elem = driver.find_element_by_name("_checkForErrors")
+    elem.click()
+    
+    elem = driver.find_element_by_id("buttonPortalOk")
+    elem.click()
+    
+    elem = driver.find_element_by_id("_submitToCBSA")
+    elem.click()
+    
+    WebDriverWait(driver, 100).until(AnyEc(
+        EC.presence_of_element_located((By.ID, "buttonPortalOk")),
+        EC.presence_of_element_located((By.ID, "buttonPortalYes"))))
+    
+    driver.implicitly_wait(3)
+    try:
+        driver.find_element_by_id("buttonPortalOk").click()
+        driver.implicitly_wait(1000)
+        failed.append(container)
+        return
+    except:
+        driver.implicitly_wait(1000)
+        driver.find_element_by_id("buttonPortalYes").click()
+          
+        elem = driver.find_element_by_css_selector('a[href*="/manif/services/eng/pb10001.html?pb1=ls&ts="]')
+        elem.click()
+            
+        if not saved[0]:
+    #         while not GetKeyState(13)<0:
+    #             True
+            top = Tk()
+            L1 = Label()
+            L1 = Label(top, text="Check ")
+            L1.config(font=("Courier", 16))
+            L1.grid(row=0, column=0)
+            top.lift()
+            top.attributes('-topmost',True)
+            top.after_idle(top.attributes,'-topmost',False)
+              
+            def callbackOK():
+                top.destroy()
+              
+            MyButton5 = Button(top, text="OK", height = 10, width=20, command=callbackOK)
+            MyButton5.grid(row=1, column=0)
+              
+              
+            w = 200 # width for the Tk root
+            h = 100 # height for the Tk root
+               
+            # get screen width and height
+            ws = top.winfo_screenwidth() # width of the screen
+            hs = top.winfo_screenheight() # height of the screen
+               
+            # calculate x and y coordinates for the Tk root window
+            x = (ws/2) - (w/2)
+            y = (hs/2) - (h/2)
+               
+            # set the dimensions of the screen 
+            # and where it is placed
+            top.geometry('%dx%d+%d+%d' % (w, h, x, y))
+           
+            top.mainloop()
+        saved[0] = True
+          
+#         elem = driver.find_element_by_name("_ok")
+#         elem.click()
+    click(535, 351)
+#     
+
+if __name__ == '__main__':
+    
+    folderPath = r"J:\Linehaul Drivers Weekly Reports\2017\Week 30"
+    
+#     folderPath = ''
+#     for i in range(len(argv)):
+#         if i!=0:
+#             folderPath+=argv[i]
+#             if i != len(argv) - 1:
+#                 folderPath+=" "
+    
+    driver = setupPortal()
+    containers = loadInfo(folderPath)
+    saved = [False]
+    failed = []
+    i=0
+    for container in containers:
+#         if i:
+        makeACI(driver, container, saved, failed)
+        i+=1
+    
+    failedFile = folderPath[:folderPath.rfind('\\')] + "\\" + "Containers not arrived.txt"
+    
+    for container in failed:
+        f=open(failedFile, "a+")
+        f.write(container.containerNumber + "\n")
+        f.close()
+#     top = Tk()
+#     L1 = Label()
+#     L1 = Label(top, text="Please enter ERD:")
+#     L1.grid(row=0, column=0)
+#     E1 = Entry(top, bd = 5)
+#     E1.grid(row=0, column=1)
+    
+#     def callbackNextACI(driver):
+        
+        
+        
+#     MyButton5 = Button(top, text="NextAci", height = 10, width=20, command=lambda: callbackNextACI(driver))
+#     MyButton5.grid(row=0, column=0)
+#     
+#     top.lift()
+#     top.attributes('-topmost',True)
+#     top.after_idle(top.attributes,'-topmost',False)
+#     
+#     w = 200 # width for the Tk root
+#     h = 100 # height for the Tk root
+#     
+#     # get screen width and height
+#     ws = top.winfo_screenwidth() # width of the screen
+#     hs = top.winfo_screenheight() # height of the screen
+#     
+#     # calculate x and y coordinates for the Tk root window
+#     x = (ws/2) - (w/2)
+#     y = (hs/2) - (h/2)
+#     
+#     # set the dimensions of the screen 
+#     # and where it is placed
+#     top.geometry('%dx%d+%d+%d' % (w, h, x, y))
+# 
+#     top.mainloop()

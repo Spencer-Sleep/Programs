@@ -1,0 +1,27 @@
+-- VERSION_4
+-- START DISKCACHE_2
+C:\Users\ssleep\workspace\.metadata\.plugins\org.eclipse.core.resources\.projects\RV Getter Deliveries - Morning\com.python.pydev.analysis\v2_indexcache
+Automator.__init__|1529686203503969000|C:\Users\ssleep\workspace\RV Getter Deliveries - Morning\Automator\__init__.py
+-- END DISKCACHE
+-- START DICTIONARY
+3
+3=Booking.__init__
+2=Booking
+1=Automator.__init__
+-- END DICTIONARY
+-- START TREE 1
+6
+boo|2|Booking!9@bookings!11@
+dri|1|driver!11@
+get|1|getRVs!10@
+loa|1|loadInfo!10@
+set|1|setupCn!10@
+spe|1|specificPath!11@
+-- END TREE
+-- START TREE 2
+4
+__i|1|__init__!2&10@
+boo|1|bookingNumber!3&11@
+num|1|num!3&11@
+tim|1|timeRange!3&11@
+-- END TREE

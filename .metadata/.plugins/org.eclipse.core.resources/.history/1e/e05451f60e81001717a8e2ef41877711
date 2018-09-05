@@ -1,0 +1,283 @@
+from openpyxl import load_workbook
+
+from sys import argv, exit
+
+from pyautogui import moveTo, click, press, typewrite
+
+from win32api import GetKeyState
+
+
+CONTAINERNUMBER = "Container"
+BOOKING = "TPDoc"
+VESSEL = "Vessel"
+WEIGHLBS = "Weight (lbs)"
+WEIGHT = "Weight"
+PIECES = "Piece Count"
+SIZE = "Size-Type"
+PARS = "Border"
+
+class Container(object):
+    def __init__(self):
+        self.properties = {CONTAINERNUMBER: "",
+               BOOKING: "",
+               VESSEL: "",
+               WEIGHLBS: "",
+               WEIGHT: "",
+               PIECES: "",
+               SIZE: "",
+               PARS: ""}    
+    
+
+def loadInfo(workbookPath):
+    routing = load_workbook(workbookPath)
+    routing = routing.get_active_sheet()
+    
+    pars = []
+    a8a = []
+    
+    colDict = {CONTAINERNUMBER: "",
+               BOOKING: "",
+               VESSEL: "",
+               WEIGHLBS: "",
+               WEIGHT: "",
+               PIECES: "",
+               SIZE: "",
+               PARS: ""}              
+    
+    for cell in next(routing.rows):
+        for contProperty in colDict:
+            if contProperty in cell.value:
+                colDict[contProperty] = cell.col_idx - 1
+    
+    i=0
+    for row in routing.rows:
+        if i>0:
+            container = Container()
+            for contProperty in container.properties:
+                if contProperty != WEIGHLBS:    
+                    container.properties[contProperty] = str(row[colDict[contProperty]].value)
+            if container.properties[PARS] == 'PARS':
+                pars.append(container)
+            elif container.properties[PARS] == 'A8A':
+                a8a.append(container)
+                
+#             print(container.properties[CONTAINERNUMBER])
+        i+=1
+      
+    return (pars, a8a)      
+
+def bookPars(containers):
+    click(45, 305)
+    typewrite("311")
+    press('tab')
+     
+    click(299, 305)
+    typewrite("303")
+    press('tab')
+     
+    click(565, 305)
+    typewrite("1779")
+    press('tab')
+
+    click(18, 351)
+    press("tab", 8)
+    typewrite("o")
+    
+    press("tab", 4)
+    typewrite("MAERSK")
+    
+    click(413, 930)
+    typewrite("imp")
+    press("enter")
+    
+    click(652, 957)
+    typewrite("toronto li")
+    press("enter")
+    
+    click(1876, 999)
+    typewrite("REGIONAL")
+    
+#     click(1153, 98)
+#     click(89, 144)
+#     typewrite("on")
+#     press("tab")
+#     
+#     click(248, 101)
+    
+    for container in containers:
+        click(1871, 130)
+        click(1851, 273)
+        
+        if GetKeyState(27) < 0:
+            exit()
+            
+        click(223, 304)
+        typewrite(container.properties[BOOKING])
+        
+        click(472, 304)
+        typewrite(container.properties[VESSEL])
+        
+        click(18, 351)
+        press("tab", 7)
+        typewrite("1")
+        
+        press("tab", 2)
+        typewrite(container.properties[CONTAINERNUMBER])
+        
+        
+        click(400, 911)
+        press('home')
+        size = container.properties[SIZE]
+        if size == "20 DRY 8 6":
+            downAmount = 4
+        elif size == "20 REEF 8 6":
+            downAmount = 3
+        elif size == "40 DRY 8 6":
+            downAmount = 7
+        elif size == "40 DRY 9 6":
+            downAmount = 10
+        elif size == "40 REEF 9 6":
+            downAmount = 12
+        elif size == "45 DRY 9 6":
+            downAmount = 13
+        
+
+        press('down', downAmount)
+        press('enter')
+        
+        
+def bookA8A(containers):
+#     click(45, 305)
+#     typewrite("311")
+#     press('tab')
+#      
+#     click(299, 305)
+#     typewrite("303")
+#     press('tab')
+     
+    click(565, 305)
+    typewrite("1779")
+    press('tab')
+
+#     click(18, 351)
+#     press("tab", 8)
+#     typewrite("o")
+    
+#     press("tab", 4)
+#     typewrite("MAERSK")
+    
+    click(413, 930)
+    typewrite("imp")
+    press("enter")
+    
+    click(652, 957)
+    typewrite("toronto li")
+    press("enter")
+    
+    click(1876, 999)
+    typewrite("REGIONAL")
+    
+#     click(1153, 98)
+#     click(89, 144)
+#     typewrite("on")
+#     press("tab")
+#     
+#     click(248, 101)
+    
+    for container in containers:
+        click(1871, 130)
+        click(1851, 273)
+        
+        while not GetKeyState(13)<0:
+            True
+        
+        if GetKeyState(27) < 0:
+            exit()
+            
+        click(18, 351)
+        press("tab", 1)
+        typewrite(container.properties[WEIGHT])
+        
+        press("tab", 6)
+        
+#         click(550, 350)
+        typewrite(container.properties[PIECES])
+        
+#         click(18, 351)
+        press("tab", 1)
+        typewrite("o")
+        
+        
+        press("tab", 1)
+        typewrite(container.properties[CONTAINERNUMBER])
+        
+        sizeCode = ''
+        
+        size = container.properties[SIZE]
+        if size == "20 DRY 8 6":
+            sizeCode = "20DC"
+        elif size == "20 REEF 8 6":
+            sizeCode = "20RF"
+        elif size == "40 DRY 8 6":
+            sizeCode = "40DC"
+        elif size == "40 DRY 9 6":
+            sizeCode = "40HC"
+        elif size == "40 REEF 9 6":
+            sizeCode = "40RH"
+        elif size == "45 DRY 9 6":
+            sizeCode = "45DC"
+            
+            
+        press("tab", 3)
+        typewrite("MAERSK" + sizeCode)
+        
+        click(223, 304)
+        typewrite(container.properties[BOOKING])
+        
+        click(472, 304)
+        typewrite(container.properties[VESSEL])
+        
+#         click(18, 351)
+#         press("tab", 7)
+#         typewrite("1")
+        
+        
+        
+        
+        click(400, 911)
+        press('home')
+        
+        if size == "20 DRY 8 6":
+            downAmount = 4
+        elif size == "20 REEF 8 6":
+            downAmount = 3
+        elif size == "40 DRY 8 6":
+            downAmount = 7
+        elif size == "40 DRY 9 6":
+            downAmount = 10
+        elif size == "40 REEF 9 6":
+            downAmount = 12
+        elif size == "45 DRY 9 6":
+            downAmount = 13
+        
+
+        press('down', downAmount)
+        press('enter')
+        
+        
+if __name__ == '__main__':
+    
+    workbookPath = r"J:\Running Routing by Vessel\MAERSK PITTSBURGH 1708.xlsx"
+    
+#     workbookPath = ""
+    
+#     for i in range(len(argv)):
+#         if i!=0:
+#             workbookPath+=argv[i]
+#             if i != len(argv) - 1:
+#                 workbookPath+=" "
+    
+    pars, A8A = loadInfo(workbookPath)
+    
+    bookPars(pars)
+#     bookA8A(A8A)

@@ -1,0 +1,25 @@
+-- VERSION_4
+-- START DISKCACHE_2
+C:\Users\ssleep\workspace\.metadata\.plugins\org.eclipse.core.resources\.projects\Put Drivers on PBs\com.python.pydev.analysis\v2_indexcache
+Automator.__init__|1535466399057784000|C:\Users\ssleep\workspace\Put Drivers on PBs\Automator\__init__.py
+-- END DISKCACHE
+-- START DICTIONARY
+2
+2=Driver
+1=Automator.__init__
+-- END DICTIONARY
+-- START TREE 1
+5
+dri|1|Driver!9@
+fol|1|folderPath!11@
+loa|1|loadinfo!10@
+pop|1|popUp!10@
+set|1|setupDM!10@
+-- END TREE
+-- START TREE 2
+4
+cit|1|city!2&11@
+dri|1|driver!2&11@
+nam|1|name!2&11@
+par|1|PARS!2&11@
+-- END TREE

@@ -1,0 +1,172 @@
+1501087163079	geckodriver	INFO	Listening on 127.0.0.1:56902
+1501087164390	geckodriver::marionette	INFO	Starting browser C:\Program Files (x86)\Mozilla Firefox\firefox.exe with args ["-marionette"]
+1501087176339	Marionette	INFO	Listening on port 56908
+1501087176535	Marionette	WARN	TLS certificate errors will be ignored for this session
+1501087213920	Marionette	INFO	Ceased listening
+1501087217489	geckodriver	INFO	Listening on 127.0.0.1:57033
+1501087219507	geckodriver::marionette	INFO	Starting browser C:\Program Files (x86)\Mozilla Firefox\firefox.exe with args ["-marionette"]
+1501087223207	Marionette	INFO	Listening on port 57039
+1501087223668	Marionette	WARN	TLS certificate errors will be ignored for this session
+*************************
+A coding exception was thrown and uncaught in a Task.
+
+Full message: TypeError: NetworkError when attempting to fetch resource.
+Full stack: 
+*************************
+1501088874350	Marionette	INFO	Ceased listening
+1501088879680	geckodriver	INFO	Listening on 127.0.0.1:57522
+1501088881134	geckodriver::marionette	INFO	Starting browser C:\Program Files (x86)\Mozilla Firefox\firefox.exe with args ["-marionette"]
+1501088885858	Marionette	INFO	Listening on port 57528
+1501088886397	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js, line 1: Using //@ to indicate sourceMappingURL pragmas is deprecated. Use //# instead
+1501089329952	Marionette	INFO	Ceased listening
+1501089331729	geckodriver	INFO	Listening on 127.0.0.1:57807
+1501089333711	geckodriver::marionette	INFO	Starting browser C:\Program Files (x86)\Mozilla Firefox\firefox.exe with args ["-marionette"]
+1501089336906	Marionette	INFO	Listening on port 57813
+1501089337337	Marionette	WARN	TLS certificate errors will be ignored for this session
+1501089395725	Marionette	INFO	Ceased listening
+0.0.1:57976
+1501089392322	geckodriver::marionette	INFO	Starting browser C:\Program Files (x86)\Mozilla Firefox\firefox.exe with args ["-marionette"]
+1501089396648	Marionette	INFO	Listening on port 57982
+1501089397601	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js, line 1: Using //@ to indicate sourceMappingURL pragmas is deprecated. Use //# instead
+1501089608202	Marionette	INFO	Ceased listening
+1501089611829	geckodriver	INFO	Listening on 127.0.0.1:58207
+1501089613670	geckodriver::marionette	INFO	Starting browser C:\Program Files (x86)\Mozilla Firefox\firefox.exe with args ["-marionette"]
+1501089617649	Marionette	INFO	Listening on port 58213
+1501089617952	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js, line 1: Using //@ to indicate sourceMappingURL pragmas is deprecated. Use //# instead
+1501089829480	Marionette	INFO	Ceased listening
+1501089831665	geckodriver	INFO	Listening on 127.0.0.1:58409
+1501089833537	geckodriver::marionette	INFO	Starting browser C:\Program Files (x86)\Mozilla Firefox\firefox.exe with args ["-marionette"]
+1501089837478	Marionette	INFO	Listening on port 58415
+1501089837699	Marionette	WARN	TLS certificate errors will be ignored for this session
+1501089845700	geckodriver	INFO	Listening on 127.0.0.1:58459
+1501089847743	geckodriver::marionette	INFO	Starting browser C:\Program Files (x86)\Mozilla Firefox\firefox.exe with args ["-marionette"]
+1501089850261	Marionette	INFO	Listening on port 58465
+1501089850914	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js, line 1: Using //@ to indicate sourceMappingURL pragmas is deprecated. Use //# instead
+1501089886187	geckodriver	INFO	Listening on 127.0.0.1:58600
+1501089888230	geckodriver::marionette	INFO	Starting browser C:\Program Files (x86)\Mozilla Firefox\firefox.exe with args ["-marionette"]
+1501089891089	Marionette	INFO	Listening on port 58606
+1501089891355	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js, line 1: Using //@ to indicate sourceMappingURL pragmas is deprecated. Use //# instead
+console.trace: 
+_fronts/inspector.js 829 WalkerFront<.getMutations</<
+_/Promise-backend.js 922 process
+_/Promise-backend.js 806 walkerLoop
+_/Promise-backend.js 742 scheduleWalkerLoop/<
+
+console.trace: 
+_fronts/inspector.js 829 WalkerFront<.getMutations</<
+_/Promise-backend.js 922 process
+_/Promise-backend.js 806 walkerLoop
+_/Promise-backend.js 742 scheduleWalkerLoop/<
+
+console.trace: 
+_fronts/inspector.js 829 WalkerFront<.getMutations</<
+_/Promise-backend.js 922 process
+_/Promise-backend.js 806 walkerLoop
+_/Promise-backend.js 742 scheduleWalkerLoop/<
+
+1501089977716	Marionette	INFO	Ceased listening
+1501089980471	geckodriver	INFO	Listening on 127.0.0.1:58786
+1501089982249	geckodriver::marionette	INFO	Starting browser C:\Program Files (x86)\Mozilla Firefox\firefox.exe with args ["-marionette"]
+1501089986649	Marionette	INFO	Listening on port 58792
+1501089987549	Marionette	WARN	TLS certificate errors will be ignored for this session
+console.trace: 
+_fronts/inspector.js 829 WalkerFront<.getMutations</<
+_/Promise-backend.js 922 process
+_/Promise-backend.js 806 walkerLoop
+_/Promise-backend.js 742 scheduleWalkerLoop/<
+
+1501090050530	Marionette	INFO	Ceased listening
+1501090051615	geckodriver	INFO	Listening on 127.0.0.1:58952
+1501090053628	geckodriver::marionette	INFO	Starting browser C:\Program Files (x86)\Mozilla Firefox\firefox.exe with args ["-marionette"]
+1501090058121	Marionette	INFO	Listening on port 58958
+1501090058899	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js, line 1: Using //@ to indicate sourceMappingURL pragmas is deprecated. Use //# instead
+1501090380103	Marionette	INFO	Ceased listening
+1501090382647	geckodriver	INFO	Listening on 127.0.0.1:59161
+1501090384504	geckodriver::marionette	INFO	Starting browser C:\Program Files (x86)\Mozilla Firefox\firefox.exe with args ["-marionette"]
+1501090389454	Marionette	INFO	Listening on port 59167
+1501090389789	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js, line 1: Using //@ to indicate sourceMappingURL pragmas is deprecated. Use //# instead
+1501090409161	Marionette	INFO	Ceased listening
+1501090411262	geckodriver	INFO	Listening on 127.0.0.1:59325
+1501090413368	geckodriver::marionette	INFO	Starting browser C:\Program Files (x86)\Mozilla Firefox\firefox.exe with args ["-marionette"]
+1501090416302	Marionette	INFO	Listening on port 59331
+1501090416519	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js, line 1: Using //@ to indicate sourceMappingURL pragmas is deprecated. Use //# instead
+1501090455947	Marionette	INFO	Ceased listening
+1501090457120	geckodriver	INFO	Listening on 127.0.0.1:59505
+1501090459179	geckodriver::marionette	INFO	Starting browser C:\Program Files (x86)\Mozilla Firefox\firefox.exe with args ["-marionette"]
+1501090467845	Marionette	INFO	Listening on port 59512
+1501090468637	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js, line 1: Using //@ to indicate sourceMappingURL pragmas is deprecated. Use //# instead
+1501090493113	Marionette	INFO	Ceased listening
+1501090494753	geckodriver	INFO	Listening on 127.0.0.1:59783
+1501090496770	geckodriver::marionette	INFO	Starting browser C:\Program Files (x86)\Mozilla Firefox\firefox.exe with args ["-marionette"]
+1501090499987	Marionette	INFO	Listening on port 59789
+1501090500414	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js, line 1: Using //@ to indicate sourceMappingURL pragmas is deprecated. Use //# instead
+1501090526292	Marionette	INFO	Ceased listening
+1501090537205	geckodriver	INFO	Listening on 127.0.0.1:59948
+1501090538986	geckodriver::marionette	INFO	Starting browser C:\Program Files (x86)\Mozilla Firefox\firefox.exe with args ["-marionette"]
+1501090543007	Marionette	INFO	Listening on port 59954
+1501090543126	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js, line 1: Using //@ to indicate sourceMappingURL pragmas is deprecated. Use //# instead
+1501090609377	Marionette	INFO	Ceased listening
+1501090610616	geckodriver	INFO	Listening on 127.0.0.1:60145
+1501090612629	geckodriver::marionette	INFO	Starting browser C:\Program Files (x86)\Mozilla Firefox\firefox.exe with args ["-marionette"]
+1501090615872	Marionette	INFO	Listening on port 60151
+1501090616300	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js, line 1: Using //@ to indicate sourceMappingURL pragmas is deprecated. Use //# instead
+1501090670280	Marionette	INFO	Ceased listening
+1501090676598	geckodriver	INFO	Listening on 127.0.0.1:60282
+1501090678455	geckodriver::marionette	INFO	Starting browser C:\Program Files (x86)\Mozilla Firefox\firefox.exe with args ["-marionette"]
+1501090682409	Marionette	INFO	Listening on port 60288
+1501090682628	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js, line 1: Using //@ to indicate sourceMappingURL pragmas is deprecated. Use //# instead
+1501090932021	Marionette	INFO	Ceased listening
+0.0.1:60585
+1501090932875	geckodriver::marionette	INFO	Starting browser C:\Program Files (x86)\Mozilla Firefox\firefox.exe with args ["-marionette"]
+1501090942192	Marionette	INFO	Listening on port 60591
+1501090942411	Marionette	WARN	TLS certificate errors will be ignored for this session
+1501091138090	Marionette	INFO	Ceased listening
+1501091140133	geckodriver	INFO	Listening on 127.0.0.1:60762
+1501091142005	geckodriver::marionette	INFO	Starting browser C:\Program Files (x86)\Mozilla Firefox\firefox.exe with args ["-marionette"]
+1501091146003	Marionette	INFO	Listening on port 60768
+1501091146217	Marionette	WARN	TLS certificate errors will be ignored for this session
+1501091166454	geckodriver	INFO	Listening on 127.0.0.1:60842
+1501091168466	geckodriver::marionette	INFO	Starting browser C:\Program Files (x86)\Mozilla Firefox\firefox.exe with args ["-marionette"]
+1501091171122	Marionette	INFO	Listening on port 60848
+1501091171608	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js, line 1: Using //@ to indicate sourceMappingURL pragmas is deprecated. Use //# instead
+1501091250896	Marionette	INFO	Ceased listening
+1501091252059	geckodriver	INFO	Listening on 127.0.0.1:61013
+1501091254165	geckodriver::marionette	INFO	Starting browser C:\Program Files (x86)\Mozilla Firefox\firefox.exe with args ["-marionette"]
+1501091257167	Marionette	INFO	Listening on port 61019
+1501091257354	Marionette	WARN	TLS certificate errors will be ignored for this session
+1501091289916	geckodriver	INFO	Listening on 127.0.0.1:61134
+1501091291757	geckodriver::marionette	INFO	Starting browser C:\Program Files (x86)\Mozilla Firefox\firefox.exe with args ["-marionette"]
+1501091295523	Marionette	INFO	Listening on port 61140
+1501091295900	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js, line 1: Using //@ to indicate sourceMappingURL pragmas is deprecated. Use //# instead
+JavaScript warning: https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js, line 1: Using //@ to indicate sourceMappingURL pragmas is deprecated. Use //# instead
+1501091320620	Marionette	INFO	Ceased listening
+0.0.1:61308
+1501091320483	geckodriver::marionette	INFO	Starting browser C:\Program Files (x86)\Mozilla Firefox\firefox.exe with args ["-marionette"]
+1501091323893	Marionette	INFO	Listening on port 61314
+1501091324147	Marionette	WARN	TLS certificate errors will be ignored for this session
+1501091341000	geckodriver	INFO	Listening on 127.0.0.1:61343
+1501091343029	geckodriver::marionette	INFO	Starting browser C:\Program Files (x86)\Mozilla Firefox\firefox.exe with args ["-marionette"]
+1501091345215	Marionette	INFO	Listening on port 61349
+1501091346179	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js, line 1: Using //@ to indicate sourceMappingURL pragmas is deprecated. Use //# instead
+JavaScript warning: https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js, line 1: Using //@ to indicate sourceMappingURL pragmas is deprecated. Use //# instead
+1501091363408	Marionette	INFO	Ceased listening
+1501091364621	geckodriver	INFO	Listening on 127.0.0.1:61516
+1501091366696	geckodriver::marionette	INFO	Starting browser C:\Program Files (x86)\Mozilla Firefox\firefox.exe with args ["-marionette"]
+1501091369461	Marionette	INFO	Listening on port 61522
+1501091369834	Marionette	WARN	TLS certificate errors will be ignored for this session

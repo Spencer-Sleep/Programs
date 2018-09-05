@@ -1,0 +1,38 @@
+-- VERSION_4
+-- START DISKCACHE_2
+C:\Users\ssleep\workspace\.metadata\.plugins\org.eclipse.core.resources\.projects\Hamburg Cargo Docs\com.python.pydev.analysis\v2_indexcache
+Automator.__init__|1535715749629446000|C:\Users\ssleep\workspace\Hamburg Cargo Docs\Automator\__init__.py
+-- END DISKCACHE
+-- START DICTIONARY
+5
+3=Container
+4=AnyEc.__init__
+1=Automator.__init__
+5=Container.__init__
+2=AnyEc
+-- END DICTIONARY
+-- START TREE 1
+15
+any|1|AnyEc!9@
+ccn|1|CCN!11@
+cha|1|changeContants!10@
+con|3|containers!11@Container!9@CONTAINERNUMBER!11@
+des|1|DESCRIPTION!11@
+dri|1|driver!11@
+loa|3|loadContainerInfoHapag!10@loadContainerInfoHapagRecurse!10@loadContainerInfo!10@
+mak|1|makeCargoDocs!10@
+pie|1|PIECECOUNT!11@
+pol|1|POL!11@
+pop|1|popUpOKLeft!10@
+set|1|setupPortal!10@
+spe|1|specificPath!11@
+ter|1|TERMINAL!11@
+wei|1|WEIGHT!11@
+-- END TREE
+-- START TREE 2
+4
+__c|1|__call__!2&10@
+__i|2|__init__!2&10@__init__!3&10@
+ecs|1|ecs!4&11@
+pro|1|properties!5&11@
+-- END TREE

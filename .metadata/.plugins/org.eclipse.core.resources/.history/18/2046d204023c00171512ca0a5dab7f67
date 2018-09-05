@@ -1,0 +1,79 @@
+# import PyPDF2
+import re
+import subprocess
+import sys
+import os
+from pdfminer.pdfparser import PDFParser, PDFDocument #@UnresolvedImport
+from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter #@UnresolvedImport
+from pdfminer.converter import PDFPageAggregator #@UnresolvedImport
+from pdfminer.layout import LAParams, LTTextBox, LTTextLine #@UnresolvedImport
+
+
+
+#sys.argv = "a C:\\Users\\ssleep\\Documents\\Programming\\Dispatchmate automation\\TRHU3267880_B13.pdf".split()
+sys.argv = "a C:\\Users\\ssleep\\Documents\\Programming\\Dispatchmate automation\\APZU3703747_B13.pdf".split()
+workOrderLocation = ''
+for i in range(len(sys.argv)):
+    if i!=0:
+        workOrderLocation+=sys.argv[i]
+        if i != len(sys.argv) + 1:
+            workOrderLocation+=" "
+destinationOfFiles = workOrderLocation[:workOrderLocation.rfind('\\')] + "\\"
+
+# print(workOrderLocation)
+
+
+
+
+if __name__ == '__main__':
+#     pdfFileObj = open(workOrderLocation, 'rb')
+#     pdfReader = PyPDF2.PdfFileReader(pdfFileObj)
+#     
+#     text=''
+#     if pdfReader.isEncrypted:
+#         pdfReader.decrypt('')
+#     for i in range(pdfReader.getNumPages()):
+#         print(i)
+#         pageObj = pdfReader.getPage(i)
+#         text += pageObj.extractText()
+    
+    
+
+    text = ""
+
+    fp = open(workOrderLocation, 'rb')
+    parser = PDFParser(fp)
+    doc = PDFDocument()
+    parser.set_document(doc)
+    doc.set_parser(parser)
+    doc.initialize('')
+    rsrcmgr = PDFResourceManager()
+    laparams = LAParams()
+    device = PDFPageAggregator(rsrcmgr, laparams=laparams)
+    interpreter = PDFPageInterpreter(rsrcmgr, device)
+    # Process each page contained in the document.
+    for page in doc.get_pages():
+        interpreter.process_page(page)
+        layout = device.get_result()
+        for lt_obj in layout:
+            if isinstance(lt_obj, LTTextBox) or isinstance(lt_obj, LTTextLine):
+                text+=lt_obj.get_text()
+        
+    f=open(("testfile2.txt"), "w")
+    f.write(text)
+    f.close()
+    
+    text = text.split('\n')
+    
+    shipper=''
+    
+    if text[77].find("SUNRISE METALS") != -1:
+        shipper='SUNRISE METALS'
+    
+    description = text[114]
+    
+    traceNumber = text[92][4:]
+    
+    
+    
+    

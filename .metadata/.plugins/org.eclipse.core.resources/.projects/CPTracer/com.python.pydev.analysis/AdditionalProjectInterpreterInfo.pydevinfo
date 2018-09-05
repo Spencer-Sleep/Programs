@@ -1,0 +1,53 @@
+-- VERSION_4
+-- START DISKCACHE_2
+C:\Users\ssleep\workspace\.metadata\.plugins\org.eclipse.core.resources\.projects\CPTracer\com.python.pydev.analysis\v2_indexcache
+Automator.__init__|1534527642328536000|C:\Users\ssleep\workspace\CPTracer\Automator\__init__.py
+-- END DISKCACHE
+-- START DICTIONARY
+4
+2=Container
+1=Automator.__init__
+3=constants
+4=Container.__init__
+-- END DICTIONARY
+-- START TREE 1
+17
+L1|1|L1!11@
+cal|1|callbackOK!10@
+con|3|constants!9@containers!11@Container!9@
+dri|1|driver!11@
+fil|1|filePath!11@
+h|1|h!11@
+hs|1|hs!11@
+myb|1|MyButton5!11@
+put|1|putInfoinExcel!10@
+rea|1|readContainerInfo!10@
+sav|1|saved!11@
+set|2|setupExcel!10@setupCP!10@
+top|1|top!11@
+w|1|w!11@
+ws|1|ws!11@
+x|1|x!11@
+y|1|y!11@
+-- END TREE
+-- START TREE 2
+18
+__i|1|__init__!2&10@
+act|2|ACTARRIVALCOL!3&11@actarrival!4&11@
+con|3|conspoint!4&11@CONSPOINTCOL!3&11@CONTAINERCOL!3&11@
+cur|2|currentpos!4&11@CURRENTPOSCOL!3&11@
+gro|2|GROUNDECOL!3&11@grounded!4&11@
+hol|2|HOLDSCOL!3&11@holds!4&11@
+las|2|LASTREPORTEDCOL!3&11@lastreported!4&11@
+le|1|le!4&11@
+lec|1|LECOL!3&11@
+lfd|2|lfd!4&11@LFDCOL!3&11@
+loa|2|load!4&11@LOADCOL!3&11@
+num|1|number!4&11@
+pie|2|PIECESCOL!3&11@pieces!4&11@
+pun|2|PUNUMBERCOL!3&11@punumber!4&11@
+shi|2|SHIPPOINTCOL!3&11@shippoint!4&11@
+siz|2|SIZECOL!3&11@size!4&11@
+sta|2|status!4&11@STATUSCOL!3&11@
+sto|2|storage!4&11@STORAGECOL!3&11@
+-- END TREE

@@ -1,0 +1,38 @@
+import email
+import imaplib
+import os
+from exchangelib import DELEGATE, Account, Credentials
+from exchangelib.attachments import FileAttachment, ItemAttachment
+from exchangelib.items import Message
+from time import sleep
+import datetime
+import img2pdf
+    
+def release(content):
+    transactionIndex = content.find("Transaction:")
+    transaction = content[transactionIndex: content[transactionIndex:].find("\n")+transactionIndex]
+    
+    deliveryIndex = content.find("Delivery Instructions")
+    
+    containerIndex = content.find("Container ID(s):")+17
+    
+if __name__ == '__main__':
+    credentials = Credentials(
+    username='ssleep@seaportint.com',  # Or myusername@example.com for O365
+    password='ss#99PASS'
+    )
+    account = Account(
+        primary_smtp_address='torrns@seaportint.com', 
+        credentials=credentials, 
+        autodiscover=True, 
+        access_type=DELEGATE
+    )
+    
+    while(True):
+        print(account.inbox.unread_count)
+        for item in account.inbox.filter(is_read=False, sender="cadex@custombroker.com"):
+            release(item.body)
+            item.is_read=True
+            item.save()
+        sleep(30)
+        account.inbox.refresh()

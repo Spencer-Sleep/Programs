@@ -1,0 +1,30 @@
+-- VERSION_4
+-- START DISKCACHE_2
+C:\Users\ssleep\workspace\.metadata\.plugins\org.eclipse.core.resources\.projects\Hamburg Sud Dispatchmate\com.python.pydev.analysis\v2_indexcache
+Automator.__init__|1534956791838907000|C:\Users\ssleep\workspace\Hamburg Sud Dispatchmate\Automator\__init__.py
+-- END DISKCACHE
+-- START DICTIONARY
+1
+1=Automator.__init__
+-- END DICTIONARY
+-- START TREE 1
+15
+boo|3|bookA8A!10@bookPars!10@BOOKING!11@
+cof|1|COFFEE!11@
+con|2|contRates!11@CONTAINERNUMBER!11@
+inb|1|INBOND!11@
+inf|1|infoPopups!10@
+lan|3|laneCodesCoffee!11@laneCodes!11@laneCodesThru!11@
+loa|1|loadContainerInfo!10@
+pie|1|PIECES!11@
+pon|1|PONUMBER!11@
+pop|1|popUpOKLeft!10@
+siz|1|SIZE!11@
+spe|1|specificPath!11@
+val|1|values!11@
+ves|1|VESSEL!11@
+wei|1|WEIGHT!11@
+-- END TREE
+-- START TREE 2
+0
+-- END TREE
