@@ -4485,3 +4485,59 @@ Unable to read VR Path Registry from C:\Users\ssleep\AppData\Local\openvr\openvr
 JavaScript error: https://ace.cbp.dhs.gov/ace1/javascript/qformslib/qforms.js line 246 > Function, line 3: ReferenceError: fp is not defined
 JavaScript error: https://ace.cbp.dhs.gov/ace1/javascript/qformslib/qforms.js line 246 > Function, line 3: ReferenceError: fp is not defined
 JavaScript error: https://ace.cbp.dhs.gov/ace1/javascript/qformslib/qforms.js line 246 > Function, line 3: ReferenceError: fp is not defined
+1536349234557	geckodriver	INFO	geckodriver 0.20.1
+1536349234578	geckodriver	INFO	Listening on 127.0.0.1:50105
+1536349237529	mozrunner::runner	INFO	Running command: "C:\\Program Files (x86)\\Mozilla Firefox\\firefox.exe" "-marionette" "-profile" "C:\\Users\\ssleep\\AppData\\Local\\Temp\\rust_mozprofile.njBKDkxQ7wEr"
+1536349243044	Marionette	INFO	Listening on port 50113
+1536349243474	Marionette	WARN	TLS certificate errors will be ignored for this session
+Unable to read VR Path Registry from C:\Users\ssleep\AppData\Local\openvr\openvrpaths.vrpath
+JavaScript error: https://ace.cbp.dhs.gov/ace1/javascript/qformslib/qforms.js line 246 > Function, line 3: ReferenceError: fp is not defined
+JavaScript error: https://ace.cbp.dhs.gov/ace1/javascript/qformslib/qforms.js line 246 > Function, line 3: ReferenceError: fp is not defined
+Unable to read VR Path Registry from C:\Users\ssleep\AppData\Local\openvr\openvrpaths.vrpath
+[Parent 7132, Gecko_IOThread] WARNING: pipe error: 109: file z:/build/build/src/ipc/chromium/src/chrome/common/ipc_channel_win.cc, line 346
+[Child 4316, Chrome_ChildThread] WARNING: pipe error: 109: file z:/build/build/src/ipc/chromium/src/chrome/common/ipc_channel_win.cc, line 346
+[Child 4316, Chrome_ChildThread] WARNING: pipe error: 109: file z:/build/build/src/ipc/chromium/src/chrome/common/ipc_channel_win.cc, line 346
+Unable to read VR Path Registry from C:\Users\ssleep\AppData\Local\openvr\openvrpaths.vrpath
+[Child 9540, Chrome_ChildThread] WARNING: pipe error: 109: file z:/build/build/src/ipc/chromium/src/chrome/common/ipc_channel_win.cc, line 346
+[Child 9540, Chrome_ChildThread] WARNING: pipe error: 109: file z:/build/build/src/ipc/chromium/src/chrome/common/ipc_channel_win.cc, line 346
+Unable to read VR Path Registry from C:\Users\ssleep\AppData\Local\openvr\openvrpaths.vrpath
+[Child 10480, Chrome_ChildThread] WARNING: pipe error: 109: file z:/build/build/src/ipc/chromium/src/chrome/common/ipc_channel_win.cc, line 346
+[Child 10480, Chrome_ChildThread] WARNING: pipe error: 109: file z:/build/build/src/ipc/chromium/src/chrome/common/ipc_channel_win.cc, line 346
+Unable to read VR Path Registry from C:\Users\ssleep\AppData\Local\openvr\openvrpaths.vrpath
+[GPU 10936, Chrome_ChildThread] WARNING: pipe error: 109: file z:/build/build/src/ipc/chromium/src/chrome/common/ipc_channel_win.cc, line 346
+
+###!!! [Child][MessageChannel::SendAndWait] Error: Channel error: cannot send/recv
+
+1536349843641	geckodriver	INFO	geckodriver 0.20.1
+1536349843649	geckodriver	INFO	Listening on 127.0.0.1:50275
+1536349846572	mozrunner::runner	INFO	Running command: "C:\\Program Files (x86)\\Mozilla Firefox\\firefox.exe" "-marionette" "-profile" "C:\\Users\\ssleep\\AppData\\Local\\Temp\\rust_mozprofile.3muPBuoQtGPb"
+1536349849496	Marionette	INFO	Listening on port 50283
+1536349849979	Marionette	WARN	TLS certificate errors will be ignored for this session
+Unable to read VR Path Registry from C:\Users\ssleep\AppData\Local\openvr\openvrpaths.vrpath
+JavaScript error: https://ace.cbp.dhs.gov/ace1/javascript/qformslib/qforms.js line 246 > Function, line 3: ReferenceError: fp is not defined
+1536349944375	geckodriver	INFO	geckodriver 0.20.1
+1536349944383	geckodriver	INFO	Listening on 127.0.0.1:50383
+1536349947367	mozrunner::runner	INFO	Running command: "C:\\Program Files (x86)\\Mozilla Firefox\\firefox.exe" "-marionette" "-profile" "C:\\Users\\ssleep\\AppData\\Local\\Temp\\rust_mozprofile.FoZFGvCeNQ45"
+1536349951582	Marionette	INFO	Listening on port 50391
+1536349952631	Marionette	WARN	TLS certificate errors will be ignored for this session
+Unable to read VR Path Registry from C:\Users\ssleep\AppData\Local\openvr\openvrpaths.vrpath
+JavaScript error: https://ace.cbp.dhs.gov/ace1/javascript/qformslib/qforms.js line 246 > Function, line 3: ReferenceError: fp is not defined
+JavaScript error: https://ace.cbp.dhs.gov/ace1/javascript/qformslib/qforms.js line 246 > Function, line 3: ReferenceError: fp is not defined
+1536350049591	geckodriver	INFO	geckodriver 0.20.1
+1536350049601	geckodriver	INFO	Listening on 127.0.0.1:50594
+1536350052525	mozrunner::runner	INFO	Running command: "C:\\Program Files (x86)\\Mozilla Firefox\\firefox.exe" "-marionette" "-profile" "C:\\Users\\ssleep\\AppData\\Local\\Temp\\rust_mozprofile.RBBqvP7kjZZh"
+1536350055445	Marionette	INFO	Listening on port 50602
+1536350055644	Marionette	WARN	TLS certificate errors will be ignored for this session
+Unable to read VR Path Registry from C:\Users\ssleep\AppData\Local\openvr\openvrpaths.vrpath
+JavaScript error: https://ace.cbp.dhs.gov/ace1/javascript/qformslib/qforms.js line 246 > Function, line 3: ReferenceError: fp is not defined
+JavaScript error: https://ace.cbp.dhs.gov/ace1/javascript/qformslib/qforms.js line 246 > Function, line 3: ReferenceError: fp is not defined
+JavaScript error: https://ace.cbp.dhs.gov/ace1/javascript/qformslib/qforms.js line 246 > Function, line 3: ReferenceError: fp is not defined
+IPDL protocol error: Handler returned error code!
+
+###!!! [Parent][DispatchAsyncMessage] Error: PAPZCTreeManager::Msg_SetTargetAPZC Processing error: message was deserialized, but the handler returned false (indicating failure)
+
+[Child 8900, Chrome_ChildThread] WARNING: pipe error: 109: file z:/build/build/src/ipc/chromium/src/chrome/common/ipc_channel_win.cc, line 346
+[Child 8900, Chrome_ChildThread] WARNING: pipe error: 109: file z:/build/build/src/ipc/chromium/src/chrome/common/ipc_channel_win.cc, line 346
+Unable to read VR Path Registry from C:\Users\ssleep\AppData\Local\openvr\openvrpaths.vrpath
+[Child 10208, Chrome_ChildThread] WARNING: pipe error: 109: file z:/build/build/src/ipc/chromium/src/chrome/common/ipc_channel_win.cc, line 346
+Unable to read VR Path Registry from C:\Users\ssleep\AppData\Local\openvr\openvrpaths.vrpath

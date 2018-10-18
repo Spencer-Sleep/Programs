@@ -336,8 +336,10 @@ def setupDM(drivers, date, sunriseRate):
          
             press('enter')
                 
-            sleep(0.5)    
+            sleep(1)    
             
+        click(DRIVERPAYOUTLOC)
+        sleep(0.2)
         click(DRIVERPAYOUTLOC)
         hotkey('ctrl', 'a')
         
@@ -987,7 +989,7 @@ if __name__ == '__main__':
     
 #     folderPath = r"C:\Users\ssleep\Documents\Programming\2018\CSX Moves WEEK 10 Mar 4 to Mar 10 local.xlsx"
     
-    argv = r"a J:\Buffalo Weekly Reports\2018\CSX Moves WEEK 33 AUGUST 12 TO AUGUST 18.xlsx".split()
+#     argv = r"a J:\Buffalo Weekly Reports\2018\CSX Moves WEEK 33 AUGUST 12 TO AUGUST 18.xlsx".split()
     
     folderPath = ''
     for i in range(len(argv)):

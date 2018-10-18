@@ -1,7 +1,7 @@
 -- VERSION_4
 -- START DISKCACHE_2
 C:\Users\ssleep\workspace\.metadata\.plugins\org.eclipse.core.resources\.projects\RNS Releaser\com.python.pydev.analysis\v2_indexcache
-Automator.__init__|1536092039444206000|C:\Users\ssleep\workspace\RNS Releaser\Automator\__init__.py
+Automator.__init__|1537976053998514000|C:\Users\ssleep\workspace\RNS Releaser\Automator\__init__.py
 -- END DISKCACHE
 -- START DICTIONARY
 3
@@ -10,18 +10,29 @@ Automator.__init__|1536092039444206000|C:\Users\ssleep\workspace\RNS Releaser\Au
 3=Flag
 -- END DICTIONARY
 -- START TREE 1
-12
+23
 acc|1|account!11@
+bgc|1|bgC!11@
+cal|1|callbackOK!10@
 con|1|Container!9@
 cre|1|credentials!11@
+don|1|done!11@
+dos|1|doStuff!10@
 dri|1|driver!11@
 fla|1|Flag!9@
-q|1|q!11@
+h|1|h!11@
+hs|1|hs!11@
+myb|1|MyButton!11@
 rel|1|release!10@
 sen|1|sendRelease!10@
 set|1|setupEterm!10@
+top|1|top!11@
 tz|1|tz!11@
 upd|2|updateInfo!10@updateEterm!10@
+w|1|w!11@
+ws|1|ws!11@
+x|1|x!11@
+y|1|y!11@
 yar|1|yardAccount!11@
 -- END TREE
 -- START TREE 2

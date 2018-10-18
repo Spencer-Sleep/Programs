@@ -3,7 +3,7 @@ import pythoncom
 import pyHook
 from win32api import GetKeyState
 from win32con import VK_CAPITAL
-from pyautogui import click, press, hotkey, typewrite, keyDown, keyUp
+from pyautogui import click, press, hotkey, typewrite, keyDown, keyUp, position
 from time import sleep
 from pywinauto.win32functions import SendInput
 import pyperclip
@@ -12,6 +12,9 @@ import time
 from past.builtins.misc import unichr
 import unicodedata
 from HelperFunctions import done
+import pyautogui
+from openpyxl.workbook.workbook import Workbook
+from sspicon import MsV1_0Lm20ChallengeRequest
 SendInput = ctypes.windll.user32.SendInput
 
 PUL = ctypes.POINTER(ctypes.c_ulong)
@@ -64,6 +67,100 @@ def ReleaseKey(KeyUnicode):
     ctypes.windll.user32.SendInput(1, ctypes.pointer(x), ctypes.sizeof(x))
 
 if __name__ == '__main__':
+    routingBook = load_workbook(r"C:\Users\ssleep\Documents\Contacts to combine\combineFiltered.xlsx")
+#     routingBook = load_workbook(r"C:\Users\ssleep\Documents\Contacts to combine\CustomerIDs.xlsx")
+    mainSheet = routingBook.active
+    
+    for row in mainSheet.rows:
+        row[1].value = row[1].value.strip()
+    
+    routingBook.save(r"C:\Users\ssleep\Documents\Contacts to combine\combineFiltered.xlsx")
+    exit()
+    
+    routingBook = load_workbook(r"C:\Users\ssleep\Documents\Contacts to combine\combine.xlsx")
+#     routingBook = load_workbook(r"C:\Users\ssleep\Documents\Contacts to combine\CustomerIDs.xlsx")
+    mainSheet = routingBook.active
+    
+    destBook = Workbook()
+    ds = destBook.active    
+    
+    emails = []
+    col = 1
+    for row in mainSheet.rows:
+        if not row[1].value.lower() in emails:
+            if "ca.nestle.com" in row[1].value:
+                name = row[1].value.lower()
+            else:
+                name = row[0].value.lower()
+            if name[0]=="'":
+                name=name[1:]
+            if name[-1]=="'":
+                name=name[:-1]
+            name = name.replace("("," ")
+            name = name.replace(")","")
+            if "@" in name:
+                name = name[:name.find("@")]
+            if "," in name:
+                i=0
+                firstname = ""
+                for nameX in name.split(","):
+                    if i==0:
+                        lastname = nameX.strip()
+                    else:
+                        firstname = firstname + nameX.strip()
+                    i+=1
+            elif " " in name:
+                i=0
+                lastname = ""
+                for nameX in name.split(" "):
+                    if i==0:
+                        firstname = nameX.strip()
+                    else:
+                        lastname = lastname + nameX.strip()
+                    i+=1
+            elif "." in row[0].value:
+                i=0
+                lastname = ""
+                for nameX in name.split("."):
+                    if i==0:
+                        firstname = nameX.strip()
+                    else:
+                        lastname = lastname + nameX.strip()
+                    i+=1
+            else:
+                firstname = name
+                lastname = " "
+            if lastname=="":
+                lastname=" "
+            while lastname[0]=="-":
+                lastname=lastname[1:]
+            if lastname[0]=="|":
+                lastname=lastname[1:]
+            ds.cell(col, 1).value = firstname
+            ds.cell(col, 2).value = lastname
+#             ds.cell(col, 1).value = row[0].value.lower()
+            ds.cell(col, 3).value = row[1].value.lower()
+            ds.cell(col, 4).value = row[1].value.lower()
+            index = row[2].value.rfind(".")
+            ds.cell(col, 5).value = row[2].value.lower()[:index]
+            ds.cell(col, 6).value = "valid"
+            col+=1
+            emails.append(row[1].value.lower())
+#         if row[0].value and not row[0].value.lower() in emails:
+# #             ds.cell(col, 1).value = row[0].value.lower()
+#             index = row[0].value.rfind(".")
+#             ds.cell(col, 1).value = row[0].value[0].lower()+row[0].value[1:index].lower()
+#             ds.cell(col, 2).value = row[0].value[0].lower()+row[0].value[1:index].lower()
+#             ds.cell(col, 3).value= "valid"
+#             col+=1
+#             emails.append(row[0].value.lower())
+    destBook.save(r"C:\Users\ssleep\Documents\Contacts to combine\combineFiltered.xlsx")
+#     destBook.save(r"C:\Users\ssleep\Documents\Contacts to combine\CustomerIDsFiltered.xlsx")
+    
+    exit()
+    
+    
+    
     print("CREATE THE FIRST BARCODE AS NORMAL AND COPY IT.\n")
     print("FOR SUBSEQUENT BARCODES, PASTE THE FIRST BARCODE")
     print("THEN HOVER THE CURSOR OVER IT AND PRESS \"CAPS LOCK\"")

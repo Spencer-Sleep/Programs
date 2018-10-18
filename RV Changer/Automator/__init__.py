@@ -455,9 +455,9 @@ def getBetterRVs(driver, dates):
         
         if first:
             go = False
-            while datetime.now().minute <45:
-        #         print(datetime.now().minute)
-                True
+#             while datetime.now().minute <45:
+#         #         print(datetime.now().minute)
+#                 True
         
             while not go:
                 wait = WebDriverWait(driver, 100)

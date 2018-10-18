@@ -6,7 +6,8 @@ from selenium.webdriver.firefox.firefox_profile import FirefoxProfile
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC,\
     expected_conditions
-from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import TimeoutException,\
+    SessionNotCreatedException
 from selenium.webdriver.common.by import By
 from os import devnull
 
@@ -24,6 +25,13 @@ from sys import exc_info
 from selenium.webdriver.firefox.options import Options
 from sys import exit
 import atexit
+# import sys
+import os
+from getpass import fallback_getpass
+from HelperFunctions import popUpOK
+
+import monkey
+import signal
 
 def getDaysForward(daysForward, weekdaysOK=False):
     target_Date_dateTime =datetime.now() + timedelta(days = daysForward)
@@ -67,7 +75,7 @@ def queryDatesAndTimes(allConts, malport):
     bgC = "lavender"
     top = Tk()
     top.config(bg = bgC)
-    L1 = Label(top, text="Please select the acceptable dates/times\nfor the new RVs", bg = bgC, padx = 20)
+    L1 = Label(top, text="Please select the acceptable dates/times\nfor the new RVs\n(Hold shift to select all since last selection)", bg = bgC, padx = 20)
     L1.config(font=("serif", 16))
     L1.grid(row=0, column=0, sticky=constants.W+constants.E, columnspan = 2)
     
@@ -104,7 +112,7 @@ def queryDatesAndTimes(allConts, malport):
         time_Order = ["04", "05","06","07","08","09","10","11","12","13","14","16","18","19","20", "00"]
         
         
-        for i in range(len(time_Order)): 
+        for i in range(len(time_Order)):
             check=BooleanVar()
             cb = Checkbutton(text=time_Order[i]+":00",padx=0,pady=0,bd=0, variable=check, bg="dark violet", font=("serif", 12))
             cb.grid(row = i+1, column = 1, sticky=constants.W+constants.E+constants.N+constants.S)
@@ -119,9 +127,12 @@ def queryDatesAndTimes(allConts, malport):
         for button, date in dateValues:
             if button.get():
                 returnDates.append(date)
+        if len(returnDates)<1:
+            popUpOK("Please select target dates for the new RV(s)")
         for button, time in timeValues:
             if button.get():
                 returnTimes.append(time)  
+        
         top.destroy()
         
     
@@ -198,8 +209,14 @@ def queryContainers():
     cb.grid(row=0, column=3, pady=(10,0), padx = 20)
     
     def callbackCont():
-        containers.append(T1.get("1.0", constants.END).splitlines())
-        top.destroy()
+        if date.get()=="":
+            popUpOK("Please select the day the current RV is on")
+        else:
+            if T1.get("1.0", constants.END).strip()=="":
+                popUpOK("Please list the target containers or RV #s (for deliveries)")
+            else:
+                containers.append(T1.get("1.0", constants.END).splitlines())
+                top.destroy()
         
     dates=[]
             
@@ -237,6 +254,9 @@ def queryContainers():
     
     top.geometry('%dx%d+%d+%d' % (w, h, x, y))
     top.update()
+    top.lift()
+    top.attributes('-topmost',True)
+    top.after_idle(top.attributes,'-topmost',False)
     moveTo(MyButton.winfo_width()/2 + MyButton.winfo_rootx(), MyButton.winfo_height()/2 + MyButton.winfo_rooty())
     
     top.mainloop()
@@ -245,6 +265,9 @@ def queryContainers():
 
 
 def setupCn(headlessBrowser):
+    
+#     webdriver.common.service.Service.start = monkey.start
+    
     options = Options()
     options.set_headless(headless=headlessBrowser)
     fp = FirefoxProfile();
@@ -277,6 +300,7 @@ def setupCn(headlessBrowser):
 
 
 def getBetterRVs(driver, containers, date, acceptableTimes, targetDates, headlessBrowser, delivery, allowSameDayAsETA, malport):
+    messages=False
     allConts = containers[0]=="ALL"
     weekend = not getDaysForward(int(date[-2:]) - datetime.now().day)
     def exit_hander():
@@ -284,7 +308,7 @@ def getBetterRVs(driver, containers, date, acceptableTimes, targetDates, headles
         driver.quit()     
     atexit.register(exit_hander)
     
-    
+    driver.switch_to_default_content()
     driver.switch_to.frame("menuHeader")
     driver.implicitly_wait(1)
     try:
@@ -338,13 +362,17 @@ def getBetterRVs(driver, containers, date, acceptableTimes, targetDates, headles
     ignore_list=[]
     
     driver.find_element_by_id("btn_23").click()
-    
-    try:
-        table = driver.find_element_by_css_selector("table[class='TableStandardBG']")
-        rows = table.find_element_by_css_selector("table[id='listingTable']>tbody").find_elements_by_css_selector("tr")
-    except:
-        table = driver.find_element_by_css_selector("table[class='TableStandardBG']")
-        rows = table.find_element_by_css_selector("table[id='listingTable']>tbody").find_elements_by_css_selector("tr")
+    failed = True
+    while failed:
+        try:
+            table = driver.find_element_by_css_selector("table[class='TableStandardBG']")
+            rows = table.find_element_by_css_selector("table[id='listingTable']>tbody").find_elements_by_css_selector("tr")
+            failed = False
+        except:
+            pass
+#         except:
+#             table = driver.find_element_by_css_selector("table[class='TableStandardBG']")
+#             rows = table.find_element_by_css_selector("table[id='listingTable']>tbody").find_elements_by_css_selector("tr")
         
     badTimes = [
         "00",
@@ -439,8 +467,11 @@ def getBetterRVs(driver, containers, date, acceptableTimes, targetDates, headles
                     pass
             while True:
                 if (int(cur_time)<18 and cur_time!="00") and allConts and not weekend:
-                    HelperFunctions.done()
-                    driver.quit()
+                    if (messages):
+                        HelperFunctions.popUpOK("Done, but check the console\nwindow for messages")
+                    else:
+                        HelperFunctions.done()
+#                     driver.quit()
                     exit()
                 for row in rows:
                     cells = row.find_elements_by_css_selector("td")
@@ -464,8 +495,21 @@ def getBetterRVs(driver, containers, date, acceptableTimes, targetDates, headles
                             driver.find_element_by_name("Modify").click()
                             return contNum
                 if len(time_Order)==0:
-                    HelperFunctions.done()
-                    driver.quit()
+#                     targetDateString = ""
+#                     for targetDateX in date:
+#                         targetDateString=targetDateString+targetDateX+", "
+#                     targetDateString=targetDateString[:-2]
+                    for cont in containers:
+                        if (not cont in ignore_list):
+                            print("Could not find "+cont+" on "+date)
+                            messages=True
+#                     [i for i in ignore_list if not i in containers or containers.remove(i)]
+                    
+                    if (messages):
+                        HelperFunctions.popUpOK("Done, but check the console\nwindow for messages")
+                    else:
+                        HelperFunctions.done()
+#                     driver.quit()
                     exit()
                 else:
                     cur_time = time_Order.pop()
@@ -490,35 +534,56 @@ def getBetterRVs(driver, containers, date, acceptableTimes, targetDates, headles
         nonlocal allConts
         foundAGoodOne = False
         switch = False
+        failed = True
         try:
             driver.switch_to_alert().accept()
-            driver.switch_to_default_content()
-            driver.switch_to_frame(driver.find_element_by_css_selector("frame[name='content1']"))
-            i = 2
-            found = False
-            driver.implicitly_wait(0)
-            while not found:
+            alert=True
+        except:
+            alert=False
+        if alert:
+            while failed:
                 try:
-                    driver.switch_to_default_content()
-                    currentFrame = driver.find_element_by_css_selector("frame[name='content" + str(i) + "']")
-                    driver.switch_to_frame(currentFrame)
-                    driver.find_element_by_id("alternateDate")
-                    found = True
+#                 driver.switch_to_default_content()
+#                 driver.switch_to_frame(driver.find_element_by_css_selector("frame[name='content1']"))
+                    i = 2
+                    found = False
+                    driver.implicitly_wait(0)
+                    while not found:
+                        try:
+                            driver.switch_to_default_content()
+                            currentFrame = driver.find_element_by_css_selector("frame[name='content" + str(i) + "']")
+                            driver.switch_to_frame(currentFrame)
+                            driver.find_element_by_id("alternateDate")
+                            found = True
+                        except:
+                            if i<30:
+                                i+=1
+                            else:
+                                i=2
+                                     
+                         
+                    driver.implicitly_wait(60)
+                    Select(driver.find_element_by_id("alternateDate")).select_by_visible_text(target_Date)
+                    failed = False
+#                 Select(driver.find_element_by_id("alternateDate")).select_by_visible_text(target_Date)
+#                 failed = True
                 except:
-                    if i<30:
-                        i+=1
-                    else:
-                        i=2
-                             
-                 
-            driver.implicitly_wait(600)
+                    driver.refresh()
+        try:
             Select(driver.find_element_by_id("alternateDate")).select_by_visible_text(target_Date)
         except:
-            pass
-        Select(driver.find_element_by_id("alternateDate")).select_by_visible_text(target_Date)
-        wait = WebDriverWait(driver, 100)
-        elem = wait.until(expected_conditions.element_to_be_clickable((By.CSS_SELECTOR, 'input[onclick="beforeSubmit();saveActionAndSubmit(\'CheckAvailability\', \'GateAppointmentForm\', \'actionId\')"]')))
-        elem.click()
+            print("Failed @alternateDate, restarting")
+            return -1
+        failed = True
+        while failed:
+            try:
+                wait = WebDriverWait(driver, 100)
+                elem = wait.until(expected_conditions.element_to_be_clickable((By.CSS_SELECTOR, 'input[onclick="beforeSubmit();saveActionAndSubmit(\'CheckAvailability\', \'GateAppointmentForm\', \'actionId\')"]')))
+                elem.click()
+                failed=False
+            except:
+                driver.refresh()
+        
         driver.implicitly_wait(0)
         try:
             times = driver.find_elements_by_name("alternateTimeChecked")
@@ -600,6 +665,8 @@ def getBetterRVs(driver, containers, date, acceptableTimes, targetDates, headles
                         targetDatesTemp.remove(target_Date)
                     else:
                         ignore_list.append(contNum)
+                        print("ETA for "+contNum+" is on or after the last acceptable day. \nIf you want the program to try to get an RV for whatever times are allowed anyway,\n run again but check the \"same day as ETA\" option")
+                        messages=True
                         driver.find_element_by_name("Cancel").click()
                         driver.find_element_by_css_selector("img[src='/ImxEbusWeb/images/english/Back.gif']").click()
                         return True
@@ -641,6 +708,12 @@ def getBetterRVs(driver, containers, date, acceptableTimes, targetDates, headles
                 driver.find_element_by_name("Cancel").click()
                 driver.find_element_by_css_selector("img[src='/ImxEbusWeb/images/english/Back.gif']").click()
                 print(exc_info())
+                messages=True
+                if (messages):
+                    HelperFunctions.popUpOK("Done, but check the console\nwindow for messages")
+                else:
+                    HelperFunctions.done()
+                exit()
         return foundAGoodOne
     
     startTime = datetime.now()
@@ -650,6 +723,7 @@ def getBetterRVs(driver, containers, date, acceptableTimes, targetDates, headles
     while len(rvs)>0:
         if datetime.now()-startTime>timedelta(seconds=60):
             driver.close()
+            print("Restarting...   " + str(datetime.now()))
             driver = setupCn(headlessBrowser)
             driver.switch_to.frame("menuHeader")
             driver.implicitly_wait(1)
@@ -661,6 +735,8 @@ def getBetterRVs(driver, containers, date, acceptableTimes, targetDates, headles
                 driver.find_element_by_id("tools").click()
                 driver.find_element_by_id("tools").click()
                 driver.find_element_by_id("tools").click()
+                driver.find_element_by_id("tools").click()
+                driver.find_element_by_id("tools").click()
         #         sleep(5)
         #         driver.find_element_by_class_name("tools selected").click()
                 driver.switch_to_default_content()
@@ -668,7 +744,10 @@ def getBetterRVs(driver, containers, date, acceptableTimes, targetDates, headles
         #         sleep(500)
         #         driver.find_element_by_css_selector(r'a[href^="top.frames[0].openTab(\'id41\');"]').click()
         #         print(driver.find_element_by_css_selector('a[onclick*="top.frames[0].openTab(\'id41\');"]').text)
-                driver.find_element_by_css_selector('a[onclick*="top.frames[0].openTab(\'id41\');"]').click()
+                try:
+                    driver.find_element_by_css_selector('a[onclick*="top.frames[0].openTab(\'id41\');"]').click()
+                except:
+                    driver.execute_script("arguments[0].click();", driver.find_element_by_css_selector('a[onclick*="top.frames[0].openTab(\'id41\');"]'))
                 driver.switch_to_default_content()
                 driver.switch_to.frame("menuHeader")
                 driver.find_element_by_id("id41").click()
@@ -719,8 +798,11 @@ def getBetterRVs(driver, containers, date, acceptableTimes, targetDates, headles
                 for container in containers:
                     allCont = allCont and container in ignore_list
                 if allCont:
-                    HelperFunctions.done()
-                    driver.quit()
+                    if (messages):
+                        HelperFunctions.popUpOK("Done, but check the console\nwindow for messages")
+                    else:
+                        HelperFunctions.done()
+#                     driver.quit()
                     exit()
         else:
             targetDatesTemp = targetDates
@@ -736,20 +818,24 @@ def getBetterRVs(driver, containers, date, acceptableTimes, targetDates, headles
                         if len(rvs)>0:
                             rv = rvs[0]
                         else:
-                            HelperFunctions.done()
-                            driver.quit()
+                            if (messages):
+                                HelperFunctions.popUpOK("Done, but check the console\nwindow for messages")
+                            else:
+                                HelperFunctions.done()
+#                             driver.quit()
                             exit()
                         break
     
     
 if __name__ == '__main__':
     print("IF RUNNING IN BACKGROUND DO NOT EXIT THIS WINDOW")
-    print("HIT \"CONTROL-C\" TO END THE PROGRAM, AND THEN EXIT THE WINDOW") 
+    print("HIT \"CONTROL-C\" TO END THE PROGRAM, AND THEN EXIT THE WINDOW\n") 
     
-#     try:
     containers, date, headless, delivery, allowSameDayAsETA, malport = queryContainers()
+#     if containers =="" or date=="":
+#         containers, date, headless, delivery, allowSameDayAsETA, malport = queryContainers()
     targetDates, times = queryDatesAndTimes(containers[0]== "ALL", malport)
-    
+
     if not containers[0]=="ALL" and not delivery:
         for i in range(len(containers)):
             if containers[i]!="":
@@ -767,10 +853,54 @@ if __name__ == '__main__':
                 containers[i]=containers[i].strip().upper()
             else:
                 del containers[i]
-    driver = setupCn(headless)
- 
+                
+                
+    conts = ""
+    for container in containers:
+        conts=conts+container+", "
+    conts=conts[:-2]
     
-    getBetterRVs(driver, containers, date, times, targetDates, headless, delivery, allowSameDayAsETA, malport)
+    targetDateString = ""
+    for targetDateX in targetDates:
+        targetDateString=targetDateString+targetDateX+", "
+    targetDateString=targetDateString[:-2]
+    
+    timeString = ""
+    for timeX in times:
+        timeString=timeString+timeX+", "
+    timeString=timeString[:-2]
+    
+    
+    print("The program is running on the following containers:")
+    print(conts)
+    print("Which have RVs on "+ date+"\n")
+    print("Looking for new RVs on " + targetDateString)
+    print("At " +timeString+"\n")
+
+    driver = setupCn(headless)
+    def interrupt_handler():
+        print("quittin' time")
+        driver.quit()
+        print("exittin' time")
+        exit()
+    signal.signal(signal.SIGINT, interrupt_handler)
+    
+    repeat = True
+    while repeat:
+        try:
+            if getBetterRVs(driver, containers, date, times, targetDates, headless, delivery, allowSameDayAsETA, malport)==-1:
+                getBetterRVs(driver, containers, date, times, targetDates, headless, delivery, allowSameDayAsETA, malport)
+            else:
+                repeat=False
+        except SystemExit:
+            exit()
+        except SessionNotCreatedException:
+            exit()
+        except:
+#             popUpOK("FAILED")
+            print("Failed")
+            print(exc_info())
+            print("Restarting")
 #     except:
 #         try:
 #             driver.quit()

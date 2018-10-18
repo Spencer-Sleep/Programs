@@ -386,7 +386,13 @@ def makeACI(driver, container, saved, failed, dayoftheweek):
     
     driver.find_element_by_id("portOfReport").send_keys("427")
     
-    Select(driver.find_element_by_id("conveyanceGeneralForm.emptyLoadedStatusCode")).select_by_visible_text("Loaded")
+    failed = True
+    while failed:
+        try:
+            Select(driver.find_element_by_id("conveyanceGeneralForm.emptyLoadedStatusCode")).select_by_visible_text("Loaded")
+            failed = False
+        except:
+            pass
     driver.find_element_by_id("conveyanceTractorTabTop").click()
     
     
@@ -599,7 +605,7 @@ def makeACI(driver, container, saved, failed, dayoftheweek):
 #     
 
 if __name__ == '__main__':
-#     argv = r"a J:\Linehaul Drivers Weekly Reports\2018\2018\WEEK 30".split()
+    argv = r"a J:\Linehaul Drivers Weekly Reports\2018\2018\WEEK 40".split()
 #     argv = r"a C:\Users\ssleep\Documents\Week 29".split()
 #     print("IF RUNNING IN BACKGROUND DO NOT EXIT THIS WINDOW")
 #     print("HIT \"CONTROL-C\" TO END THE PROGRAM, AND THEN EXIT THE WINDOW") 

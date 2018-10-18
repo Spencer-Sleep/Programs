@@ -507,7 +507,8 @@ def loadinfo(folderPath):
 
 if __name__ == '__main__':
     
-    folderPath = r"J:\LOCAL DEPARTMENT\Park Farm.xlsx"
+#     folderPath = r"J:\LOCAL DEPARTMENT\Park Farm.xlsx"
+    folderPath = r"C:\Users\ssleep\Documents\Park Farm.xlsx"
     
 #     folderPath = r"C:\Users\ssleep\Documents\Programming\Old Stuff\Park Farm local.xlsx"
 #     folderPath = ''

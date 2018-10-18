@@ -1,0 +1,14 @@
+INSTUPAutomator.__init__
+C:\Users\ssleep\workspace\RV Changer Every Day\Automator\__init__.py
+INFOS:&&2|1|2|0&&2|3|2|0&&2|4|2|0&&2|5|2|0&&2|6|2|0&&3|7|2|0&&3|7|2|0&&3|7|2|0&&3|8|2|0&&3|8|2|0&&3|8|2|0&&3|9|2|0&&3|9|2|0&&3|9|2|0&&3|10|2|0&&3|11|2|0&&3|11|2|0
+getDaysForward=1
+driver=10
+getBetterRVs=6
+conts=7
+targetDateString=8
+timeString=9
+setupCn=5
+repeat=11
+Automator.__init__=2
+queryContainers=4
+queryDatesAndTimes=3

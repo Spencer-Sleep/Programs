@@ -37,6 +37,8 @@ from win32con import SWP_SHOWWINDOW
 
 from sys import exc_info
 import HelperFunctions
+from os.path import devnull
+import atexit
 
 boo = [False]
 
@@ -99,39 +101,86 @@ def popUp(top, top2 = "", w=300, h=90, widget=""):
     
 def setupPortal():
 
-    driver = Firefox()
+#     driver = Firefox(log_path=devnull)
+
+    
+# ...
+# capabilities.setCapability("requireWindowFocus", true);
+# WebDriver driver = new InternetExplorerDriver(capabilities);
+# r"C:\Automation\IEDriverServer.exe"
+
+#     options = ()
+#     options.IntroduceInstabilityByIgnoringProtectedModeSettings = True
+#     options.IgnoreZoomLevel = True
+# #     options.UnhandledPromptBehavior = un.Accept
+#     options.EnablePersistentHover = True
+#     options.EnableNativeEvents = False
+#     options.EnsureCleanSession = True    // this cleansession did the trick
+
+    def exit_hander():
+#         sleep(20)
+#         driver.quit()
+        print("Error:")     
+    atexit.register(exit_hander)
+    capabilities = DesiredCapabilities.INTERNETEXPLORER
+#     capabilities['INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS']=True
+    capabilities['requireWindowFocus']=True
+    driver = Ie(capabilities=capabilities)
+#     driver = Ie()
     driver.get("https://ace.cbp.dhs.gov/")
     driver.set_window_position(1920, 0)
     driver.maximize_window()
-    
     driver.implicitly_wait(100)
     f=open(r"C:\Automation\ACE Login.txt", 'r')
     read = f.readline()
     m = search("username: *", read)
-    read = read[m.end():]
+    read = read[m.end():].strip()
 
     elem = driver.find_element_by_name('username')
-    
     elem.clear()
     elem.send_keys(read)
     read = f.readline()
     m = search("password: *", read)
-    read = read[m.end():]
-    driver.find_element_by_name('password').send_keys(read)
+    read = read[m.end():].strip()
+    elem =driver.find_element_by_name('password')
+    elem.clear()
+    elem.send_keys(read)
     f.close()
-    driver.find_element_by_name('Login').click()
+#     sleep(100)
+    elem = driver.find_element_by_name('Login')
+#     wait = WebDriverWait(driver, 100)
+#     wait.until(EC.element_to_be_clickable(elem)) 
+#     elem.send_keys(Keys.ENTER)
+    elem.send_keys(Keys.ENTER)
     
 #     driver.find_element_by_class_name("wpsToolBar")
-    driver.find_element_by_css_selector("button[accesskey='T']").click()
-    driver.find_element_by_id("clayView:ns_7_M3ULU7BUVD0M2HFG8D10000000_00000:_idsc00001:_idsc00003_2:_idsc00007").click()
-    driver.find_element_by_id("clayView:ns_7_CHMCHJ3VMJ3L502FK9QRJ71003_00000:accountListForm:_idsc00058_0:_idsc00065").click()
-    driver.find_element_by_id("clayView:ns_7_CHMCHJ3VMJ3L502FK9QRJ71003_00000:accountListForm:_idsc00058_1:_idsc00068").click()
-    
-    driver.implicitly_wait(3)
+    driver.find_element_by_css_selector("button[accesskey='T']").send_keys(Keys.ENTER)
+    driver.find_element_by_id("clayView:ns_7_M3ULU7BUVD0M2HFG8D10000000_00000:_idsc00001:_idsc00003_2:_idsc00007").send_keys(Keys.ENTER)
+#     sleep(5)
+    driver.implicitly_wait(5)
+#     try:
+#         driver.find_element_by_css_selector('img[href="/ace1/wps/myportal/!ut/p/c5/hZHBcoIwFEW_xS94D2iELhHEgMQqCAIbhhF04oi6yFjh6ytTbZkRMFmenNx3E0jgvk_Zle8zwc-n7AgxJGpqUGZQRwmZo7gEZWv-ufIcVcIZQlhmN17yusghgmTcexTxzuNxij1Lx8ZmSuAG6iQITWQytWY2kR781x7gHbbhP2-HDUT4kfoH7cIqEbm1cV0fal8Wpi4Jc4WLOq5Evl7moRdMdNPaFt-3v0RpimgTDW3Z0diXha3Ed20HJhq2N81HvPq01bfhQ6_Z5ZNW_oP3tuvy1X9_Qc9lAZdSq_iReDvf5sv9aPQD-GwhZg!!/dl3/d3/L0lKQSEvd0pDQUFBISEvWVB3IS9ub3JtYWw!/"]').send_keys(Keys.ENTER)
+#     except:
+#         True
+    minimized = False
     try:
-        driver.find_element_by_css_selector('img[alt="Minimize Manifest"').click()
+        driver.execute_script("arguments[0].click();", driver.find_element_by_css_selector('img[alt="Minimize Manifest"]'))
+#         driver.find_element_by_css_selector('a[href="/ace1/wps/myportal/!ut/p/c5/hZHRboIwFIafxSc4h7IKu8QyLIw6hIHADSGRmRpRLxo3-_STzG0kA9Zefv36n7-FEm77WF_krlbydKwPUEBpVYwLxgMzE4EZUiTe8-M6DiwDlwhZW3_IVupmCzmU89GjiDdezCscWQ52tjDTMLUWaeaiINxb-tS48y97gg_YLPm-HTaQ40OV7O2zuKo81OzyutcJUa5jqHD9LnShxSqKtlmcLhyXKGzYT6LxhOhTG30S2OLFw17if20nJpq2N91H_PV5r2_Hp15zyKe9_DsfbTfkW7_-ip_aBs6tfZUHGr8lvox2s9knEEREDw!!/dl3/d3/L0lKQSEvd0pDQUFBISEvWVB3IS9taW5pbWl6ZWQ!/"]').send_keys(Keys.ENTER)
+        minimized = True
     except:
         True
+    driver.implicitly_wait(100)
+    driver.find_element_by_id("clayView:ns_7_CHMCHJ3VMJ3L502FK9QRJ71003_00000:accountListForm:_idsc00058_0:_idsc00065").send_keys(Keys.ENTER)
+    driver.find_element_by_id("clayView:ns_7_CHMCHJ3VMJ3L502FK9QRJ71003_00000:accountListForm:_idsc00058_1:_idsc00068").send_keys(Keys.ENTER)
+    driver.implicitly_wait(2)
+#     driver.implicitly_wait(1)
+    if not minimized:
+        try:
+#         driver.execute_script("arguments[0].click();", driver.find_element_by_css_selector('img[alt="Minimize Manifest"]'))
+            driver.execute_script("arguments[0].click();", driver.find_element_by_css_selector('img[alt="Minimize Manifest"]'))
+        except:
+            True
+    
         
     driver.implicitly_wait(100)
     return driver
@@ -139,7 +188,7 @@ def setupPortal():
     
 def callbackBookTE(driver):
 #     if "Create Standard Shipment for another Carrier" in driver.page_source:
-#         driver.find_element_by_id("PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_Create_Standard_Shipment").click()
+#         driver.find_element_by_id("PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_Create_Standard_Shipment").send_keys(Keys.ENTER)
 #     elif not "Either an ID or Full Shipper information is required for a Shipper." in driver.page_source:
 #         while not "Either an ID or Full Shipper information is required for a Shipper." in driver.page_source:
 #             top = Tk()
@@ -153,7 +202,7 @@ def callbackBookTE(driver):
 #             MyButton4.grid(row=1, column=0)
 #         
 #             popUp(top)
-    
+    driver.implicitly_wait(100)
     container = Container()
     setupDM(container)
     try:
@@ -211,10 +260,12 @@ def callbackBookTE(driver):
         
         elem = driver.find_element_by_id("PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_STANDARDSHIPMENT_SHIPMENTTYPE")
         while "Either an ID or Full Shipper information is required for a Shipper." in driver.page_source:
-            elem.click()
+            try:
+                elem.send_keys(Keys.ENTER)
+            except:
+                pass
         Select(driver.find_element_by_id("PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_STANDARDSHIPMENT_SHIPMENTTYPE")).select_by_visible_text("Prefiled Inbond")
-        driver.find_element_by_id("PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_null").click()
-     
+        driver.find_element_by_id("PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_null").send_keys(Keys.ENTER)
         elem = driver.find_element_by_id("PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_userEnteredSCN")
         elem.clear()
         elem.send_keys("801" + str(container.PB))
@@ -222,11 +273,16 @@ def callbackBookTE(driver):
         driver.find_element_by_id("PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_STANDARDSHIPMENT_POINTOFLOADING").send_keys("80107")
         Select(driver.find_element_by_id("PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_STANDARDSHIPMENT_FDACONFIRMATIONIND")).select_by_visible_text("No")
          
-        driver.find_element_by_css_selector("input[value='Find Shipper']").click()
-         
-        wait = WebDriverWait(driver, 100000000)
-        wait.until(lambda driver: "Either an ID or Full Shipper information is required for a Shipper." in driver.page_source) 
-         
+        try:
+            driver.find_element_by_css_selector("input[value='Find Shipper']").send_keys(Keys.ENTER)
+            sleep(3)
+            wait = WebDriverWait(driver, 100000000)
+            wait.until(lambda driver: "Either an ID or Full Shipper information is required for a Shipper." in driver.page_source)
+        except:
+            driver.find_element_by_id("PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_null").send_keys(Keys.ENTER)
+            wait = WebDriverWait(driver,10)
+            wait.until(EC.alert_is_present());
+            driver.switch_to_alert().accept()
         address1 = ""
         address2 = ""
         city = ""
@@ -276,54 +332,58 @@ def callbackBookTE(driver):
             country = "USA"
             stateProv = "New Jersey"
             zipPost = "07201"
-         
+          
         driver.find_element_by_id("PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_STANDARDSHIPMENT_CONSIGNEE_ADDRESS_STREET").send_keys(address1)
         driver.find_element_by_id("PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_STANDARDSHIPMENT_CONSIGNEE_ADDRESS_STREET2").send_keys(address2)
         driver.find_element_by_id("PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_STANDARDSHIPMENT_CONSIGNEE_ADDRESS_CITY").send_keys(city)
         Select(driver.find_element_by_id("PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_STANDARDSHIPMENT_CONSIGNEE_ADDRESS_COUNTRY")).select_by_visible_text(country)
-#         try:
+    #         try:
         Select(driver.find_element_by_id("PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_STANDARDSHIPMENT_CONSIGNEE_ADDRESS_REGION")).select_by_visible_text(stateProv)
-#         except:
-#             wait = WebDriverWait(driver, 100000000)
-#             wait.until(lambda driver: "Create Standard Shipment for another Carrier" in driver.page_source)
-#             return
+    #         except:
+    #             wait = WebDriverWait(driver, 100000000)
+    #             wait.until(lambda driver: "Create Standard Shipment for another Carrier" in driver.page_source)
+    #             return
         driver.find_element_by_id("PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_STANDARDSHIPMENT_CONSIGNEE_ADDRESS_ZIP").send_keys(zipPost)
-        driver.find_element_by_id("PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_STANDARDSHIPMENT_CONSIGNEE_NAME").click()
-        
+        driver.find_element_by_id("PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_STANDARDSHIPMENT_CONSIGNEE_NAME").send_keys(Keys.ENTER)
+         
         while not GetKeyState(13)<0:
-            True
-             
-        
-        
+            if GetKeyState(27)<0:
+                raise AssertionError
+                 
+    #             True
+              
+         
+         
         Select(driver.find_element_by_id("PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_standardShipmentEquipmentType")).select_by_visible_text("Create One Time")
-        driver.find_element_by_id("PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_standardShipmentEquipmentType").click()
-         
-         
+        driver.find_element_by_id("PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_standardShipmentEquipmentType").send_keys(Keys.ENTER)
+          
+          
         sizeSelect = ""
         if container.size=="40":
             sizeSelect = "40ft ClosedTopSeaCnt"
         elif container.size=="20":
             sizeSelect = "20ft ClosedTopSeaCnt"
-         
+          
         Select(driver.find_element_by_id("PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_SHIPMENTEQUIPMENT_TYPE")).select_by_visible_text(sizeSelect)
     #     print(container.containerNumber[:4] + container.containerNumber[5:11] + container.containerNumber[12:13])
         driver.find_element_by_id("PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_SHIPMENTEQUIPMENT_TRANSPORTID").send_keys(container.containerNumber)
-        driver.find_element_by_id("PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_null").click()
-        
-        
+        driver.find_element_by_id("PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_null").send_keys(Keys.ENTER)
+         
+         
     #     sleep(10)
-        driver.find_element_by_xpath("//form[@name='PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_createStandardShipment']/table/tbody/tr[2]/td/fieldset[6]/table/tbody/tr/td/a").click()
+        driver.find_element_by_xpath("//form[@name='PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_createStandardShipment']/table/tbody/tr[2]/td/fieldset[6]/table/tbody/tr/td/a").send_keys(Keys.ENTER)
     # #     
         container.pieces = container.pieces.replace(',', "")
         elem = driver.find_element_by_id("PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_INBONDCOMMODITY_SHIPMENTQUANTITY")
         elem.clear()
         elem.send_keys(container.pieces)
-        driver.find_element_by_id("PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_INBONDCOMMODITY_QUANTITYUOM").click()
+        driver.find_element_by_id("PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_INBONDCOMMODITY_QUANTITYUOM").send_keys(Keys.ENTER)
     #       
         while not GetKeyState(13)<0:
-            True
+            if GetKeyState(27)<0:
+                raise AssertionError
     #       
-    
+     
         elem = driver.find_element_by_id("PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_INBONDCOMMODITY_WEIGHT")
         elem.clear()
         container.weight = container.weight.replace(',', "")
@@ -332,37 +392,61 @@ def callbackBookTE(driver):
             container.weight=container.weight[:index]
         elem.send_keys(container.weight)
         Select(driver.find_element_by_id("PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_INBONDCOMMODITY_WEIGHTUOM")).select_by_visible_text('Kilograms')
-          
+           
         driver.find_element_by_id("PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_INBONDCOMMODITY_DESCRIPTION").send_keys(container.description)
         elem = driver.find_element_by_id("PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_INBONDCOMMODITY_VALUE")
         elem.clear()
-        elem.click()
-           
+        elem.send_keys(Keys.ENTER)
+            
         while not GetKeyState(13)<0:
-            True
-           
-        driver.find_element_by_id("PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_AvailableINBONDCOMMODITY_HTSNUMS").click()
+            if GetKeyState(27)<0:
+                raise AssertionError
+            
+        driver.find_element_by_id("PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_AvailableINBONDCOMMODITY_HTSNUMS").send_keys(Keys.ENTER)
         sleep(1)
-           
+            
         while not GetKeyState(13)<0:
-            True
-               
-               
+            if GetKeyState(27)<0:
+                raise AssertionError
+                
+                
         HS = driver.find_element_by_id("PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_AvailableINBONDCOMMODITY_HTSNUMS").get_attribute("value")
+        zeroes=""
         if len(HS)<10:
-            for i in range(10 - len(HS)):
-                driver.find_element_by_id("PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_AvailableINBONDCOMMODITY_HTSNUMS").send_keys("0")
-        driver.find_element_by_css_selector('img[src*="/ace1/wps/PA_Shipment/images/right_single.gif"]').click()
-        driver.find_element_by_id("PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_null").click()
+            for _ in range(10 - len(HS)):
+                zeroes+="0"
+         
+        driver.find_element_by_id("PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_AvailableINBONDCOMMODITY_HTSNUMS").send_keys(zeroes)
+                 
+         
+        driver.execute_script("arguments[0].click();", driver.find_element_by_css_selector('img[src*="/ace1/wps/PA_Shipment/images/right_single.gif"]'))
+    #         driver.find_element_by_css_selector('img[src*="/ace1/wps/PA_Shipment/images/right_single.gif"]').send_keys(Keys.ENTER)
+         
+    #         driver.find_element_by_css_selector('img[src*="/ace1/wps/PA_Shipment/images/right_single.gif"]').click()
+        driver.find_element_by_id("PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_null").send_keys(Keys.ENTER)
     #     
-        
         Select(driver.find_element_by_id("PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_standardShipmentEquipmentType")).select_by_visible_text("Conveyance")
-        driver.find_element_by_id("PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_standardShipmentEquipmentType").click()
+        driver.find_element_by_id("PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_standardShipmentEquipmentType").send_keys(Keys.ENTER)
+    #         didntwork = True
+    #         while didntwork:
+    #             try:
+        wait = WebDriverWait(driver, 100000000)
+        wait.until(lambda driver: "Conveyance</t" in driver.page_source)
         
         Select(driver.find_element_by_id("PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_INBONDSHIPMENT_ENTRYTYPE")).select_by_visible_text("Transportation and Exportation")
-        
-        
-        
+    #                 while not "Transportation and Exportation" in elem.first_selected_option.text:
+    #                     failed = True
+    #                     while failed:
+    #                         try:
+    #     Select(elem).select_by_visible_text("Transportation and Exportation")
+    #                             failed = False
+    #                         except:
+    #                             pass
+    #                     elem = Select(driver.find_element_by_id("PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_INBONDSHIPMENT_ENTRYTYPE"))
+    #                 
+    #                 didntwork=False
+    #             except:
+    #                 pass
         
         
         driver.find_element_by_id("PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_INBONDSHIPMENT_INBONDDESTINATION").send_keys(portCode[0])
@@ -373,8 +457,10 @@ def callbackBookTE(driver):
         date = (date + timedelta(days=14)).strftime('%m/%d/%Y')
         
         driver.find_element_by_id("PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_INBONDSHIPMENT_ESTDATEOFUSDEPARTURE").send_keys(date)
-        driver.find_element_by_id("PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_INBONDSHIPMENT_FOREIGNPORTOFDESTINATION").click()
-    
+        driver.find_element_by_id("PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_INBONDSHIPMENT_FOREIGNPORTOFDESTINATION").send_keys(Keys.ENTER)
+        wait.until(lambda driver: "Create Standard Shipment for another Carrier" in driver.page_source)
+    except AssertionError:
+        pass
     except:
         top = Tk()
         L1 = Label(top, text="Something went wrong. Either complete the rest of this T&E manually,\n or cancel and restart.")
@@ -383,10 +469,10 @@ def callbackBookTE(driver):
         L2 = Label(top, text=exc_info())
 #         L2.config(font=("Courier", 30))
         L2.grid(row=1, column=0)
-        
+         
         def callbackDM():
             top.destroy()
-        
+         
         MyButton4 = Button(top, text="OK", width=20, command=callbackDM)
         MyButton4.grid(row=2, column=0)
         MyButton4.config(font=("Courier", 30))
@@ -394,7 +480,7 @@ def callbackBookTE(driver):
         
 #     while not GetKeyState(13)<0 and not "Create Standard Shipment for another Carrier" in driver.page_source:
 #         if GetKeyState(13)<0:
-#             driver.find_element_by_id("PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_null").click()
+#             driver.find_element_by_id("PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_null").send_keys(Keys.ENTER)
 #     while not "Create Standard Shipment for another Carrier" in driver.page_source:
 #         try:
     wait = WebDriverWait(driver, 100000000)
@@ -441,25 +527,25 @@ def setupDM(container):
     
     
     
-#     click(50, 350)
-#     fore = win32gui.GetForegroundWindow()
-#     DMFore = "Dispatch-Mate" in win32gui.GetWindowText(fore)
-#     while not DMFore:
-#         top = Tk()
-#         L1 = Label(top, text="Please maximize DispatchMate and the PB in the left monitor")
-#         L1.grid(row=0, column=0)
-#         
-#         def callbackDM():
-#             top.destroy()
-#         
-#         MyButton4 = Button(top, text="OK", width=10, command=callbackDM)
-#         MyButton4.grid(row=1, column=0)
-#     
-#         popUp(top, w=350, h=50, widget = MyButton4)
-#         
-#         click(50, 350)
-#         fore = win32gui.GetForegroundWindow()
-#         DMFore = "Dispatch-Mate" in win32gui.GetWindowText(fore)
+    click(50, 350)
+    fore = win32gui.GetForegroundWindow()
+    DMFore = "Dispatch-Mate" in win32gui.GetWindowText(fore)
+    while not DMFore:
+        top = Tk()
+        L1 = Label(top, text="Please maximize DispatchMate and the PB in the left monitor")
+        L1.grid(row=0, column=0)
+         
+        def callbackDM():
+            top.destroy()
+         
+        MyButton4 = Button(top, text="OK", width=10, command=callbackDM)
+        MyButton4.grid(row=1, column=0)
+     
+        popUp(top, w=350, h=50, widget = MyButton4)
+         
+        click(50, 350)
+        fore = win32gui.GetForegroundWindow()
+        DMFore = "Dispatch-Mate" in win32gui.GetWindowText(fore)
 #         
 #     moveTo(2000, 550)
 #     def windowEnumerationHandler(hwnd, top_windows):
@@ -492,9 +578,7 @@ def setupDM(container):
 #     topWindowWrap = app.window(handle=topWindow)
 #     topWindowWrap.MoveWindow(0,0,1920,1080)
 #     topWindowWrap.Maximize()
-    
     for x in winChildren:
-#         print(handleprops.text(x))
 #         if handleprops.classname(x)=="ListBox":
 # #             for y in handleprops.children(x):
 # #                 print(handleprops.text(x))
@@ -699,7 +783,8 @@ def readRects():
             rects.append(RECT(int(rect[0]), int(rect[1]), int(rect[2]), int(rect[3])))
         f.close()
     except:
-        rects = ([RECT(15, 344, 128, 357), RECT(2090, 146, 2219, 168), RECT(2089, 233, 2191, 255), RECT(755, 342, 842, 360)]) 
+#         rects = ([RECT(15, 344, 128, 357), RECT(2090, 146, 2219, 168), RECT(2089, 233, 2191, 255), RECT(755, 342, 842, 360)])
+        rects = ([RECT(15, 344, 178, 357), RECT(2090, 146, 2219, 168), RECT(2089, 233, 2191, 255), RECT(755, 342, 842, 360)])
     return rects
         
 def writeRects(rects):

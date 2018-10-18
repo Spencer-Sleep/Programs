@@ -6,3 +6,5 @@ USE_LOCALS_AND_ATTRS_CAMELCASE=true
 USE_METHODS_FORMAT=0
 eclipse.preferences.version=1
 org.python.pydev.editor.templates.PyTemplatePreferencesPage=<?xml version\="1.0" encoding\="UTF-8" standalone\="no"?><templates/>
+synch_ignore_entries_b36c8dtiect29s4m16eynnyze=C\:\\Users\\ssleep\\AppData\\Roaming\\Python\\Python36\\site-packages
+synch_ignore_entries_dan248kydds5ftt8gxq0ywteg=C\:\\Users\\ssleep\\AppData\\Roaming\\Python\\Python36\\site-packages|||C\:\\Users\\ssleep\\AppData\\Local\\Programs\\Python\\Python36-32\\lib\\site-packages\\textract-1.6.1-py3.6.egg

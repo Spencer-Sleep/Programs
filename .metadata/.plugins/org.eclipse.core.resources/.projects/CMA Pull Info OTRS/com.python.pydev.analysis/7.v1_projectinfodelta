@@ -1,0 +1,18 @@
+INSTUPAutomator.__init__
+C:\Users\ssleep\workspace\CMA Pull Info OTRS\Automator\__init__.py
+INFOS:&&2|1|2|0&&1|3|2|0&&3|4|2|3&&3|5|2|3&&3|6|2|3&&3|7|2|3&&3|8|2|3&&3|9|2|3&&3|10|2|3&&3|11|2|3&&3|12|2|3&&3|13|2|3&&2|14|2|0&&2|15|2|0
+cut=12
+address3=10
+address2=9
+address1=8
+extractText=14
+cnumber=4
+exit_hander=1
+WONumber=6
+Container=3
+receivedTime=7
+vessel=11
+cancelled=13
+Automator.__init__=2
+extractTextHapag=15
+bookingNumber=5
