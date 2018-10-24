@@ -20,7 +20,7 @@ from pyautogui import moveTo
 from time import sleep
 from selenium.webdriver.support.expected_conditions import alert_is_present
 from lib2to3.pgen2.tokenize import Ignore
-import HelperFunctions
+# import HelperFunctions
 from sys import exc_info
 from selenium.webdriver.firefox.options import Options
 from sys import exit
@@ -28,10 +28,52 @@ import atexit
 # import sys
 import os
 from getpass import fallback_getpass
-from HelperFunctions import popUpOK
+# from HelperFunctions import popUpOK
 
-import monkey
+# import monkey
 import signal
+import subprocess
+import sys
+from _signal import SIGTERM, SIGINT
+# from signal import pthread_sigmask
+# process="No Proc"
+
+def popUpOKLeft(text1, text2="", textSize = 16):
+    bgC = "lavender"
+    top = Tk()
+    top.config(bg = bgC)
+    L1 = Label(top, text=text1, bg = bgC, padx = 20)
+    L1.config(font=("serif", textSize))
+    L1.grid(row=0, column=0, sticky=constants.W+constants.E)
+    L1 = Label(top, text=text2, bg = bgC, padx = 20, justify=constants.LEFT)
+    L1.config(font=("serif", textSize))
+    L1.grid(row=1, column=0, sticky=constants.W + constants.E)
+    def callbackOK():
+#         sys.exit()
+        top.destroy()
+        
+    MyButton = Button(top, text="OK", command=callbackOK)
+    MyButton.grid(row=2, column=0, sticky=constants.W+constants.E, padx = 20, pady = (0,20))
+    MyButton.config(font=("serif", 30), bg="green")
+      
+    top.update()
+    
+    w = top.winfo_width() # width for the Tk root
+    h = top.winfo_height() # height for the Tk root
+       
+    ws = top.winfo_screenwidth() # width of the screen
+    hs = top.winfo_screenheight() # height of the screen
+    x = (ws/2) - (w/2)
+    y = (hs/2) - (h/2)
+    
+    top.geometry('%dx%d+%d+%d' % (w, h, x, y))
+    top.update()
+    moveTo(MyButton.winfo_width()/2 + MyButton.winfo_rootx(), MyButton.winfo_height()/2 + MyButton.winfo_rooty())
+    top.lift()
+    top.attributes('-topmost',True)
+    top.after_idle(top.attributes,'-topmost',False)
+    top.mainloop()
+
 
 def getDaysForward(daysForward, weekdaysOK=False):
     target_Date_dateTime =datetime.now() + timedelta(days = daysForward)
@@ -128,7 +170,7 @@ def queryDatesAndTimes(allConts, malport):
             if button.get():
                 returnDates.append(date)
         if len(returnDates)<1:
-            popUpOK("Please select target dates for the new RV(s)")
+            popUpOKLeft("Please select target dates for the new RV(s)")
         for button, time in timeValues:
             if button.get():
                 returnTimes.append(time)  
@@ -210,10 +252,10 @@ def queryContainers():
     
     def callbackCont():
         if date.get()=="":
-            popUpOK("Please select the day the current RV is on")
+            popUpOKLeft("Please select the day the current RV is on")
         else:
             if T1.get("1.0", constants.END).strip()=="":
-                popUpOK("Please list the target containers or RV #s (for deliveries)")
+                popUpOKLeft("Please list the target containers or RV #s (for deliveries)")
             else:
                 containers.append(T1.get("1.0", constants.END).splitlines())
                 top.destroy()
@@ -264,7 +306,7 @@ def queryContainers():
     return containers[0], date.get(), checkHeadless.get(), checkDelivery.get(), checkallowSameDayAsETA.get(), checkMalport.get()
 
 
-def setupCn(headlessBrowser):
+def setupCn(headlessBrowser, process="", globalPort=""):
     
 #     webdriver.common.service.Service.start = monkey.start
     
@@ -272,8 +314,42 @@ def setupCn(headlessBrowser):
     options.set_headless(headless=headlessBrowser)
     fp = FirefoxProfile();
     fp.set_preference("webdriver.load.strategy", "unstable");
-       
-    driver = Firefox(firefox_profile=fp, log_path=devnull, firefox_options=options)
+    if globalPort=="":
+        try:
+            f=open(r"C:\Automation\CNPort.txt", 'r')
+        #     read = f.readline()
+        #     m = re.search("username: *", read)
+        #     username = read[m.end():].rstrip()
+            read = f.readline()
+            port=int(read)+1
+            if port == 9999:
+                port=1000
+    #     m = re.search("password: *", read)
+    #     password = read[m.end():].rstrip()
+            f.close()
+            os.remove(r"C:\Automation\CNPort.txt")
+        except:
+            port=4444    
+        f=open(r"C:\Automation\CNPort.txt", 'w+')
+        f.write(str(port))
+        f.close()
+#     port = 4444
+    failed=True
+    while failed:
+        try:
+            if process=="":
+                process = subprocess.Popen("start geckodriver -p "+str(port), shell=True)
+            if globalPort!="":
+                port=globalPort
+            driver=webdriver.Remote("http://127.0.0.1:"+str(port),desired_capabilities=webdriver.DesiredCapabilities.FIREFOX, options=options)
+            failed=False
+            globalPort=port
+        except:
+            process.kill()
+            port+=1
+#     print(process)
+#     process.kill()
+#     driver = Firefox(firefox_profile=fp, log_path=devnull, firefox_options=options)
 #     driver = webdriver.Chrome()
 #     driver = webdriver.Ie()
     driver.get("http://cn.ca/")
@@ -281,7 +357,8 @@ def setupCn(headlessBrowser):
     
     driver.implicitly_wait(100)
     
-    f=open(r"J:\LOCAL DEPARTMENT\Automation - DO NOT MOVE\CN Login.txt", 'r')
+#     f=open(r"J:\LOCAL DEPARTMENT\Automation - DO NOT MOVE\CN Login.txt", 'r')
+    f=open(r"C:\Automation\CN Login.txt", 'r')
     read = f.readline()
     m = re.search("username: *", read)
     username = read[m.end():].rstrip()
@@ -296,16 +373,21 @@ def setupCn(headlessBrowser):
     driver.find_element_by_id("login_passwordNew").send_keys(password)
     driver.find_element_by_id("loginform_enterbutton").click()
     
-    return driver
+    return driver, process, globalPort
 
 
-def getBetterRVs(driver, containers, date, acceptableTimes, targetDates, headlessBrowser, delivery, allowSameDayAsETA, malport):
+def getBetterRVs(driver, containers, date, acceptableTimes, targetDates, headlessBrowser, delivery, allowSameDayAsETA, malport, process, globalPort):
     messages=False
     allConts = containers[0]=="ALL"
     weekend = not getDaysForward(int(date[-2:]) - datetime.now().day)
     def exit_hander():
+        print("Quitting")
 #         sleep(20)
-        driver.quit()     
+        try:
+            driver.quit()
+        except:
+            pass
+        exit()
     atexit.register(exit_hander)
     
     driver.switch_to_default_content()
@@ -468,9 +550,9 @@ def getBetterRVs(driver, containers, date, acceptableTimes, targetDates, headles
             while True:
                 if (int(cur_time)<18 and cur_time!="00") and allConts and not weekend:
                     if (messages):
-                        HelperFunctions.popUpOK("Done, but check the console\nwindow for messages")
+                        popUpOKLeft("Done, but check the console\nwindow for messages")
                     else:
-                        HelperFunctions.done()
+                        popUpOKLeft("Done")
 #                     driver.quit()
                     exit()
                 for row in rows:
@@ -506,9 +588,9 @@ def getBetterRVs(driver, containers, date, acceptableTimes, targetDates, headles
 #                     [i for i in ignore_list if not i in containers or containers.remove(i)]
                     
                     if (messages):
-                        HelperFunctions.popUpOK("Done, but check the console\nwindow for messages")
+                        popUpOKLeft("Done, but check the console\nwindow for messages")
                     else:
-                        HelperFunctions.done()
+                        popUpOKLeft("Done")
 #                     driver.quit()
                     exit()
                 else:
@@ -710,9 +792,9 @@ def getBetterRVs(driver, containers, date, acceptableTimes, targetDates, headles
                 print(exc_info())
                 messages=True
                 if (messages):
-                    HelperFunctions.popUpOK("Done, but check the console\nwindow for messages")
+                    popUpOKLeft("Done, but check the console\nwindow for messages")
                 else:
-                    HelperFunctions.done()
+                    popUpOKLeft("Done")
                 exit()
         return foundAGoodOne
     
@@ -724,7 +806,7 @@ def getBetterRVs(driver, containers, date, acceptableTimes, targetDates, headles
         if datetime.now()-startTime>timedelta(seconds=60):
             driver.close()
             print("Restarting...   " + str(datetime.now()))
-            driver = setupCn(headlessBrowser)
+            driver, process, globalPort = setupCn(headlessBrowser, process, globalPort)
             driver.switch_to.frame("menuHeader")
             driver.implicitly_wait(1)
             try:
@@ -799,9 +881,9 @@ def getBetterRVs(driver, containers, date, acceptableTimes, targetDates, headles
                     allCont = allCont and container in ignore_list
                 if allCont:
                     if (messages):
-                        HelperFunctions.popUpOK("Done, but check the console\nwindow for messages")
+                        popUpOKLeft("Done, but check the console\nwindow for messages")
                     else:
-                        HelperFunctions.done()
+                        popUpOKLeft("Done")
 #                     driver.quit()
                     exit()
         else:
@@ -819,9 +901,9 @@ def getBetterRVs(driver, containers, date, acceptableTimes, targetDates, headles
                             rv = rvs[0]
                         else:
                             if (messages):
-                                HelperFunctions.popUpOK("Done, but check the console\nwindow for messages")
+                                popUpOKLeft("Done, but check the console\nwindow for messages")
                             else:
-                                HelperFunctions.done()
+                                popUpOKLeft("Done")
 #                             driver.quit()
                             exit()
                         break
@@ -877,19 +959,22 @@ if __name__ == '__main__':
     print("Looking for new RVs on " + targetDateString)
     print("At " +timeString+"\n")
 
-    driver = setupCn(headless)
-    def interrupt_handler():
-        print("quittin' time")
-        driver.quit()
-        print("exittin' time")
-        exit()
-    signal.signal(signal.SIGINT, interrupt_handler)
+    driver, process, globalPort = setupCn(headless)
     
+    def interrupt_handler(a,b):
+        try:
+            driver.quit()
+        except:
+            pass
+        exit()
+        
+    signal.signal(signal.SIGINT, interrupt_handler)
+#     pthread_sigmask(signal.SIG_IGN, signal.SIGINT)
     repeat = True
     while repeat:
         try:
-            if getBetterRVs(driver, containers, date, times, targetDates, headless, delivery, allowSameDayAsETA, malport)==-1:
-                getBetterRVs(driver, containers, date, times, targetDates, headless, delivery, allowSameDayAsETA, malport)
+            if getBetterRVs(driver, containers, date, times, targetDates, headless, delivery, allowSameDayAsETA, malport, process, globalPort)==-1:
+                getBetterRVs(driver, containers, date, times, targetDates, headless, delivery, allowSameDayAsETA, malport, process, globalPort)
             else:
                 repeat=False
         except SystemExit:
@@ -898,7 +983,8 @@ if __name__ == '__main__':
             exit()
         except:
 #             popUpOK("FAILED")
-            print("Failed")
+            raise
+            print("Encountered an error:")
             print(exc_info())
             print("Restarting")
 #     except:

@@ -20,9 +20,44 @@ from pyautogui import moveTo
 from time import sleep
 from selenium.webdriver.support.expected_conditions import alert_is_present
 from lib2to3.pgen2.tokenize import Ignore
-import HelperFunctions
+# import HelperFunctions
 
 containersMoved = []
+def popUpOKLeft(text1, text2="", textSize = 16):
+    bgC = "lavender"
+    top = Tk()
+    top.config(bg = bgC)
+    L1 = Label(top, text=text1, bg = bgC, padx = 20)
+    L1.config(font=("serif", textSize))
+    L1.grid(row=0, column=0, sticky=constants.W+constants.E)
+    L1 = Label(top, text=text2, bg = bgC, padx = 20, justify=constants.LEFT)
+    L1.config(font=("serif", textSize))
+    L1.grid(row=1, column=0, sticky=constants.W + constants.E)
+    def callbackOK():
+#         sys.exit()
+        top.destroy()
+        
+    MyButton = Button(top, text="OK", command=callbackOK)
+    MyButton.grid(row=2, column=0, sticky=constants.W+constants.E, padx = 20, pady = (0,20))
+    MyButton.config(font=("serif", 30), bg="green")
+      
+    top.update()
+    
+    w = top.winfo_width() # width for the Tk root
+    h = top.winfo_height() # height for the Tk root
+       
+    ws = top.winfo_screenwidth() # width of the screen
+    hs = top.winfo_screenheight() # height of the screen
+    x = (ws/2) - (w/2)
+    y = (hs/2) - (h/2)
+    
+    top.geometry('%dx%d+%d+%d' % (w, h, x, y))
+    top.update()
+    moveTo(MyButton.winfo_width()/2 + MyButton.winfo_rootx(), MyButton.winfo_height()/2 + MyButton.winfo_rooty())
+    top.lift()
+    top.attributes('-topmost',True)
+    top.after_idle(top.attributes,'-topmost',False)
+    top.mainloop()
 
 
 def getDaysForward(daysForward):
@@ -54,14 +89,14 @@ def setupCn():
     
     driver.implicitly_wait(40)
     
-    f=open(r"J:\LOCAL DEPARTMENT\Automation - DO NOT MOVE\CN Login.txt", 'r')
+    f=open(r"C:\Automation\CN Login.txt", 'r')
     read = f.readline()
     m = re.search("username: *", read)
     username = read[m.end():].rstrip()
     read = f.readline()
     m = re.search("password: *", read)
     password = read[m.end():].rstrip()
-    f.close()    
+    f.close()
     
     driver.find_element_by_class_name("lbl").click()
     
@@ -93,7 +128,7 @@ def queryDates():
     bgC = "lavender"
     top = Tk()
     top.config(bg = bgC)
-    L1 = Label(top, text="Please select the dates to run on", bg = bgC, padx = 20)
+    L1 = Label(top, text="Please select the date to run on\nPlease only select one date.", bg = bgC, padx = 20)
     L1.config(font=("serif", 16))
     L1.grid(row=0, column=0, sticky=constants.W+constants.E)
     
@@ -311,7 +346,7 @@ def getBetterRVs(driver, dates):
             rows = table.find_element_by_css_selector("table[id='listingTable']>tbody").find_elements_by_css_selector("tr")
             while True:
                 if (int(cur_time)<18 and cur_time!="00"):
-                    HelperFunctions.done()
+                    popUpOKLeft("Done")
                     driver.quit()
                     exit()
                 for row in rows:
