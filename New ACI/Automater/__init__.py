@@ -31,10 +31,11 @@ from future.backports.http.client import GONE
 from sys import argv
 from sys import exit
 from tkinter.constants import CURRENT
-from _datetime import timedelta
+from _datetime import timedelta, date
 from selenium.webdriver.firefox.options import Options
 from HelperFunctions import done
 import atexit
+import os
 
 # dayOfTheWeek = [-1]
 # skip = [0]
@@ -65,8 +66,12 @@ def setupPortal(headlessInc):
     fp = FirefoxProfile();
     fp.set_preference("webdriver.load.strategy", "unstable")
     
+    downloadDirectory="J:\Linehaul\Linehaul Drivers Weekly Reports\ACI\\" + str(date.today())
+    if not os.path.isdir(downloadDirectory):
+        os.makedirs(downloadDirectory, exist_ok=True)
+
     #No download pop-up confirmation box
-    fp.set_preference("browser.download.dir", "J:\Linehaul Drivers Weekly Reports\ACI")
+    fp.set_preference("browser.download.dir", downloadDirectory)
     fp.set_preference("browser.download.folderList", 2)
      
     fp.set_preference("browser.helperApps.neverAsk.saveToDisk", 
@@ -554,11 +559,12 @@ def makeACI(driver, container, saved, failed, dayoftheweek):
         driver.find_element_by_id("buttonPortalOk").click()
         driver.implicitly_wait(30)
         failed.append(container)
+        print("Failed: " + container)
         return
     except:
         driver.implicitly_wait(30)
         driver.find_element_by_id("buttonPortalYes").click()
-          
+        print("Created ACI for container: " + container)
         elem = driver.find_element_by_css_selector('a[href*="/manif/services/eng/pb10001.html?pb1=ls&ts="]')
         elem.click()
             
@@ -605,7 +611,7 @@ def makeACI(driver, container, saved, failed, dayoftheweek):
 #     
 
 if __name__ == '__main__':
-    argv = r"a J:\Linehaul Drivers Weekly Reports\2018\2018\WEEK 40".split()
+#     argv = r"a J:\Linehaul\Linehaul Drivers Weekly Reports\2018\2018\WEEK 43".split()
 #     argv = r"a C:\Users\ssleep\Documents\Week 29".split()
 #     print("IF RUNNING IN BACKGROUND DO NOT EXIT THIS WINDOW")
 #     print("HIT \"CONTROL-C\" TO END THE PROGRAM, AND THEN EXIT THE WINDOW") 

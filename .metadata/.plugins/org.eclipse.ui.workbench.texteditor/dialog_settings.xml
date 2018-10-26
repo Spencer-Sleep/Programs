@@ -6,20 +6,20 @@
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="vessel" key="selection"/>
+		<item value="save" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="true" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="vessel"/>
-			<item value="findall"/>
-			<item value="print("/>
-			<item value="re.find"/>
-			<item value="re.sear"/>
-			<item value="containerspa"/>
-			<item value="hapagwo"/>
 			<item value="save"/>
+			<item value="linehaul "/>
+			<item value="old time"/>
+			<item value="headl"/>
+			<item value="refre"/>
+			<item value="alert"/>
+			<item value="head"/>
+			<item value="while"/>
 		</list>
 		<list key="replacehistory">
 			<item value="send_keys(Keys.ENTER)"/>
@@ -37,6 +37,6 @@
 		<item value="1|Segoe UI|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI" key="DIALOG_FONT_NAME"/>
 		<item value="514" key="DIALOG_HEIGHT"/>
 		<item value="1181" key="DIALOG_X_ORIGIN"/>
-		<item value="574" key="DIALOG_Y_ORIGIN"/>
+		<item value="566" key="DIALOG_Y_ORIGIN"/>
 	</section>
 </section>

@@ -32,6 +32,7 @@ from HelperFunctions import popUpOK
 
 import monkey
 import signal
+import sys
 
 def getDaysForward(daysForward, weekdaysOK=False):
     target_Date_dateTime =datetime.now() + timedelta(days = daysForward)
@@ -289,7 +290,8 @@ def setupCn(headlessBrowser):
     m = re.search("password: *", read)
     password = read[m.end():].rstrip()
     f.close()    
-    
+#     username="virdi2017"
+#     password="Virdi7351"
     driver.find_element_by_class_name("lbl").click()
     driver.find_element_by_id("login_usernameNew").clear()
     driver.find_element_by_id("login_usernameNew").send_keys(username)
@@ -382,7 +384,6 @@ def getBetterRVs(driver, containers, date, acceptableTimes, targetDates, headles
         ]
     
     if not delivery:
-    
         def check_RVs():
             nonlocal rows
             i=0
@@ -394,6 +395,42 @@ def getBetterRVs(driver, containers, date, acceptableTimes, targetDates, headles
                     if cells[5].text=="Pickup" and not contNum in ignore_list:
                         cells[6].click()
                         driver.find_element_by_name("Modify").click()
+                        try:
+                            driver.switch_to_alert().accept()
+                            alert=True
+                        except:
+                            alert=False
+                        if alert:
+                            failed = True
+                            while failed:
+                                try:
+                #                 driver.switch_to_default_content()
+                #                 driver.switch_to_frame(driver.find_element_by_css_selector("frame[name='content1']"))
+                                    j = 2
+                                    found = False
+                                    driver.implicitly_wait(0)
+                                    while not found:
+                                        try:
+                                            driver.switch_to_default_content()
+                                            currentFrame = driver.find_element_by_css_selector("frame[name='content" + str(j) + "']")
+                                            driver.switch_to_frame(currentFrame)
+                                            driver.find_element_by_id("alternateDate")
+                                            found = True
+                                        except:
+                                            if j<30:
+                                                j+=1
+                                            else:
+                                                j=2
+                                                     
+                                         
+                                    driver.implicitly_wait(60)
+#                                     Select(driver.find_element_by_id("alternateDate")).select_by_visible_text(target_Date)
+                                    failed = False
+                #                 Select(driver.find_element_by_id("alternateDate")).select_by_visible_text(target_Date)
+                #                 failed = True
+                                except:
+                                    print(sys.exc_info())
+                                    driver.refresh()
                         if "No record of equipment" in driver.page_source:
                             elem1 = driver.find_element_by_name("Cancel")
                             elem1.click()
@@ -412,7 +449,7 @@ def getBetterRVs(driver, containers, date, acceptableTimes, targetDates, headles
                             ignore_list.append(contNum)
                         driver.find_element_by_name("Cancel").click()
                         while not "Gate Appointment Inquiry" in driver.page_source:
-                                driver.find_element_by_css_selector("img[src='/ImxEbusWeb/images/english/Back.gif']").click()
+                            driver.find_element_by_css_selector("img[src='/ImxEbusWeb/images/english/Back.gif']").click()
                         wait = WebDriverWait(driver, 100)
                         wait.until(lambda driver: "Gate Appointment Inquiry" in driver.page_source)
                         rows = driver.find_element_by_css_selector("table[class='TableStandardBG']").find_element_by_css_selector("table[id='listingTable']>tbody").find_elements_by_css_selector("tr")
@@ -523,14 +560,20 @@ def getBetterRVs(driver, containers, date, acceptableTimes, targetDates, headles
     def get_RV(rv):
         table = driver.find_element_by_css_selector("table[class='TableStandardBG']")
         rows = table.find_element_by_css_selector("table[id='listingTable']>tbody").find_elements_by_css_selector("tr")
+        found=False
         for row in rows:
             cells = row.find_elements_by_css_selector("td")
             if rv in cells[6].text:
                 cells[6].click()
                 driver.find_element_by_name("Modify").click()
+                found=True
                 break
+        if not found:
+            print("Could not find " + rv + " on date: " +str(date))
+            messages=True
+        return found
     
-    def take_appointment_time(target_Date, contNum):
+    def take_appointment_time(target_Date, contNum, rv=False):
         nonlocal allConts
         foundAGoodOne = False
         switch = False
@@ -700,7 +743,10 @@ def getBetterRVs(driver, containers, date, acceptableTimes, targetDates, headles
                         if not allConts:
                             ignore_list.append(contNum)
                         print(datetime.now())
-                        print(contNum)
+                        if rv:
+                            print(rv)
+                        else:
+                            print(contNum)
                         print("Old time: " + cur_time + "  and date: " + date)
                         print("New time: " + buttonTime+ "  and date: " + target_Date + "\n")
                         driver.find_element_by_css_selector("img[src='/ImxEbusWeb/images/english/Back.gif']").click()
@@ -807,12 +853,15 @@ def getBetterRVs(driver, containers, date, acceptableTimes, targetDates, headles
         else:
             targetDatesTemp = targetDates
             gotRV = False
-            get_RV(rv)
+            if not get_RV(rv):
+                rvs.remove(rv)
+                rv=rvs[0]
+                continue
             while not gotRV:
                 if datetime.now()-startTime>timedelta(seconds=60):
                     break
                 for day in targetDatesTemp:
-                    gotRV = take_appointment_time(day, "None")
+                    gotRV = take_appointment_time(day, "None", rv)
                     if gotRV:
                         rvs.remove(rv)
                         if len(rvs)>0:

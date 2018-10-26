@@ -540,7 +540,7 @@ def bookPB(specificPath):
 #    
 if __name__ == '__main__':
 #     argv = r"a J:\All motor routings\2018\Week 22\Hapag-Lloyd".split()
-    
+    argv = r"a J:\All motor routings\2018\Week 43\HAPAG".split()
 #     t = Thread(target=listenForExit)
 #     t.setDaemon(True)
 #     t.start()
@@ -557,7 +557,8 @@ if __name__ == '__main__':
 #     destinationOfFiles = workOrderLocation[:workOrderLocation.rfind('\\')] + "\\"
 #     print(specificPath)
     
-    values = ContainerSizeInfo.loadValues(True, True, "NJ HAPAG-LLOYD: $250", "", "", True)
+    values = ContainerSizeInfo.loadValues(True, True, "NJ HAPAG-LLOYD: $250", "", True)
+#     print(values)
     contRates = values[0]
     laneCodes = values[1]
     laneCodesCoffee = values[2]

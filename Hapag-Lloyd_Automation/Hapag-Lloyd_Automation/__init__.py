@@ -429,7 +429,7 @@ def recursiveArrive(specificPath):
     
 if __name__ == '__main__':
     
-#     sys.argv = r"a J:\All motor routings\2018\Week 25\Hapag-Lloyd".split()
+#     sys.argv = r"a J:\All motor routings\2018\Week 43\HAPAG".split()
     workOrderLocation = ''
     for i in range(len(sys.argv)):
         if i!=0:

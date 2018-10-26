@@ -55,6 +55,7 @@ class Container(object):
     vessel=""
 #     eta=""
     cut=""
+    consignee=""
     
     cancelled=False
 
@@ -65,7 +66,6 @@ def extractText(pdf):
     
     name = r"J:\Spencer\CMA Work Orders\\"+pdf.Filename
     file = open(name, "rb")
-#     print(ticket.articles[0].attachments[0].Content)
 #     fileObj = StringIO()
 #     fileObj.write(ticket.articles[0].attachments[0].Content)
 #     fileData = base64.urlsafe_b64decode(pdf.encode('UTF-8'))
@@ -124,7 +124,6 @@ def extractText(pdf):
         text = parse_obj(text, layout._objs)
 #         if(thisText):
 #             text = text + thisText
-#     print(text)
     return text
 
 def extractTextHapag(pdf):
@@ -164,6 +163,8 @@ def getRestOfLine(text, findString, instance=-1, ):
     
     endIndex = text[startIndex:].find("_")+startIndex
 #     print(text[startIndex:endIndex])
+#     if "HLXU  5612736" in text[startIndex:endIndex]:
+#         exit() 
     return text[startIndex:endIndex]
     
     
@@ -205,131 +206,75 @@ def getContainer(text):
     elif "B/L Ref:  " in text:
         container.bookingNumber=getRestOfLine(text, "B/L Ref:  ")
 #     if "Customs Requirement" in container.cnumber:
-#         print(text)
     return container
-#     print(container)
 
 def getContainerHapag(text):
-    print(text)
-    exit()
-    
     containers=[]
-    print(text)
-    containerText = text[text.find("_W o r k   O r d e r   C o s t   S u m m a r y_"):]
     
-#     m = re.findall("[A-Za-z]{4}  [0-9]{7}", containerText)
-#     print(m)
-
-
     newContainer=Container()
-    
-    newContainer.cnumber=getRestOfLine(text, "Container:_",1)
-    
-    if newContainer.cnumber=="":
+     
+    newContainer.cnumber=getRestOfLine(text, "Container:_",1).replace(" ", "")
+    containers.append(newContainer)
+    if not re.search("[A-Za-z]{4}[0-9]{7}", newContainer.cnumber):
         newContainer.cnumber="Export"
-        containers.append(newContainer)
     else:
         noContFound = False
         i=2
         while not noContFound:
             newContainer = Container()
-            newContainer.cnumber=container
-            containers.append(newContainer)
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-#     container = Container()
-        
+            newContainer.cnumber=getRestOfLine(text, "Container:_",i).replace(" ", "")
+            i+=1
+            if newContainer.cnumber!="":
+                containers.append(newContainer)
+            else:
+                noContFound=True
+                
+    firstContainer = containers[0] 
+    if "Consignee:_" in text:
+        firstContainer.consignee=getRestOfLine(text, "Consignee:_")
+    firstContainer.bookingNumber=getRestOfLine(text, "Shipment:_")
+    firstContainer.bookingNumber=firstContainer.bookingNumber[:firstContainer.bookingNumber.find("-")]
+    firstContainer.address1=getRestOfLine(text, "Pick up_")
+    if "GREENWICH TERMINALS LLC" in firstContainer.address1:
+        firstContainer.address1="PACKER"
+    firstContainer.address1=getRestOfLine(text, "Pick up_")
+    firstContainer.address2=getRestOfLine(text, "_To_")
+    if "by TR" in firstContainer.address2:
+        firstContainer.address2=getRestOfLine(text, "_To_by TR_")
+    if "Empty return to" in text:
+        firstContainer.address3=getRestOfLine(text, "Empty return to_")
+        if "by TR" in firstContainer.address3:
+            firstContainer.address3=getRestOfLine(text, "by TR_")
+            
+    if firstContainer.address1!="" and firstContainer.address1[-1]==",":
+        firstContainer.address1=firstContainer.address1[:-1]
+    if firstContainer.address2!="" and firstContainer.address2[-1]==",":
+        firstContainer.address2=firstContainer.address2[:-1]
+    if firstContainer.address3!="" and firstContainer.address3[-1]==",":
+        firstContainer.address3=firstContainer.address3[:-1]
+    ###ADDRESS3
+#     print(text)
+#     exit()
+    firstContainer.WONumber=getRestOfLine(text, "Work Order:_")
+    firstContainer.vessel=getRestOfLine(text, "Voyage:_")
+    firstContainer.vessel=getRestOfLine(text, firstContainer.vessel+"_")
+    firstContainer.vessel+=getRestOfLine(text, "Sched. Voy:_")
+    if "_Cutoff_" in text:
+        firstContainer.cut="CUT: " + getRestOfLine(text, "_Cutoff_")
+    else:
+        firstContainer.cut="ETA: " + getRestOfLine(text, "_Arrival Date:_")
+        if not re.search("[0-9]", firstContainer.cut):
+            firstContainer.cut="DEL: " + getRestOfLine(text, "_Del. Date_")
     
     for container in containers:
-        container.address1 = getRestOfLine(text, "Pick up_")
-        container.address2=getRestOfLine(text, "_To_")
-        if "_Empty return to_" in text:
-            container.address3=getRestOfLine(text, "_Empty return to_")
-        
-        findString="_Work Order: "
-        startIndex =text.rfind(findString)+len(findString)
-        endIndex = text[startIndex:].find(" ")+startIndex
-        endIndex = min(text[startIndex:].find("_")+startIndex, endIndex)
-        
-        container.WONumber=text[startIndex:endIndex]
-        
-        if "_Del. Date_" in text:
-            container.cut="Delivery Date: " + getRestOfLine(text, "_Del. Date_")
-        elif "_Cutoff_" in text:
-            container.cut="Cutoff: " + getRestOfLine(text, "_Cutoff_")
-        else:
-            container.cut="ETA: " + getRestOfLine(text, "_Arrival Date:_")
-            
-            
-        fromLoc = text.find("_From")
-        m = re.search("(-001_[0-9]{6}[ _])(.*?)_", text)
-        if m:
-            container.vessel=m.group(2)
-#         else:
-            if m.start()<fromLoc:
-                startIndex=text.find(container.vessel)
-                startIndex = text[startIndex:].find("_")+startIndex+1
-                endIndex = text[startIndex:].find("_")+startIndex
-                vesselCode = text[startIndex:endIndex]
-                startIndex=endIndex+1
-                endIndex = text[startIndex:].find("_")+startIndex
-                container.vessel = text[startIndex:endIndex]+" "+vesselCode
-        
-        
-        findString=container.vessel+"_"
-        startIndex =text.find(findString)+len(findString)
-        startIndex = text[startIndex:].find("_")+startIndex+1
-        endIndex = text[startIndex:].find("_")+startIndex
-        
-        container.vessel += " " + text[startIndex:endIndex]
-        
+        container.address1=firstContainer.address1
+        container.address2=firstContainer.address2
+        container.address3=firstContainer.address3
+        container.cut=firstContainer.cut
+        container.vessel=firstContainer.vessel
+        container.WONumber=firstContainer.WONumber
+    
     return containers
-    
-    if "KCAN" in text:
-        container.WONumber=getRestOfLine(text, "KCAN", 0)
-        container.cut=getRestOfLine(text, "Restitution Date:_")
-    elif "TCAN" in text:
-        container.WONumber=getRestOfLine(text, "TCAN", 0)
-        container.cut=getRestOfLine(text, "Available From:_")
-    elif "KNAM" in text:
-        container.WONumber=getRestOfLine(text, "KNAM", 0)
-    
-    voyage = getRestOfLine(text, "_Vessel: _")
-    container.vessel=getRestOfLine(text, voyage+"_")+" "+voyage
-    
-    container.address1 = getRestOfLine(text, "_Address:_",1)
-    container.address2 = getRestOfLine(text, "_Address:_",2)
-    container.address3 = getRestOfLine(text, "_Address:_",3)
-    
-    container.cnumber=getRestOfLine(text, "_Container _")
-    m = re.match("((?!TCAN)(?!KCAN)(?!KNAM)[A-Za-z]{4}[0-9]{7})", container.cnumber)
-    if not m:
-        m = re.search("((?!TCAN)(?!KCAN)(?!KNAM)[A-Za-z]{4}[0-9]{7})", text)
-        if m:
-            container.cnumber=m.group(0)
-        else:
-            numofcont=getRestOfLine(text, "_Containers: _")
-            m = re.search("_[0-9]{2}[A-Za-z]{2}_", text[text.find("_Containers: _"):])
-            container.cnumber = numofcont+"x"+ m.group(0)[1:-1]
-        
-#     if "Empty Repo" in text:
-#         container.bookingNumber=getRestOfLine(text, "Empty Repo Ref: _SIPA: _")
-#         container.vessel=""
-    if "Booking Ref:  " in text:
-        container.bookingNumber=getRestOfLine(text, "Booking Ref:  ")
-    elif "B/L Ref:  " in text:
-        container.bookingNumber=getRestOfLine(text, "B/L Ref:  ")
-#     if "Customs Requirement" in container.cnumber:
-#         print(text)
-    return container
 
 def putContainerInSheet(containers, sheetLocation, listBook, listSheet, lastFileNumber, code):
     containerDict = dict()
@@ -352,7 +297,7 @@ def putContainerInSheet(containers, sheetLocation, listBook, listSheet, lastFile
             values.append(container.cut)
         values.append(container.receivedTime)
         if code=="TCAN":
-            values.append("=HYPERLINK(\"J:\\LOCAL DEPARTMENT\\CMA WOs\\"+container.WONumber+"-"+container.cnumber+".pdf\", \"Work Order\")")
+            values.append("=HYPERLINK(\"J:\\LOCAL DEPARTMENT\\CMA WO\\"+container.WONumber+"-"+container.cnumber+".pdf\", \"Work Order\")")
         if container in containerDict.keys():
             lastRow=containerDict[container]
             if container.cancelled:                
@@ -360,7 +305,6 @@ def putContainerInSheet(containers, sheetLocation, listBook, listSheet, lastFile
             else:
                 listSheet.cell(lastRow,len(values)+1).value = "Amended"
             
-#         print(lastRow)
         i=1
         for value in values:
             listSheet.cell(lastRow,i).value = value
@@ -383,7 +327,6 @@ def putContainerInSheet(containers, sheetLocation, listBook, listSheet, lastFile
     if len(containers) != 0:
         listSheet.cell(1,i+2).value = datetime.datetime.utcnow()
     i=lastFileNumber
-#     print(i)
     deleted = True
     while deleted:
         try:
@@ -414,7 +357,6 @@ def putContainerInSheet(containers, sheetLocation, listBook, listSheet, lastFile
             i+=1
 
 def putContainerInSheetHapag(containers, sheetLocation, listBook, listSheet, lastFileNumber):
-    print(sheetLocation)
     containerDict = dict()
     i=1
     print(containers)
@@ -426,27 +368,47 @@ def putContainerInSheetHapag(containers, sheetLocation, listBook, listSheet, las
             pass
 #     i=1
 #     containers.reverse()
-    for container in containers:
+    lastWO=""
+
+    for container in reversed(containers):
         lastRow = listSheet.max_row+1
-        values = [container.cnumber, container.WONumber, container.bookingNumber, container.vessel, container.address1, container.address2, container.address3, container.cut, container.receivedTime]
+        if container.WONumber==lastWO:
+            tempContainer = Container()
+            tempContainer.cnumber=container.cnumber
+            container=tempContainer
+
+        values = [container.cnumber, container.WONumber, container.bookingNumber, container.vessel, container.address1, container.address2, container.address3, container.consignee, container.cut, container.receivedTime]
         
-        values.append("=HYPERLINK(\"J:\\LOCAL DEPARTMENT\\Hapag WO\\"+container.WONumber+"-"+container.cnumber+".pdf\", \"Work Order\")")
         if container in containerDict.keys():
             lastRow=containerDict[container]
             
-#         print(lastRow)
+        if container.WONumber!="":
+            values.append("=HYPERLINK(\"J:\\LOCAL DEPARTMENT\\Hapag WO\\"+container.WONumber+"-"+container.cnumber+".pdf\", \"Work Order\")")
+        else:
+            values.append("")
+            corrected = False
+            i=1
+            while not corrected and i<lastRow:
+                for j in range(len(values)):
+                    if "HYPER" in listSheet.cell(lastRow-i,j+1).value:
+                        listSheet.cell(lastRow-i,j+1).value = listSheet.cell(lastRow-i,j+1).value[0:listSheet.cell(lastRow-i,j+1).value.find(".")]+"-"+container.cnumber+listSheet.cell(lastRow-i,j+1).value[listSheet.cell(lastRow-i,j+1).value.find("."):]
+                        corrected=True
+                        break
+                i+=1
+            
         i=1
         for value in values:
             listSheet.cell(lastRow,i).value = value
             if "HYPER" in value:
                 listSheet.cell(lastRow,i).font = Font(u='single', color=colors.BLUE)
             i+=1
-#             
+        if container.WONumber!="":
+            lastWO=container.WONumber
+#
 #         i+=1
     if len(containers) != 0:
         listSheet.cell(1,i+2).value = datetime.datetime.utcnow()
     i=lastFileNumber
-#     print(i)
     deleted = True
     while deleted:
         try:
@@ -555,7 +517,6 @@ def fetchCMAWOInfo(client, codes, sheetLocations):
             lastCheckLoc+=1
         elif code=="TCAN":
             lastCheckLoc+=3
-    #     print("Transport Order: " + code+"*")
         if listSheet.cell(1,lastCheckLoc).value=="" or listSheet.cell(1,lastCheckLoc).value==None:
 #             if code=="TCAN":
 #                 tickets = client.ticket_search(Title="Transport Order: TCAN1815669")
@@ -570,9 +531,7 @@ def fetchCMAWOInfo(client, codes, sheetLocations):
                 continue
             ticket = (client.ticket_get_by_id(ticket, True, True))
         #     ticket.articles[0].to_dct()
-    #         print(ticket.articles[0].field_get("Subject"))
             
-        #     print(ticket.articles[0].attachments[0])
         
             #     pdf = ticket.articles[0].attachments[0].Content
             for article in ticket.articles:
@@ -585,18 +544,17 @@ def fetchCMAWOInfo(client, codes, sheetLocations):
                             print(container.WONumber)
                             if "TCAN" in ticket.articles[0].field_get("Subject"):
                                 try:
-                                    copyfile(r"J:\Spencer\CMA Work Orders\\"+pdf.Filename, "J:\LOCAL DEPARTMENT\CMA WOs\\"+container.WONumber+"-"+container.cnumber+".pdf")
+                                    copyfile(r"J:\Spencer\CMA Work Orders\\"+pdf.Filename, "J:\LOCAL DEPARTMENT\CMA WO\\"+container.WONumber+"-"+container.cnumber+".pdf")
                                 except:
                                     pass
                             
                             if not container.cnumber in containerNumbers:
                                 containerNumbers.append(container.cnumber)
-                #                 print(container.cnumber)
                                 container.cancelled="Cancellation" in ticket.articles[0].field_get("Subject")
                                 container.receivedTime=str(datetime.datetime.strptime(ticket.articles[0].field_get("CreateTime"), "%Y-%m-%d %H:%M:%S")-timedelta(hours=4))
                                 containers.append(container)
-                    else:
-                        print(attachment.Filename)
+#                     else:
+#                         print(attachment.Filename)
         if i==0:
             exports = list(containers)
         elif i==1:
@@ -649,7 +607,7 @@ def fetchHAPAG():
         listBook=Workbook()
         listSheet = listBook.active
         
-        headers = ["Container Number", "WO Number", "Booking Number", "Vessel", "Address 1", "Address 2", "Address 3", "Relevant Date", "Date Received", "WO Link"]
+        headers = ["Container Number", "WO Number", "Booking Number", "Vessel", "Address 1", "Address 2", "Address 3", "Consignee", "Relevant Date", "Date Received", "WO Link"]
         
         
         i=1
@@ -660,14 +618,13 @@ def fetchHAPAG():
         listSheet.cell(1,i+1).value = "Last Checked:"
         listSheet.cell(1,i+2).value = None
             
-    if listSheet.cell(1,13).value=="" or listSheet.cell(1,13).value==None:
-#         tickets=client.ticket_search(Title="WOSD0001*")
-        tickets=client.ticket_search(Title="WOSD0001*", TicketChangeTimeNewerDate="2018-10-16 00:00:00")
+    if listSheet.cell(1,14).value=="" or listSheet.cell(1,14).value==None:
+#         tickets=client.ticket_search(Title="*602758250")
+        tickets=client.ticket_search(Title="WOSD0001*", TicketChangeTimeNewerDate="2018-09-22 00:00:00")
     else:
-        tickets=client.ticket_search(Title="WOSD0001*", TicketChangeTimeNewerDate=listSheet.cell(1,13).value)
+        tickets=client.ticket_search(Title="WOSD0001*", TicketChangeTimeNewerDate=listSheet.cell(1,14).value)
     
-#     tickets=[tickets[:4]]
-#     print(tickets)
+#     tickets=[tickets[3]]
     
     containers=[]
     woNumbers=[]
@@ -679,26 +636,25 @@ def fetchHAPAG():
             for attachment in article.attachments:
                 pdf = attachment
                 if ".pdf" in attachment.Filename and "WOSD0001" in attachment.Filename:
-#                     print(attachment.Filename)
                     text = extractTextHapag(pdf)
 #                     if not "Empty Repo" in text and text!="":
                     containersParsed = getContainerHapag(text)
 #                         if "TCAN" in ticket.articles[0].field_get("Subject"):
-                    try:
-                        if len(containersParsed)==1:
-                            copyfile(r"J:\Spencer\CMA Work Orders\\"+pdf.Filename, "J:\LOCAL DEPARTMENT\Hapag WO\\"+containersParsed[0].WONumber+"-"+containersParsed[0].cnumber+".pdf")
-                        else:
-                            contString=""
-                            for container in containersParsed:
-                                contString+=container.cnumber+"-"
-                            contString=contString[:-1]
-                            copyfile(r"J:\Spencer\CMA Work Orders\\"+pdf.Filename, "J:\LOCAL DEPARTMENT\Hapag WO\\"+containersParsed[0].WONumber+"-"+contString+".pdf")
-                    except:
-                        print(sys.exc_info())
-                        pass
                     if not containersParsed[0].WONumber in woNumbers:
+                        try:
+                            if len(containersParsed)==1:
+                                copyfile(r"J:\Spencer\CMA Work Orders\\"+pdf.Filename, "J:\LOCAL DEPARTMENT\Hapag WO\\"+containersParsed[0].WONumber+"-"+containersParsed[0].cnumber+".pdf")
+                            else:
+                                contString=""
+                                for container in containersParsed:
+                                    contString+=container.cnumber+"-"
+                                contString=contString[:-1]
+                                copyfile(r"J:\Spencer\CMA Work Orders\\"+pdf.Filename, "J:\LOCAL DEPARTMENT\Hapag WO\\"+containersParsed[0].WONumber+"-"+contString+".pdf")
+                        except:
+                            print(sys.exc_info())
+                            pass
                         print(containersParsed[0].WONumber)
-                        for container in containersParsed:
+                        for container in reversed(containersParsed):
                             woNumbers.append(container.WONumber)
             #                 print(container.cnumber)
 #                                 container.cancelled="Cancellation" in ticket.articles[0].field_get("Subject")
@@ -723,7 +679,7 @@ if __name__ == '__main__':
     #     Codes=["TCAN"]
         sheetLocations=[r"J:\ANTONIO-Export Work\CMA WO Sheets\\", r"J:\LOCAL DEPARTMENT\CMA WO Sheets\\", r"J:\IMPORTS\CMA WO Sheets\\"]
 #         sheetLocations=[r"C:\Users\ssleep\Documents\CMA WO\\", r"J:\LOCAL DEPARTMENT\CMA WO Sheets\\", r"J:\IMPORTS\CMA WO Sheets\\"]
-#         fetchCMAWOInfo(client, Codes, sheetLocations)
+        fetchCMAWOInfo(client, Codes, sheetLocations)
         fetchHAPAG()
         print("Done")
         sleep(600)

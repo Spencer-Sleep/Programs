@@ -426,7 +426,7 @@ def loadContainerInfo(specificPath, startAt, skip, terminal, steamShipLine):
                                     pars.append(container)
                             
                             if terminal!="CSX": 
-                                print(terminal)
+#                                 print(terminal)
                                 tier = ""
                                 if container.properties[COFFEE] != "NONE": 
                                     tier = "TIER 1"
@@ -667,7 +667,7 @@ def bookPars(containers, terminal, steamShipLine):
                 typewrite("56")
                 press("up", 2)
             elif terminal !="CSX" and int(float(container.properties[WEIGHT]))>contRates[size].T4weight:
-                typewrite(laneCodesThru[terminal])
+                typewrite(str(laneCodesThru[terminal]))
             elif laneCodes[terminal]==554:
                 typewrite("56")
                 press('up', 3)
@@ -1205,7 +1205,7 @@ def bookA8A(containers, terminal, steamShipLine):
 
 
 if __name__ == '__main__':
-#     argv = r"a J:\Running Routing by Vessel\GERDA MAERSK 830W.xlsx".split()
+  #  argv = r"a J:\All motor routings\JPO CAPRICORNUS V.022N_HS_LH_NYC.xlsx".split()
 #     argv = r"a J:\All motor routings\2018\Week 29\HAMBURG\MONTE ACONCAGUA V-82N\PA\PBs.xlsx".split()
 
 #     print("NONE".split(" ")[0])

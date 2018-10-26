@@ -27,9 +27,11 @@ import atexit
 from sys import exc_info
 from tkinter import Tk
 
+import warnings
 
 from tkinter import Tk, Button, Label, constants
 from exchangelib import Mailbox
+from urllib3.exceptions import InsecureRequestWarning
 
 
 class Container(object):
@@ -370,7 +372,7 @@ class Flag(ExtendedProperty):
 if __name__ == '__main__':
     driver = setupEterm()
     
-    
+    warnings.filterwarnings("ignore", category=InsecureRequestWarning)
     
     def doStuff(credentials, yardAccount, account, done):
 #         while(True):
@@ -380,16 +382,13 @@ if __name__ == '__main__':
         for item in account.inbox.filter(is_read=False, sender="cadex@custombroker.com"):
             if("Goods Released" in item.body):
                 release(item.body, driver, account)
-                item.flag=1
-                item.is_read=True
-            elif("Rejected" in item.body):
-                item.flag=1
-                item.is_read=True
-            else:
-                print("Unrecognized RNS Message: \n" + item.body)
-                popUpOK("Unrecognized RNS Message, see inbox or\nconsole window for details",16,top)
-                item.is_read=True
-                item.flag=2
+            item.flag=1
+            item.is_read=True
+#             else:
+#                 print("Unrecognized RNS Message: \n" + item.body)
+#                 popUpOK("Unrecognized RNS Message, see inbox or\nconsole window for details",16,top)
+#                 item.is_read=True
+#                 item.flag=2
 #             item.flag=1
 #             item.is_read=True
             item.save()

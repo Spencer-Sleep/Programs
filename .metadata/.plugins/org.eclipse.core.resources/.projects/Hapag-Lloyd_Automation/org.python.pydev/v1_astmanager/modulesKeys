@@ -786,16 +786,6 @@ PyInstaller.hooks.pre_safe_import_module.hook-setuptools.extern.six.moves|C:\Use
 PyInstaller.hooks.pre_safe_import_module.hook-six.moves|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\PyInstaller\hooks\pre_safe_import_module\hook-six.moves.py
 PyInstaller.hooks.pre_safe_import_module.hook-urllib3.packages.six.moves|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\PyInstaller\hooks\pre_safe_import_module\hook-urllib3.packages.six.moves.py
 PyInstaller.lib.__init__|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\PyInstaller\lib\__init__.py
-PyInstaller.lib.macholib.dyld|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\PyInstaller\lib\macholib\dyld.py
-PyInstaller.lib.macholib.dylib|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\PyInstaller\lib\macholib\dylib.py
-PyInstaller.lib.macholib.framework|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\PyInstaller\lib\macholib\framework.py
-PyInstaller.lib.macholib.itergraphreport|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\PyInstaller\lib\macholib\itergraphreport.py
-PyInstaller.lib.macholib.mach_o|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\PyInstaller\lib\macholib\mach_o.py
-PyInstaller.lib.macholib.macho_dump|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\PyInstaller\lib\macholib\macho_dump.py
-PyInstaller.lib.macholib.macho_find|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\PyInstaller\lib\macholib\macho_find.py
-PyInstaller.lib.macholib.macho_standalone|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\PyInstaller\lib\macholib\macho_standalone.py
-PyInstaller.lib.macholib.ptypes|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\PyInstaller\lib\macholib\ptypes.py
-PyInstaller.lib.macholib.util|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\PyInstaller\lib\macholib\util.py
 PyInstaller.lib.modulegraph.__init__|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\PyInstaller\lib\modulegraph\__init__.py
 PyInstaller.lib.modulegraph.__main__|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\PyInstaller\lib\modulegraph\__main__.py
 PyInstaller.lib.modulegraph._compat|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\PyInstaller\lib\modulegraph\_compat.py
@@ -803,10 +793,6 @@ PyInstaller.lib.modulegraph.find_modules|C:\Users\ssleep\AppData\Local\Programs\
 PyInstaller.lib.modulegraph.modulegraph|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py
 PyInstaller.lib.modulegraph.util|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\PyInstaller\lib\modulegraph\util.py
 PyInstaller.lib.modulegraph.zipio|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\PyInstaller\lib\modulegraph\zipio.py
-PyInstaller.lib.ordlookup.__init__|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\PyInstaller\lib\ordlookup\__init__.py
-PyInstaller.lib.ordlookup.oleaut32|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\PyInstaller\lib\ordlookup\oleaut32.py
-PyInstaller.lib.ordlookup.ws2_32|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\PyInstaller\lib\ordlookup\ws2_32.py
-PyInstaller.lib.pefile|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\PyInstaller\lib\pefile.py
 PyInstaller.loader.__init__|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\PyInstaller\loader\__init__.py
 PyInstaller.loader.pyiboot01_bootstrap|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\PyInstaller\loader\pyiboot01_bootstrap.py
 PyInstaller.loader.pyimod01_os_path|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\PyInstaller\loader\pyimod01_os_path.py
@@ -815,7 +801,6 @@ PyInstaller.loader.pyimod03_importers|C:\Users\ssleep\AppData\Local\Programs\Pyt
 PyInstaller.loader.rthooks.__init__|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\PyInstaller\loader\rthooks\__init__.py
 PyInstaller.loader.rthooks.pyi_rth__nltk|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\PyInstaller\loader\rthooks\pyi_rth__nltk.py
 PyInstaller.loader.rthooks.pyi_rth__tkinter|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\PyInstaller\loader\rthooks\pyi_rth__tkinter.py
-PyInstaller.loader.rthooks.pyi_rth_cryptography|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\PyInstaller\loader\rthooks\pyi_rth_cryptography.py
 PyInstaller.loader.rthooks.pyi_rth_django|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\PyInstaller\loader\rthooks\pyi_rth_django.py
 PyInstaller.loader.rthooks.pyi_rth_enchant|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\PyInstaller\loader\rthooks\pyi_rth_enchant.py
 PyInstaller.loader.rthooks.pyi_rth_gdkpixbuf|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\PyInstaller\loader\rthooks\pyi_rth_gdkpixbuf.py
@@ -992,7 +977,6 @@ cffi.verifier|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site
 chardet.__init__|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\chardet\__init__.py
 chardet.big5freq|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\chardet\big5freq.py
 chardet.big5prober|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\chardet\big5prober.py
-chardet.chardetect|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\chardet\chardetect.py
 chardet.chardistribution|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\chardet\chardistribution.py
 chardet.charsetgroupprober|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\chardet\charsetgroupprober.py
 chardet.charsetprober|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\chardet\charsetprober.py
@@ -1000,7 +984,6 @@ chardet.cli.__init__|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\L
 chardet.cli.chardetect|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\chardet\cli\chardetect.py
 chardet.codingstatemachine|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\chardet\codingstatemachine.py
 chardet.compat|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\chardet\compat.py
-chardet.constants|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\chardet\constants.py
 chardet.cp949prober|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\chardet\cp949prober.py
 chardet.enums|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\chardet\enums.py
 chardet.escprober|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\chardet\escprober.py
@@ -2888,7 +2871,6 @@ setuptools.msvc|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\si
 setuptools.namespaces|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\setuptools\namespaces.py
 setuptools.package_index|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\setuptools\package_index.py
 setuptools.pep425tags|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\setuptools\pep425tags.py
-setuptools.py26compat|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\setuptools\py26compat.py
 setuptools.py27compat|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\setuptools\py27compat.py
 setuptools.py31compat|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\setuptools\py31compat.py
 setuptools.py33compat|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\setuptools\py33compat.py
