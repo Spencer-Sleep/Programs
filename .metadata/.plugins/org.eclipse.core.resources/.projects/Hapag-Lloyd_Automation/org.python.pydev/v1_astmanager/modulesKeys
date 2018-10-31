@@ -354,7 +354,7 @@ Cython.Compiler.CythonScope|C:\Users\ssleep\AppData\Local\Programs\Python\Python
 Cython.Compiler.DebugFlags|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\Cython\Compiler\DebugFlags.py
 Cython.Compiler.Errors|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\Cython\Compiler\Errors.py
 Cython.Compiler.ExprNodes|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\Cython\Compiler\ExprNodes.py
-Cython.Compiler.FlowControl|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\Cython\Compiler\FlowControl.pxd
+Cython.Compiler.FlowControl|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\Cython\Compiler\FlowControl.py
 Cython.Compiler.FusedNode|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\Cython\Compiler\FusedNode.py
 Cython.Compiler.Future|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\Cython\Compiler\Future.py
 Cython.Compiler.Interpreter|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\Cython\Compiler\Interpreter.py
@@ -394,7 +394,7 @@ Cython.Compiler.TypeSlots|C:\Users\ssleep\AppData\Local\Programs\Python\Python36
 Cython.Compiler.UtilNodes|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\Cython\Compiler\UtilNodes.py
 Cython.Compiler.UtilityCode|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\Cython\Compiler\UtilityCode.py
 Cython.Compiler.Version|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\Cython\Compiler\Version.py
-Cython.Compiler.Visitor|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\Cython\Compiler\Visitor.py
+Cython.Compiler.Visitor|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\Cython\Compiler\Visitor.pxd
 Cython.Compiler.__init__|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\Cython\Compiler\__init__.py
 Cython.Coverage|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\Cython\Coverage.py
 Cython.Debugger.Cygdb|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\Cython\Debugger\Cygdb.py
@@ -851,7 +851,7 @@ PyInstaller.utils.win32.versioninfo|C:\Users\ssleep\AppData\Local\Programs\Pytho
 PyInstaller.utils.win32.winmanifest|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\PyInstaller\utils\win32\winmanifest.py
 PyInstaller.utils.win32.winresource|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\PyInstaller\utils\win32\winresource.py
 PyInstaller.utils.win32.winutils|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\PyInstaller\utils\win32\winutils.py
-__init__|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\PyPDF2\__init__.py
+__init__|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\fdfgen\__init__.py
 _pytest.__init__|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\_pytest\__init__.py
 _pytest._argcomplete|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\_pytest\_argcomplete.py
 _pytest._code.__init__|C:\Users\ssleep\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\_pytest\_code\__init__.py

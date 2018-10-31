@@ -559,12 +559,12 @@ def makeACI(driver, container, saved, failed, dayoftheweek):
         driver.find_element_by_id("buttonPortalOk").click()
         driver.implicitly_wait(30)
         failed.append(container)
-        print("Failed: " + container)
+        print("Failed: " + container.containerNumber)
         return
     except:
         driver.implicitly_wait(30)
         driver.find_element_by_id("buttonPortalYes").click()
-        print("Created ACI for container: " + container)
+        print("Created ACI for container: " + container.containerNumber)
         elem = driver.find_element_by_css_selector('a[href*="/manif/services/eng/pb10001.html?pb1=ls&ts="]')
         elem.click()
             
@@ -611,7 +611,7 @@ def makeACI(driver, container, saved, failed, dayoftheweek):
 #     
 
 if __name__ == '__main__':
-#     argv = r"a J:\Linehaul\Linehaul Drivers Weekly Reports\2018\2018\WEEK 43".split()
+#     argv = r"a J:\Linehaul\Linehaul Drivers Weekly Reports\2018\2018\WEEK 44".split()
 #     argv = r"a C:\Users\ssleep\Documents\Week 29".split()
 #     print("IF RUNNING IN BACKGROUND DO NOT EXIT THIS WINDOW")
 #     print("HIT \"CONTROL-C\" TO END THE PROGRAM, AND THEN EXIT THE WINDOW") 

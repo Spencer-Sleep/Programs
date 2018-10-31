@@ -644,100 +644,100 @@ def loadinfo(folderPath):
 if __name__ == '__main__':
     
 #     argv = r"a J:\Linehaul Drivers Weekly Reports\2018\2018\WEEK 40\Imports week 40.xlsx".split()
-    done=False
-    while not done:
-        try:
-            if os.path.isfile(r"C:\Program Files\Microsoft Office 15\root\office15\outlook.exe"):
-                app = Application(backend="win32").connect(path = r"C:\Program Files\Microsoft Office 15\root\office15\outlook.exe")
-            elif os.path.isfile(r"C:\Program Files (x86)\Microsoft Office\root\Office16\OUTLOOK.EXE"):
-                app = Application(backend="win32").connect(path = r"C:\Program Files (x86)\Microsoft Office\root\Office16\OUTLOOK.EXE")
-            elif os.path.isfile(r"C:\Program Files (x86)\Microsoft Office\Office14\OUTLOOK.EXE"):
-                app = Application(backend="win32").connect(path = r"C:\Program Files (x86)\Microsoft Office\Office14\OUTLOOK.EXE")
-
-#                 elif os.path.isfile(r"C:\Program Files\WindowsApps\Microsoft.Office.Desktop.Outlook_16040.10827.20138.0_x86__8wekyb3d8bbwe\Office16\outlook.exe"):
-#                     app = Application(backend="win32").connect(path = r"C:\Program Files\WindowsApps\Microsoft.Office.Desktop.Outlook_16040.10827.20138.0_x86__8wekyb3d8bbwe\Office16\outlook.exe")    
-            else:
-                directoryPath = "C:\Program Files\WindowsApps\\"
-                if os.path.isdir("C:\Program Files\WindowsApps\\"):
-                    contents = os.listdir("C:\Program Files\WindowsApps\\")
-                    outLookFolders=[]
-                    for folder in contents:
-                        if os.path.isdir("C:\Program Files\WindowsApps\\"+folder):
-                            if "outlook" in folder.lower():
-                                outLookFolders.append(folder)
-                outlookPath = ""
-                for folder in outLookFolders:
-                    contents = os.listdir("C:\Program Files\WindowsApps\\"+folder)
-                    for officeFolder in contents:
-                        if os.path.isdir(directoryPath+folder+"\\"+officeFolder):
-                            if "office" in officeFolder.lower():
-                                contentsInner = os.listdir(directoryPath+folder+"\\"+officeFolder)
-                                for outlookProgram in contentsInner:
-                                    if outlookProgram.lower()=="outlook.exe":
-                                        outlookPath=directoryPath+folder+"\\"+officeFolder+"\\"+outlookProgram
-                if os.path.isfile(outlookPath):
-                    app = Application(backend="win32").connect(path = outlookPath)
-                else:    
-                    popUpOK("Could not find Outlook in \"C:\Program Files\Microsoft Office 15\root\office15\outlook.exe\" \n or \"C:\Program Files (x86)\Microsoft Office\root\Office16\OUTLOOK.EXE\" \n or \"C:\Program Files (x86)\Microsoft Office\Office14\" \n or the \"C:\Program Files\WindowsApps\\\" folder")
-                    exit()
-            done=True
-        except:
-            pass
-    
-    winChildren = ""
-            
-    done = False
-    
-    while not done:
-        dialogs = app.windows()
-        topWindow = None
-        for x in dialogs:
-            if isinstance(handleprops.text(x), str) and not handleprops.text(x)==None:
-                try:
-                    if "Carrier Confirmation" in handleprops.text(x):
-                        winChildren = handleprops.children(x)
-                        topWindow = x
-                        break
-                except:
-                    pass
-            
-        send = ""
-        if topWindow==None:
-            continue
-            
-        topWindowWrap = app.window(handle=topWindow)
-        
-        for x in winChildren:
-#                 print(handleprops.text(x) + "   " + handleprops.classname(x))
-            if handleprops.text(x)=="&Send":
-                send = x
-                print("found Send")
-            if handleprops.text(x)=="Fro&m":
-                print("found From")
-                buttonWrap = topWindowWrap.child_window(handle=x).wrapper_object()
-                buttonWrap.click()
-                
-#                 done = True
-                
-#                 if not clickTuple:
-#                     moveTo(114, 221)
-#                      
-#                     while not GetKeyState(145)<0:
-#                         True
-#                      
-#                     clickTuple = position()
-#                  
-# #                         else:                        
-#                 click(clickTuple)
-        
-        sleep(100)
-        if done==True:            
-            buttonWrap = topWindowWrap.child_window(handle=send).wrapper_object()
-            buttonWrap.click()
-    
-    
-    
-    exit()
+#     done=False
+#     while not done:
+#         try:
+#             if os.path.isfile(r"C:\Program Files\Microsoft Office 15\root\office15\outlook.exe"):
+#                 app = Application(backend="win32").connect(path = r"C:\Program Files\Microsoft Office 15\root\office15\outlook.exe")
+#             elif os.path.isfile(r"C:\Program Files (x86)\Microsoft Office\root\Office16\OUTLOOK.EXE"):
+#                 app = Application(backend="win32").connect(path = r"C:\Program Files (x86)\Microsoft Office\root\Office16\OUTLOOK.EXE")
+#             elif os.path.isfile(r"C:\Program Files (x86)\Microsoft Office\Office14\OUTLOOK.EXE"):
+#                 app = Application(backend="win32").connect(path = r"C:\Program Files (x86)\Microsoft Office\Office14\OUTLOOK.EXE")
+# 
+# #                 elif os.path.isfile(r"C:\Program Files\WindowsApps\Microsoft.Office.Desktop.Outlook_16040.10827.20138.0_x86__8wekyb3d8bbwe\Office16\outlook.exe"):
+# #                     app = Application(backend="win32").connect(path = r"C:\Program Files\WindowsApps\Microsoft.Office.Desktop.Outlook_16040.10827.20138.0_x86__8wekyb3d8bbwe\Office16\outlook.exe")    
+#             else:
+#                 directoryPath = "C:\Program Files\WindowsApps\\"
+#                 if os.path.isdir("C:\Program Files\WindowsApps\\"):
+#                     contents = os.listdir("C:\Program Files\WindowsApps\\")
+#                     outLookFolders=[]
+#                     for folder in contents:
+#                         if os.path.isdir("C:\Program Files\WindowsApps\\"+folder):
+#                             if "outlook" in folder.lower():
+#                                 outLookFolders.append(folder)
+#                 outlookPath = ""
+#                 for folder in outLookFolders:
+#                     contents = os.listdir("C:\Program Files\WindowsApps\\"+folder)
+#                     for officeFolder in contents:
+#                         if os.path.isdir(directoryPath+folder+"\\"+officeFolder):
+#                             if "office" in officeFolder.lower():
+#                                 contentsInner = os.listdir(directoryPath+folder+"\\"+officeFolder)
+#                                 for outlookProgram in contentsInner:
+#                                     if outlookProgram.lower()=="outlook.exe":
+#                                         outlookPath=directoryPath+folder+"\\"+officeFolder+"\\"+outlookProgram
+#                 if os.path.isfile(outlookPath):
+#                     app = Application(backend="win32").connect(path = outlookPath)
+#                 else:    
+#                     popUpOK("Could not find Outlook in \"C:\Program Files\Microsoft Office 15\root\office15\outlook.exe\" \n or \"C:\Program Files (x86)\Microsoft Office\root\Office16\OUTLOOK.EXE\" \n or \"C:\Program Files (x86)\Microsoft Office\Office14\" \n or the \"C:\Program Files\WindowsApps\\\" folder")
+#                     exit()
+#             done=True
+#         except:
+#             pass
+#     
+#     winChildren = ""
+#             
+#     done = False
+#     
+#     while not done:
+#         dialogs = app.windows()
+#         topWindow = None
+#         for x in dialogs:
+#             if isinstance(handleprops.text(x), str) and not handleprops.text(x)==None:
+#                 try:
+#                     if "Carrier Confirmation" in handleprops.text(x):
+#                         winChildren = handleprops.children(x)
+#                         topWindow = x
+#                         break
+#                 except:
+#                     pass
+#             
+#         send = ""
+#         if topWindow==None:
+#             continue
+#             
+#         topWindowWrap = app.window(handle=topWindow)
+#         
+#         for x in winChildren:
+# #                 print(handleprops.text(x) + "   " + handleprops.classname(x))
+#             if handleprops.text(x)=="&Send":
+#                 send = x
+#                 print("found Send")
+#             if handleprops.text(x)=="Fro&m":
+#                 print("found From")
+#                 buttonWrap = topWindowWrap.child_window(handle=x).wrapper_object()
+#                 buttonWrap.click()
+#                 
+# #                 done = True
+#                 
+# #                 if not clickTuple:
+# #                     moveTo(114, 221)
+# #                      
+# #                     while not GetKeyState(145)<0:
+# #                         True
+# #                      
+# #                     clickTuple = position()
+# #                  
+# # #                         else:                        
+# #                 click(clickTuple)
+#         
+#         sleep(100)
+#         if done==True:            
+#             buttonWrap = topWindowWrap.child_window(handle=send).wrapper_object()
+#             buttonWrap.click()
+#     
+#     
+#     
+#     exit()
     
     folderPath = ''
     for i in range(len(argv)):

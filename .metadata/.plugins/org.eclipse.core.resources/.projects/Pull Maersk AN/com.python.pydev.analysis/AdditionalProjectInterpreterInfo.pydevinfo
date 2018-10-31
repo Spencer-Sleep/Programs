@@ -1,0 +1,21 @@
+-- VERSION_4
+-- START DISKCACHE_2
+C:\Users\ssleep\workspace\.metadata\.plugins\org.eclipse.core.resources\.projects\Pull Maersk AN\com.python.pydev.analysis\v2_indexcache
+Automator.__init__|1540826531969033000|C:\Users\ssleep\workspace\Pull Maersk AN\Automator\__init__.py
+-- END DISKCACHE
+-- START DICTIONARY
+1
+1=Automator.__init__
+-- END DICTIONARY
+-- START TREE 1
+6
+a|1|a!11@
+bol|1|bols!11@
+cli|1|client!11@
+fet|1|fetchANs!10@
+get|2|getBOLs!10@getPdf!10@
+wor|1|workOrderLocation!11@
+-- END TREE
+-- START TREE 2
+0
+-- END TREE
