@@ -9,12 +9,13 @@ import datetime
 import img2pdf
 from PyPDF2.pdf import PdfFileWriter, PdfFileReader
 from _io import BytesIO
-    
+import warnings
     
 if __name__ == '__main__':
 #     mapi/emsmdb/?MailboxId=8b3c9bfe-7977-46dd-aeaa-fac511e675d2@seaportint.com
 #     fetcher = FetchEmail(r"https://exchange.mobinet.ca/", "ssleep", "ss#99PASS")
-    
+    warnings.filterwarnings("ignore")
+
     
     credentials = Credentials(
     username='mprewer@seaportint.com',  # Or myusername@example.com for O365
@@ -44,8 +45,8 @@ if __name__ == '__main__':
 #     print("here")
     # Print first 100 inbox messages in reverse order
     while(True):
-#         print(account.inbox.unread_count)
-#         print(datetime.datetime.now())
+        print(account.inbox.unread_count)
+        print(datetime.datetime.now())
         for item in account.inbox.filter(is_read=False, sender="wordpress@seaportint.com"):
 #             for attachment in item.attachments:
 #             if isinstance(attachment, FileAttachment):

@@ -100,7 +100,6 @@ def popUp(top, top2 = "", w=300, h=90, widget=""):
         top.mainloop()
     
 def setupPortal():
-
 #     driver = Firefox(log_path=devnull)
 
     
@@ -118,7 +117,7 @@ def setupPortal():
 #     options.EnsureCleanSession = True    // this cleansession did the trick
 
     def exit_hander():
-#         sleep(20)
+        sleep(200)
 #         driver.quit()
         print("Error:")     
     atexit.register(exit_hander)
@@ -208,9 +207,9 @@ def callbackBookTE(driver):
     try:
         portCode = [""]
         if container.terminal=="311":
-            if "PACKER" in container.extraText:
+            if "PACKER" in container.extraText or "PHL" in container.extraText:
                 portCode[0] = "1101"
-            elif "PNCT" in container.extraText or "APM" in container.extraText or "MAHER" in container.extraText:
+            elif "PNCT" in container.extraText or "APM" in container.extraText or "MAHER" in container.extraText or "NYC" in container.extraText:
                 portCode[0] = "4601"
             else:
                 top = Tk()

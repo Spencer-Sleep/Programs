@@ -301,9 +301,12 @@ def callbackBookTE(driver):
 #             stateProv = "New Jersey"
 #             zipPost = "07201"
          
+        sleep(1) 
+        
         driver.find_element_by_id("PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_STANDARDSHIPMENT_SHIPPER_NAME").send_keys(container.shipper)
         driver.find_element_by_id("PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_STANDARDSHIPMENT_SHIPPER_ADDRESS_STREET").send_keys(container.shipperAdd1)
         driver.find_element_by_id("PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_STANDARDSHIPMENT_SHIPPER_ADDRESS_CITY").send_keys(container.shipperCity)
+        sleep(1)
         Select(driver.find_element_by_id("PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_STANDARDSHIPMENT_SHIPPER_ADDRESS_COUNTRY")).select_by_value(container.shipperCountry)
         sel = Select(driver.find_element_by_id("PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_STANDARDSHIPMENT_SHIPPER_ADDRESS_REGION"))
         driver.implicitly_wait(0)
@@ -317,51 +320,51 @@ def callbackBookTE(driver):
                     sel.select_by_visible_text("--Select--")
                     raise NameError
             except:
-                bgC = "lavender"
-                top = Tk()
-                top.config(bg = bgC)
-                L1 = Label(top, text="Please select the correct province/state\nenter the correct zip/postal code,\n and press \"Enter\"", bg = bgC, padx = 20)
-                L1.config(font=("serif", 16))
-                L1.grid(row=0, column=0, sticky=constants.W+constants.E)
-                
-                def callbackOK():
-                    top.destroy()
-                    
-                MyButton = Button(top, text="OK", command=callbackOK)
-                MyButton.grid(row=1, column=0, sticky=constants.W+constants.E, padx = 20, pady = (0,20))
-                MyButton.config(font=("serif", 30), bg="green")
-                  
-                top.update()
-                
-                w = top.winfo_width() # width for the Tk root
-                h = top.winfo_height() # height for the Tk root
-                   
-                ws = top.winfo_screenwidth() # width of the screen
-                hs = top.winfo_screenheight() # height of the screen
-                x = (ws/2) - (w/2)
-                y = (hs/2) - (h/2)
-                
-                top.geometry('%dx%d+%d+%d' % (w, h, x, y))
-                top.update()
-                moveTo(MyButton.winfo_width()/2 + MyButton.winfo_rootx(), MyButton.winfo_height()/2 + MyButton.winfo_rooty())
-                
-                def destroyAfter():
-                    while not GetKeyState(13)<0:
-                        True
-                    try:
-                        top.destroy()
-                    except:
-                        pass
-                    
-                top.after_idle(destroyAfter)
-                
+#                 bgC = "lavender"
+#                 top = Tk()
+#                 top.config(bg = bgC)
+#                 L1 = Label(top, text="Please select the correct province/state\nenter the correct zip/postal code,\n and press \"Enter\"", bg = bgC, padx = 20)
+#                 L1.config(font=("serif", 16))
+#                 L1.grid(row=0, column=0, sticky=constants.W+constants.E)
+#                 
+#                 def callbackOK():
+#                     top.destroy()
+#                     
+#                 MyButton = Button(top, text="OK", command=callbackOK)
+#                 MyButton.grid(row=1, column=0, sticky=constants.W+constants.E, padx = 20, pady = (0,20))
+#                 MyButton.config(font=("serif", 30), bg="green")
+#                   
+#                 top.update()
+#                 
+#                 w = top.winfo_width() # width for the Tk root
+#                 h = top.winfo_height() # height for the Tk root
+#                    
+#                 ws = top.winfo_screenwidth() # width of the screen
+#                 hs = top.winfo_screenheight() # height of the screencarton
+#                 x = (ws/2) - (w/2)
+#                 y = (hs/2) - (h/2)
+#                 
+#                 top.geometry('%dx%d+%d+%d' % (w, h, x, y))
+#                 top.update()
+#                 moveTo(MyButton.winfo_width()/2 + MyButton.winfo_rootx(), MyButton.winfo_height()/2 + MyButton.winfo_rooty())
+#                 
+#                 def destroyAfter():
+#                     while not GetKeyState(13)<0:
+#                         True
+#                     try:
+#                         top.destroy()
+#                     except:
+#                         pass
+#                     
+#                 top.after_idle(destroyAfter)
+#                 
                 driver.find_element_by_id("PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_STANDARDSHIPMENT_SHIPPER_ADDRESS_REGION").click()
-                
-                top.lift()
-                top.attributes('-topmost',True)
-                top.after_idle(top.attributes,'-topmost',False)
-                
-                top.mainloop()
+#                 
+#                 top.lift()
+#                 top.attributes('-topmost',True)
+#                 top.after_idle(top.attributes,'-topmost',False)
+#                 
+#                 top.mainloop()
                 
                 while not GetKeyState(13)<0:
                     True
@@ -540,25 +543,25 @@ def setupDM(container):
     
     
     
-#     click(50, 350)
-#     fore = win32gui.GetForegroundWindow()
-#     DMFore = "Dispatch-Mate" in win32gui.GetWindowText(fore)
-#     while not DMFore:
-#         top = Tk()
-#         L1 = Label(top, text="Please maximize DispatchMate and the PB in the left monitor")
-#         L1.grid(row=0, column=0)
-#         
-#         def callbackDM():
-#             top.destroy()
-#         
-#         MyButton4 = Button(top, text="OK", width=10, command=callbackDM)
-#         MyButton4.grid(row=1, column=0)
-#     
-#         popUp(top, w=350, h=50, widget = MyButton4)
-#         
-#         click(50, 350)
-#         fore = win32gui.GetForegroundWindow()
-#         DMFore = "Dispatch-Mate" in win32gui.GetWindowText(fore)
+    click(50, 350)
+    fore = win32gui.GetForegroundWindow()
+    DMFore = "Dispatch-Mate" in win32gui.GetWindowText(fore)
+    while not DMFore:
+        top = Tk()
+        L1 = Label(top, text="Please maximize DispatchMate and the PB in the left monitor")
+        L1.grid(row=0, column=0)
+         
+        def callbackDM():
+            top.destroy()
+         
+        MyButton4 = Button(top, text="OK", width=10, command=callbackDM)
+        MyButton4.grid(row=1, column=0)
+     
+        popUp(top, w=350, h=50, widget = MyButton4)
+         
+        click(50, 350)
+        fore = win32gui.GetForegroundWindow()
+        DMFore = "Dispatch-Mate" in win32gui.GetWindowText(fore)
 #         
 #     moveTo(2000, 550)
 #     def windowEnumerationHandler(hwnd, top_windows):

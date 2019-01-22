@@ -1,7 +1,7 @@
 -- VERSION_4
 -- START DISKCACHE_2
 C:\Users\ssleep\workspace\.metadata\.plugins\org.eclipse.core.resources\.projects\CPTracer\com.python.pydev.analysis\v2_indexcache
-Automator.__init__|1534527642328536000|C:\Users\ssleep\workspace\CPTracer\Automator\__init__.py
+Automator.__init__|1546898654456755000|C:\Users\ssleep\workspace\CPTracer\Automator\__init__.py
 -- END DISKCACHE
 -- START DICTIONARY
 4
@@ -11,9 +11,10 @@ Automator.__init__|1534527642328536000|C:\Users\ssleep\workspace\CPTracer\Automa
 4=Container.__init__
 -- END DICTIONARY
 -- START TREE 1
-17
+18
 L1|1|L1!11@
 cal|1|callbackOK!10@
+che|1|checkContainerNumbers!10@
 con|3|constants!9@containers!11@Container!9@
 dri|1|driver!11@
 fil|1|filePath!11@

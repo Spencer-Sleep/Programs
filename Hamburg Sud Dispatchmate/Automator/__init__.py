@@ -377,11 +377,18 @@ def loadContainerInfo(specificPath, startAt, skip, terminal, steamShipLine):
                         if size:
                             skipThisContainer = [False]
                             
-                            if weight > contRates[size].CSXlimit:
+                            if terminal=="CSX":
+                                weightLimit= contRates[size].CSXlimit
+                            elif terminal=="PACKER":
+                                weightLimit= contRates[size].PAlimit
+                            else:
+                                weightLimit= contRates[size].NYClimit
+                            
+                            if weight > weightLimit:
                                 top = Tk()
                                 top.config(bg = "lavender")
-                                L1 = Label(top, text="Container " + container.properties[CONTAINERNUMBER] + " is too heavy for Buffalo.\nThe weight limit for "+ size + 
-                                           " is " + str(contRates[size].CSXlimit) + " KG.\n" + container.properties[CONTAINERNUMBER] + " is " + str(weight) + " KG.", bg="lavender", font=("serif", 16))
+                                L1 = Label(top, text="Container " + container.properties[CONTAINERNUMBER] + " is too heavy for " + terminal+".\nThe weight limit for "+ size + 
+                                           " is " + str(weightLimit) + " KG.\n" + container.properties[CONTAINERNUMBER] + " is " + str(weight) + " KG.", bg="lavender", font=("serif", 16))
                                 L1.grid(row=0, column=0, columnspan=2)
                                 
                                 def callbackSkip(skipThisContainer):
@@ -557,241 +564,204 @@ def bookPars(containers, terminal, steamShipLine):
     lastContainerRates = 0
     
     for container in containers:
-        if terminal=="PACKER" and contRates[ContainerSizeInfo.standardSize(container.properties[SIZE])].P2weight and int(float(container.properties[WEIGHT]))>contRates[ContainerSizeInfo.standardSize(container.properties[SIZE])].P2weight:
-            top = Tk()
-            L1 = Label(top, text="Container " + container.properties[CONTAINERNUMBER] + " is too heavy for PA \n Skipping container.")
-            L1.grid(row=0, column=0)
-             
-            def callbackTerminal(terminalNum):
-                top.destroy()
-             
-            MyButton4 = Button(top, text="OK", width=10, command=lambda: callbackTerminal(terminalNum))
-            MyButton4.grid(row=1, column=0)
-             
-            top.lift()
-            top.attributes('-topmost',True)
-            top.after_idle(top.attributes,'-topmost',False)
-             
-            top.update()
-    
-            w = top.winfo_width() # width for the Tk root
-            h = top.winfo_height() # height for the Tk root
-               
-            ws = top.winfo_screenwidth() # width of the screen
-            hs = top.winfo_screenheight() # height of the screen
-            x = (ws/2) - (w/2)
-            y = (hs/2) - (h/2)
-            
-            top.geometry('%dx%d+%d+%d' % (w, h, x, y))
-             
-            # set the dimensions of the screen 
-            # and where it is placed
-             
-            moveTo(968, 561)
-#             def click2():
-#                 click(1001, 508)
-#              
-#             top.after(10, click2)
-            top.mainloop()
-        else:
-            click(loc.OVERVIEWTABLOC)
-            
-            click(loc.OKLOC)
-            click(loc.DUPLICATELOC)
-            
-            if GetKeyState(27) < 0:
-                exit()
-            
-            if not (steamShipLine=="HAMBURG" and terminal!="CSX"):
-                click(loc.BOLLOC)
-                if steamShipLine=="MAERSK":
-                    typewrite(container.properties[BOOKING])
-                else:
-                    typewrite(container.properties[VESSEL])
-            
-            if not steamShipLine=="MSC" and not steamShipLine=="CMA":
-                click(loc.CONSIGNEETRACELOC)
-                if steamShipLine=="HAMBURG":
-                    typewrite(container.properties[PONUMBER])
-                elif steamShipLine=="MAERSK":
-                    typewrite(container.properties[VESSEL])
-                else:
-                    typewrite(container.properties[BOOKING])
-            
-            if not (steamShipLine=="MAERSK"):
-                click(loc.POLOC)
-                if (steamShipLine=="MSC" and terminal!= "CSX"):
-                    typewrite(container.properties[BOOKING])
-                else:
-                    typewrite(container.properties[PONUMBER])
-            
-            click(loc.DESCRIPTIONLOC)
-            press("tab", 7)
-            typewrite("1")
-            
-            press("tab", 2)
-            typewrite(container.properties[CONTAINERNUMBER])
-            
-            
-            click(loc.EQUIPMENTLOC)
-            press('home')
-            size = ContainerSizeInfo.standardSize(container.properties[SIZE])
-            if size == "20D86":
-                downAmount = 4
-            elif size == "20R86":
-                downAmount = 3
-            elif size == "20O86":
-                downAmount = 2
-            elif size == "40D86":
-                downAmount = 7
-            elif size == "40O86":
-                downAmount = 11
-            elif size == "40D96":
-                downAmount = 10
-            elif size == "40R96":
-                downAmount = 12
-            elif size == "D96":
-                downAmount = 13
-            
-            press('down', downAmount)
-            press('enter')
-            
-            click(loc.LANECODELOC)
-            
-            if container.properties[COFFEE] != "NONE" and laneCodesCoffee[terminal]==556:
-                typewrite("56")
-                press('up')
-            elif container.properties[COFFEE] != "NONE":
-                typewrite(str(laneCodesCoffee[terminal]))
-            elif terminal !="CSX" and int(float(container.properties[WEIGHT]))>contRates[size].T4weight and laneCodesThru[terminal]==555:
-                typewrite("56")
-                press("up", 2)
-            elif terminal !="CSX" and int(float(container.properties[WEIGHT]))>contRates[size].T4weight:
-                typewrite(str(laneCodesThru[terminal]))
-            elif laneCodes[terminal]==554:
-                typewrite("56")
-                press('up', 3)
-            else:
-                typewrite(str(laneCodes[terminal]))
-            press("enter")
-    
-            
-    #   *****************************
-    #        Routing Tab
-    #   *****************************
-    
-            if terminal != "CSX":
-                overweight = False
-                reefer = False
-                click(loc.ROUTINGTABLOC)
-                
-                payout = 0
-                OW = False
-                
-                weight = int(float(container.properties[WEIGHT]))
-                
-                
-                if weight>contRates[size].P1weight:
-                    overweight = True
-                if "R" in size:
-                    reefer = True
-                
-                
-                if container.properties[COFFEE] != "NONE": 
-                    payout = contRates[size].T1payout
-                else:
-                    if weight>contRates[size].T4weight:
-                        payout = contRates[size].T4payout
-                        OW = True
-                    elif weight>contRates[size].T3weight:
-                        payout = contRates[size].T3payout
-                    elif weight>contRates[size].T2weight:
-                        payout = contRates[size].T2payout
-                    elif weight>contRates[size].T1weight:
-                        payout = contRates[size].T1payout
-                
-                if payout != 0:
-                    click(loc.DRIVERPAYOUTLOC)
-                    typewrite("over")
-                    
-                    press("tab", 3)
-                      
-        #             f=open("J:\Spencer\Hapag-Lloyd Dispatchmate\Overweights.txt")
-        #             overweights = []
-        #             for i in range(6):
-        #                 overweights.append(f.readline())
-                    
-                    typewrite(str(payout))
-                    if OW:
-                        click(loc.DRIVERPAYOUTLOC[0], loc.DRIVERPAYOUTLOC[1]+19)
-                        typewrite("thru")
-                        press("tab", 3)
-                        typewrite(str(contRates[size].OWpayout))
-            
-            
-            
-    #   *****************************
-    #        Rating Tab
-    #   *****************************
-       
-                click(loc.RATINGTABLOC)
-                 
-                clickHeight = 0
-                 
-        #         click(89, clickHeight)
-        #         clickHeight += 20
-        #         typewrite("ont")
-        #         press("tab")
-        #         if terminalNum[0]=="309":
-        #             typewrite("946")
-        #         else:
-        #             typewrite("858")
-                
-                rateCount = 0
-                
-                if(reefer):
-                    click(loc.CUSTOMERCHARGELOC[0], loc.CUSTOMERCHARGELOC[1]+ clickHeight)
-                    clickHeight += 19
-                    hotkey('ctrl', 'a')
-                    typewrite('re')
-                    press("down")
-        #             press("tab", 3)
-        #             hotkey('ctrl', 'a')
-        #             typewrite(contRates[size].reeferCharge)
-                    rateCount+=1
-                 
-                if(overweight and container.properties[COFFEE]=="NONE"):
-                    click(loc.CUSTOMERCHARGELOC[0], loc.CUSTOMERCHARGELOC[1]+ clickHeight)
-                    clickHeight += 19
-                    hotkey('ctrl', 'a')
-                    typewrite("ov")
-                    press("tab")
-                    if contRates[size].P2weight and weight>contRates[size].P2weight:
-                        press("tab", 2)
-                        hotkey('ctrl', 'a')
-                        typewrite(str(contRates[size].P2rate))
-                    
-                    rateCount+=1
-                    
-                if terminalNum=="664":
-                    click(loc.CUSTOMERCHARGELOC[0], loc.CUSTOMERCHARGELOC[1]+ clickHeight)
-                    clickHeight += 19
-                    hotkey('ctrl', 'a')
-                    typewrite("n")
-                    press("tab")
-                    rateCount+=1
-                
-                if rateCount<lastContainerRates:
-                    for _ in range(lastContainerRates-rateCount):
-                        click(loc.CUSTOMERCHARGELOC[0], loc.CUSTOMERCHARGELOC[1]+clickHeight)
-                        clickHeight += 19
-                        hotkey('ctrl', 'a')
-                        press("del")
-                        press("tab")
-                        press("del")
+        click(loc.OVERVIEWTABLOC)
         
-                lastContainerRates = rateCount
-            click(loc.OKLOC)
+        click(loc.OKLOC)
+        click(loc.DUPLICATELOC)
+        
+        if GetKeyState(27) < 0:
+            exit()
+        
+        if not (steamShipLine=="HAMBURG" and terminal!="CSX"):
+            click(loc.BOLLOC)
+            if steamShipLine=="MAERSK":
+                typewrite(container.properties[BOOKING])
+            else:
+                typewrite(container.properties[VESSEL])
+        
+        if not steamShipLine=="CMA":
+            click(loc.CONSIGNEETRACELOC)
+            if steamShipLine=="HAMBURG":
+                typewrite(container.properties[PONUMBER])
+            elif steamShipLine=="MAERSK":
+                typewrite(container.properties[VESSEL])
+            else:
+                typewrite(container.properties[BOOKING])
+        
+        if not (steamShipLine=="MAERSK"):
+            click(loc.POLOC)
+#                 if (steamShipLine=="MSC"):
+#                     typewrite(container.properties[BOOKING])
+#                 else:
+            typewrite(container.properties[PONUMBER])
+        
+        click(loc.DESCRIPTIONLOC)
+        press("tab", 7)
+        typewrite("1")
+        
+        press("tab", 2)
+        typewrite(container.properties[CONTAINERNUMBER])
+        
+        
+        click(loc.EQUIPMENTLOC)
+        press('home')
+        size = ContainerSizeInfo.standardSize(container.properties[SIZE])
+        if size == "20D86":
+            downAmount = 4
+        elif size == "20R86":
+            downAmount = 3
+        elif size == "20O86":
+            downAmount = 2
+        elif size == "40D86":
+            downAmount = 7
+        elif size == "40O86":
+            downAmount = 11
+        elif size == "40D96":
+            downAmount = 10
+        elif size == "40R96":
+            downAmount = 12
+        elif size == "D96":
+            downAmount = 13
+        
+        press('down', downAmount)
+        press('enter')
+        
+        click(loc.LANECODELOC)
+        
+        if container.properties[COFFEE] != "NONE" and laneCodesCoffee[terminal]==556:
+            typewrite("56")
+            press('up')
+        elif container.properties[COFFEE] != "NONE":
+            typewrite(str(laneCodesCoffee[terminal]))
+        elif terminal !="CSX" and int(float(container.properties[WEIGHT]))>contRates[size].T4weight and laneCodesThru[terminal]==555:
+            typewrite("56")
+            press("up", 2)
+        elif terminal !="CSX" and int(float(container.properties[WEIGHT]))>contRates[size].T4weight:
+            typewrite(str(laneCodesThru[terminal]))
+        elif laneCodes[terminal]==554:
+            typewrite("56")
+            press('up', 3)
+        else:
+            typewrite(str(laneCodes[terminal]))
+        press("enter")
+
+        
+#   *****************************
+#        Routing Tab
+#   *****************************
+
+        if terminal != "CSX":
+            overweight = False
+            reefer = False
+            click(loc.ROUTINGTABLOC)
+            
+            payout = 0
+            OW = False
+            
+            weight = int(float(container.properties[WEIGHT]))
+            
+            
+            if weight>contRates[size].P1weight:
+                overweight = True
+            if "R" in size:
+                reefer = True
+            
+            
+            if container.properties[COFFEE] != "NONE": 
+                payout = contRates[size].T1payout
+            else:
+                if weight>contRates[size].T4weight:
+                    payout = contRates[size].T4payout
+                    OW = True
+                elif weight>contRates[size].T3weight:
+                    payout = contRates[size].T3payout
+                elif weight>contRates[size].T2weight:
+                    payout = contRates[size].T2payout
+                elif weight>contRates[size].T1weight:
+                    payout = contRates[size].T1payout
+            
+            if payout != 0:
+                click(loc.DRIVERPAYOUTLOC)
+                typewrite("over")
+                
+                press("tab", 3)
+                  
+    #             f=open("J:\Spencer\Hapag-Lloyd Dispatchmate\Overweights.txt")
+    #             overweights = []
+    #             for i in range(6):
+    #                 overweights.append(f.readline())
+                
+                typewrite(str(payout))
+                if OW:
+                    click(loc.DRIVERPAYOUTLOC[0], loc.DRIVERPAYOUTLOC[1]+19)
+                    typewrite("thru")
+                    press("tab", 3)
+                    typewrite(str(contRates[size].OWpayout))
+        
+        
+        
+#   *****************************
+#        Rating Tab
+#   *****************************
+   
+            click(loc.RATINGTABLOC)
+             
+            clickHeight = 0
+             
+    #         click(89, clickHeight)
+    #         clickHeight += 20
+    #         typewrite("ont")
+    #         press("tab")
+    #         if terminalNum[0]=="309":
+    #             typewrite("946")
+    #         else:
+    #             typewrite("858")
+            
+            rateCount = 0
+            
+            if(reefer):
+                click(loc.CUSTOMERCHARGELOC[0], loc.CUSTOMERCHARGELOC[1]+ clickHeight)
+                clickHeight += 19
+                hotkey('ctrl', 'a')
+                typewrite('re')
+                press("down")
+    #             press("tab", 3)
+    #             hotkey('ctrl', 'a')
+    #             typewrite(contRates[size].reeferCharge)
+                rateCount+=1
+             
+            if(overweight and container.properties[COFFEE]=="NONE"):
+                click(loc.CUSTOMERCHARGELOC[0], loc.CUSTOMERCHARGELOC[1]+ clickHeight)
+                clickHeight += 19
+                hotkey('ctrl', 'a')
+                typewrite("ov")
+                press("tab")
+                if contRates[size].P2weight and weight>contRates[size].P2weight:
+                    press("tab", 2)
+                    hotkey('ctrl', 'a')
+                    typewrite(str(contRates[size].P2rate))
+                
+                rateCount+=1
+                
+            if terminalNum=="664":
+                click(loc.CUSTOMERCHARGELOC[0], loc.CUSTOMERCHARGELOC[1]+ clickHeight)
+                clickHeight += 19
+                hotkey('ctrl', 'a')
+                typewrite("n")
+                press("tab")
+                rateCount+=1
+            
+            if rateCount<lastContainerRates:
+                for _ in range(lastContainerRates-rateCount):
+                    click(loc.CUSTOMERCHARGELOC[0], loc.CUSTOMERCHARGELOC[1]+clickHeight)
+                    clickHeight += 19
+                    hotkey('ctrl', 'a')
+                    press("del")
+                    press("tab")
+                    press("del")
+    
+            lastContainerRates = rateCount
+        click(loc.OKLOC)
         
 def bookA8A(containers, terminal, steamShipLine):
     terminalNum = ""
@@ -820,7 +790,7 @@ def bookA8A(containers, terminal, steamShipLine):
     
     click(loc.CUSTOMERCODELOC)
     if steamShipLine=="HAMBURG":
-        typewrite("1788")
+        typewrite("117")
     elif steamShipLine=="MSC":
         if terminal=="CSX":
             typewrite("1635")
@@ -908,305 +878,268 @@ def bookA8A(containers, terminal, steamShipLine):
     else:
         lastContainerRates=1
     for container in containers:
-        if terminal=="PACKER" and contRates[ContainerSizeInfo.standardSize(container.properties[SIZE])].P2weight and int(float(container.properties[WEIGHT]))>contRates[ContainerSizeInfo.standardSize(container.properties[SIZE])].P2weight:
-            top = Tk()
-            L1 = Label(top, text="Container " + container.properties[CONTAINERNUMBER] + " is too heavy for PA \n Skipping container.")
-            L1.grid(row=0, column=0)
-             
-            def callbackTerminal(terminalNum):
-                top.destroy()
-             
-            MyButton4 = Button(top, text="OK", width=10, command=lambda: callbackTerminal(terminalNum))
-            MyButton4.grid(row=1, column=0)
-             
-            top.lift()
-            top.attributes('-topmost',True)
-            top.after_idle(top.attributes,'-topmost',False)
-             
-            w = 300 # width for the Tk root
-            h = 150 # height for the Tk root
-             
-            # get screen width and height
-            ws = top.winfo_screenwidth() # width of the screen
-            hs = top.winfo_screenheight() # height of the screen
-             
-            # calculate x and y coordinates for the Tk root window
-            x = (ws/2) - (w/2)
-            y = (hs/2) - (h/2)
-             
-            # set the dimensions of the screen 
-            # and where it is placed
-            top.geometry('%dx%d+%d+%d' % (w, h, x, y))
-             
-            moveTo(1001, 508)
-#             def click2():
-#                 click(1001, 508)
-#              
-#             top.after(10, click2)
-            top.mainloop()
-        else:
-            click(loc.OVERVIEWTABLOC)
+        click(loc.OVERVIEWTABLOC)
+        
+        click(loc.OKLOC)
+        click(loc.DUPLICATELOC)
+        
+        click(SHIPPERLOC)
+        
+        if GetKeyState(27) < 0:
+            exit()
+        
+        while not GetKeyState(45)<0:
+#             if not GetKeyState(71)<0:
+            True
+        
+        if GetKeyState(27) < 0:
+            exit()
             
-            click(loc.OKLOC)
-            click(loc.DUPLICATELOC)
-            
-            click(SHIPPERLOC)
-            
-            if GetKeyState(27) < 0:
-                exit()
-            
-            while not GetKeyState(45)<0:
-    #             if not GetKeyState(71)<0:
-                True
-            
-            if GetKeyState(27) < 0:
-                exit()
-                
-            if not steamShipLine=="HAMBURG":
-                click(loc.BOLLOC)
-                if steamShipLine=="MAERSK":
-                    typewrite(container.properties[BOOKING])
-                else:
-                    typewrite(container.properties[VESSEL])
-            
-            if not steamShipLine=="MSC" and not steamShipLine=="CMA":
-                click(loc.CONSIGNEETRACELOC)
-                if steamShipLine=="HAMBURG":
-                    typewrite(container.properties[PONUMBER])
-                elif steamShipLine=="MAERSK":
-                    typewrite(container.properties[VESSEL])
-                else:
-                    typewrite(container.properties[BOOKING])
-            
-            if not (steamShipLine=="MAERSK"):
-                click(loc.POLOC)
-                if (steamShipLine=="MSC" and terminal!= "CSX"):
-                    typewrite(container.properties[BOOKING])
-                else:
-                    typewrite(container.properties[PONUMBER])
-            
+        if not steamShipLine=="HAMBURG":
+            click(loc.BOLLOC)
+            if steamShipLine=="MAERSK":
+                typewrite(container.properties[BOOKING])
+            else:
+                typewrite(container.properties[VESSEL])
+        
+        if not steamShipLine=="CMA":
+            click(loc.CONSIGNEETRACELOC)
+            if steamShipLine=="HAMBURG":
+                typewrite(container.properties[PONUMBER])
+            elif steamShipLine=="MAERSK":
+                typewrite(container.properties[VESSEL])
+            else:
+                typewrite(container.properties[BOOKING])
+        
+        if not (steamShipLine=="MAERSK"):
+            click(loc.POLOC)
+#                 if (steamShipLine=="MSC" and terminal!= "CSX"):
+#                     typewrite(container.properties[BOOKING])
+#                 else:
+            typewrite(container.properties[PONUMBER])
+        
 #             click(loc.POLOC)
 #             typewrite(container.properties[PONUMBER])
+        
+#         click(60, 134)
+#         press("tab")
+        
+        click(loc.DESCRIPTIONLOC)
+        press("tab", 1)
+        typewrite(container.properties[WEIGHT])
+        
+        press("tab", 6)
+        if container.properties[PIECES]!="NONE" and container.properties[PIECES]!="":
+            typewrite(container.properties[PIECES])
+        
+        press("tab")
+        typewrite("r")
+        if(steamShipLine =="MSC" and terminal=="CSX"):
+            typewrite("t")
+#         press("tab", 6)
+        
+#         click(550, 350)
+#         typewrite(container.properties[PIECES])
+        
+#         click(18, 351)
+        
+        
+        press("tab")
+        typewrite(container.properties[CONTAINERNUMBER])
+        
+        size = ContainerSizeInfo.standardSize(container.properties[SIZE])
+#         if size == "20DC or 20st":
+#             sizeCode = "20DC"
+#         elif size == "20RF":
+#             sizeCode = "20RF"
+#         elif size == "40 DRY 8 6":
+#             sizeCode = "40DC"
+#         elif size == "40 DRY 9 6":
+#             sizeCode = "40HC"
+#         elif size == "40 REEF 9 6":
+#             sizeCode = "40RH"
+#         elif size == " DRY 9 6":
+#             sizeCode = "DC"
             
-    #         click(60, 134)
-    #         press("tab")
             
-            click(loc.DESCRIPTIONLOC)
-            press("tab", 1)
-            typewrite(container.properties[WEIGHT])
-            
-            press("tab", 6)
-            if container.properties[PIECES]!="NONE" and container.properties[PIECES]!="":
-                typewrite(container.properties[PIECES])
-            
-            press("tab")
-            typewrite("r")
-            if(steamShipLine =="MSC" and terminal=="CSX"):
-                typewrite("t")
-    #         press("tab", 6)
-            
-    #         click(550, 350)
-    #         typewrite(container.properties[PIECES])
-            
-    #         click(18, 351)
-            
-            
-            press("tab")
-            typewrite(container.properties[CONTAINERNUMBER])
-            
-            size = ContainerSizeInfo.standardSize(container.properties[SIZE])
-    #         if size == "20DC or 20st":
-    #             sizeCode = "20DC"
-    #         elif size == "20RF":
-    #             sizeCode = "20RF"
-    #         elif size == "40 DRY 8 6":
-    #             sizeCode = "40DC"
-    #         elif size == "40 DRY 9 6":
-    #             sizeCode = "40HC"
-    #         elif size == "40 REEF 9 6":
-    #             sizeCode = "40RH"
-    #         elif size == " DRY 9 6":
-    #             sizeCode = "DC"
-                
-                
-            press("tab", 3)
-            typewrite(steamShipLine + " " + size)
-            
-    #         click(loc.BOLLOC)
-    #         typewrite(container.properties[BOOKING])
-            
+        press("tab", 3)
+        typewrite(steamShipLine + " " + size)
+        
+#         click(loc.BOLLOC)
+#         typewrite(container.properties[BOOKING])
+        
 #             click(472, 304)
 #             typewrite(container.properties[VESSEL])
-            
-    #         click(18, 351)
-    #         press("tab", 7)
-    #         typewrite("1")
-            
-            
-            
-            
-            click(loc.EQUIPMENTLOC)
-            press('home')
-            
-            downAmount = 0
-            
-            if size == "20D86":
-                downAmount = 4
-            elif size == "20R86":
-                downAmount = 3
-            elif size == "20O86":
-                downAmount = 2
-            elif size == "40D86":
-                downAmount = 7
-            elif size == "40O86":
-                downAmount = 11
-            elif size == "40D96":
-                downAmount = 10
-            elif size == "40R96":
-                downAmount = 12
-            elif size == "D96":
-                downAmount = 13
-            
-            
-            
-            press('down', downAmount)
-            press('enter')
-            
-            click(LANECODELOC)
-            if container.properties[COFFEE] != "NONE" and laneCodesCoffee[terminal]==556:
-                typewrite("56")
-                press('up')
-            elif container.properties[COFFEE] != "NONE":
-                typewrite(str(laneCodesCoffee[terminal]))
-            elif terminal !="CSX" and int(float(container.properties[WEIGHT]))>contRates[size].T4weight and laneCodesThru[terminal]==555:
-                typewrite("56")
-                press("up", 2)
-            elif terminal !="CSX" and int(float(container.properties[WEIGHT]))>contRates[size].T4weight:
-                typewrite(laneCodesThru[terminal])
-            elif laneCodes[terminal]==554:
-                typewrite("56")
-                press('up', 3)
-            else:
-                typewrite(str(laneCodes[terminal]))
-            press("enter")
-            
-            
-            
-    #   *****************************
-    #        Routing Tab
-    #   *****************************
-    
-            if terminal != "CSX":
-                overweight = False
-                reefer = False
-                click(loc.ROUTINGTABLOC)
-                
-                payout = 0
-                OW = False
-                
-                weight = int(float(container.properties[WEIGHT]))
-                
-                
-                if weight>contRates[size].P1weight:
-                    overweight = True
-                if "R" in size:
-                    reefer = True
-                
-                
-                if container.properties[COFFEE] != "NONE": 
-                    payout = contRates[size].T1payout
-                else:
-                    if weight>contRates[size].T4weight:
-                        payout = contRates[size].T4payout
-                        OW = True
-                    elif weight>contRates[size].T3weight:
-                        payout = contRates[size].T3payout
-                    elif weight>contRates[size].T2weight:
-                        payout = contRates[size].T2payout
-                    elif weight>contRates[size].T1weight:
-                        payout = contRates[size].T1payout
-                
-                if payout != 0:
-                    click(loc.DRIVERPAYOUTLOC)
-                    typewrite("over")
-                    
-                    press("tab", 3)
-                      
-        #             f=open("J:\Spencer\Hapag-Lloyd Dispatchmate\Overweights.txt")
-        #             overweights = []
-        #             for i in range(6):
-        #                 overweights.append(f.readline())
-                    
-                    typewrite(str(payout))
-                    if OW:
-                        click(loc.DRIVERPAYOUTLOC[0], loc.DRIVERPAYOUTLOC[1]+19)
-                        typewrite("thru")
-                        press("tab", 3)
-                        typewrite(str(contRates[size].OWpayout))
-            
-            
-            
-    #   *****************************
-    #        Rating Tab
-    #   *****************************
-     
-            
-                click(loc.RATINGTABLOC)
-                 
-                clickHeight = 0
-                
-                rateCount = 0
-                
-                if(reefer):
-                    click(loc.CUSTOMERCHARGELOC[0], loc.CUSTOMERCHARGELOC[1]+ clickHeight)
-                    clickHeight += 19
-                    hotkey('ctrl', 'a')
-                    typewrite('re')
-                    press("down")
-    #                 press("tab", 3)
-    #                 hotkey('ctrl', 'a')
-    #                 typewrite(str(contRates[size].reeferCharge))
-        #             print(contRates[size].reeferCharge)
-                    rateCount+=1
-                
-                if(overweight and container.properties[COFFEE]=="NONE"):
-                    click(loc.CUSTOMERCHARGELOC[0], loc.CUSTOMERCHARGELOC[1]+ clickHeight)
-                    clickHeight += 19
-                    hotkey('ctrl', 'a')
-                    typewrite("ov")
-                    press("tab")
-                    if contRates[size].P2weight and weight>contRates[size].P2weight:
-                        press("tab", 2)
-                        hotkey('ctrl', 'a')
-                        typewrite(str(contRates[size].P2rate))
-                    
-                    rateCount+=1
-                    
-                if terminalNum[0]=="664":
-                    click(loc.CUSTOMERCHARGELOC[0], loc.CUSTOMERCHARGELOC[1]+ clickHeight)
-                    clickHeight += 19
-                    hotkey('ctrl', 'a')
-                    typewrite("n")
-                    press("tab")
-                    rateCount+=1
-                
-                if rateCount<lastContainerRates:
-                    for _ in range(lastContainerRates-rateCount):
-                        click(loc.CUSTOMERCHARGELOC[0], loc.CUSTOMERCHARGELOC[1]+clickHeight)
-                        clickHeight += 19
-                        hotkey('ctrl', 'a')
-                        press("del")
-                        press("tab")
-                        press("del")
         
-                lastContainerRates = rateCount
+#         click(18, 351)
+#         press("tab", 7)
+#         typewrite("1")
+        
+        
+        
+        
+        click(loc.EQUIPMENTLOC)
+        press('home')
+        
+        downAmount = 0
+        
+        if size == "20D86":
+            downAmount = 4
+        elif size == "20R86":
+            downAmount = 3
+        elif size == "20O86":
+            downAmount = 2
+        elif size == "40D86":
+            downAmount = 7
+        elif size == "40O86":
+            downAmount = 11
+        elif size == "40D96":
+            downAmount = 10
+        elif size == "40R96":
+            downAmount = 12
+        elif size == "D96":
+            downAmount = 13
+        
+        
+        
+        press('down', downAmount)
+        press('enter')
+        
+        click(LANECODELOC)
+        if container.properties[COFFEE] != "NONE" and laneCodesCoffee[terminal]==556:
+            typewrite("56")
+            press('up')
+        elif container.properties[COFFEE] != "NONE":
+            typewrite(str(laneCodesCoffee[terminal]))
+        elif terminal !="CSX" and int(float(container.properties[WEIGHT]))>contRates[size].T4weight and laneCodesThru[terminal]==555:
+            typewrite("56")
+            press("up", 2)
+        elif terminal !="CSX" and int(float(container.properties[WEIGHT]))>contRates[size].T4weight:
+            typewrite(laneCodesThru[terminal])
+        elif laneCodes[terminal]==554:
+            typewrite("56")
+            press('up', 3)
+        else:
+            typewrite(str(laneCodes[terminal]))
+        press("enter")
+        
+        
+        
+#   *****************************
+#        Routing Tab
+#   *****************************
+
+        if terminal != "CSX":
+            overweight = False
+            reefer = False
+            click(loc.ROUTINGTABLOC)
             
-            click(loc.OKLOC)
+            payout = 0
+            OW = False
+            
+            weight = int(float(container.properties[WEIGHT]))
+            
+            
+            if weight>contRates[size].P1weight:
+                overweight = True
+            if "R" in size:
+                reefer = True
+            
+            
+            if container.properties[COFFEE] != "NONE": 
+                payout = contRates[size].T1payout
+            else:
+                if weight>contRates[size].T4weight:
+                    payout = contRates[size].T4payout
+                    OW = True
+                elif weight>contRates[size].T3weight:
+                    payout = contRates[size].T3payout
+                elif weight>contRates[size].T2weight:
+                    payout = contRates[size].T2payout
+                elif weight>contRates[size].T1weight:
+                    payout = contRates[size].T1payout
+            
+            if payout != 0:
+                click(loc.DRIVERPAYOUTLOC)
+                typewrite("over")
+                
+                press("tab", 3)
+                  
+    #             f=open("J:\Spencer\Hapag-Lloyd Dispatchmate\Overweights.txt")
+    #             overweights = []
+    #             for i in range(6):
+    #                 overweights.append(f.readline())
+                
+                typewrite(str(payout))
+                if OW:
+                    click(loc.DRIVERPAYOUTLOC[0], loc.DRIVERPAYOUTLOC[1]+19)
+                    typewrite("thru")
+                    press("tab", 3)
+                    typewrite(str(contRates[size].OWpayout))
+        
+        
+        
+#   *****************************
+#        Rating Tab
+#   *****************************
+ 
+        
+            click(loc.RATINGTABLOC)
+             
+            clickHeight = 0
+            
+            rateCount = 0
+            
+            if(reefer):
+                click(loc.CUSTOMERCHARGELOC[0], loc.CUSTOMERCHARGELOC[1]+ clickHeight)
+                clickHeight += 19
+                hotkey('ctrl', 'a')
+                typewrite('re')
+                press("down")
+#                 press("tab", 3)
+#                 hotkey('ctrl', 'a')
+#                 typewrite(str(contRates[size].reeferCharge))
+    #             print(contRates[size].reeferCharge)
+                rateCount+=1
+            
+            if(overweight and container.properties[COFFEE]=="NONE"):
+                click(loc.CUSTOMERCHARGELOC[0], loc.CUSTOMERCHARGELOC[1]+ clickHeight)
+                clickHeight += 19
+                hotkey('ctrl', 'a')
+                typewrite("ov")
+                press("tab")
+                if contRates[size].P2weight and weight>contRates[size].P2weight:
+                    press("tab", 2)
+                    hotkey('ctrl', 'a')
+                    typewrite(str(contRates[size].P2rate))
+                
+                rateCount+=1
+                
+            if terminalNum[0]=="664":
+                click(loc.CUSTOMERCHARGELOC[0], loc.CUSTOMERCHARGELOC[1]+ clickHeight)
+                clickHeight += 19
+                hotkey('ctrl', 'a')
+                typewrite("n")
+                press("tab")
+                rateCount+=1
+            
+            if rateCount<lastContainerRates:
+                for _ in range(lastContainerRates-rateCount):
+                    click(loc.CUSTOMERCHARGELOC[0], loc.CUSTOMERCHARGELOC[1]+clickHeight)
+                    clickHeight += 19
+                    hotkey('ctrl', 'a')
+                    press("del")
+                    press("tab")
+                    press("del")
+    
+            lastContainerRates = rateCount
+        
+        click(loc.OKLOC)
 
 
 if __name__ == '__main__':
-  #  argv = r"a J:\All motor routings\JPO CAPRICORNUS V.022N_HS_LH_NYC.xlsx".split()
-#     argv = r"a J:\All motor routings\2018\Week 29\HAMBURG\MONTE ACONCAGUA V-82N\PA\PBs.xlsx".split()
+#     argv = r"a J:\All motor routings\JPO CAPRICORNUS V.022N_HS_LH_NYC.xlsx".split()
+#     argv = r"a J:\All motor routings\SPIRIT OF HAMBURG HS.xlsx".split()
 
 #     print("NONE".split(" ")[0])
 #     print("1234 asd".split(" ")[0])

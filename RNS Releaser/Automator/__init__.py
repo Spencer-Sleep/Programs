@@ -286,8 +286,8 @@ def sendRelease(container, transaction, driver, account):
             m = Message(
                 account=account, 
                 subject='Missing LFD for container: ' + container, 
-                body='Missing LFD for container: ' + container, 
-                to_recipients=[Mailbox(email_address='toryard@seaportint.com')]
+                body='Missing LFD for container: ' + container + "\n\n\nTHIS IS AN AUTOMATED MESSAGE, DO NOT REPLY", 
+                to_recipients=[Mailbox(email_address='nicholas.cardin@seaportint.com'), Mailbox(email_address='terminal@seaportint.com'),]
             )
             m.send()
             
@@ -297,19 +297,33 @@ def release(content, driver, account):
     transactionIndex = content.find("Transaction:")
     transaction = content[transactionIndex: content[transactionIndex:].find("\n")+transactionIndex]
     ccnIndex =  content.find("Cargo Control Number:")
+    releaseIndex = content.find("Release Office: ")
+    ccn = content[ccnIndex+22:releaseIndex].strip()
     transaction = transaction+"\n"+content[ccnIndex: content[ccnIndex:].find("\n")+ccnIndex]
     deliveryIndex = content.find("Delivery Instructions")-2
     
     containerIndex = content.find("Container ID(s):")+17
     containers = []
     
-    while containerIndex<deliveryIndex:
-        containers.append(content[containerIndex:content[containerIndex:].find(",")+containerIndex].strip())
-        containerIndex = content[containerIndex:].find(",")+1+containerIndex
     
-    print("\nReleasing the following containers: ")
-    for cont in containers:
-        sendRelease(cont, transaction, driver, account)
+    
+    if containerIndex<deliveryIndex:
+        while containerIndex<deliveryIndex:
+            containers.append(content[containerIndex:content[containerIndex:].find(",")+containerIndex].strip())
+            containerIndex = content[containerIndex:].find(",")+1+containerIndex
+        print("\nReleasing the following containers: ")
+        for cont in containers:
+            sendRelease(cont, transaction, driver, account)
+    else:
+        m = Message(
+            account=account, 
+            subject='CCN is Released: ' + ccn, 
+            body='PB #(if Seaport CCN): ' + ccn[-6:] + "\n\nThe RNS release message did not have a container number in it\n\n\nTHIS IS AN AUTOMATED MESSAGE, DO NOT REPLY", 
+            to_recipients=[Mailbox(email_address='terminal@seaportint.com'),]
+        )
+        m.send()
+        print("\nEmail with no container number")
+        
     
 def setupEterm():
 #     fp = FirefoxProfile();

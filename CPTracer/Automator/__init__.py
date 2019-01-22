@@ -26,6 +26,7 @@ from tkinter import Button, Tk, Label, Entry
 import re
 from pyHook.HookManager import GetKeyState
 from selenium.webdriver.support.wait import WebDriverWait
+import sys
 
 # from enum.IntFlag import  
 
@@ -52,7 +53,7 @@ class constants:
 
 class Container:
     def __init__(self, number = ""):
-        self.number = number
+        self.number = number.upper()
         self.load = ""
         self.size = ""
         self.le = ""
@@ -211,7 +212,7 @@ def putInfoinExcel(containers, localContainers):
             if row[constants.CONTAINERCOL].value != None and row[constants.CONTAINERCOL].value != "":
 #                 container = containers[i-1]
                 for Xcontainer in containers:
-                    if Xcontainer.number==row[constants.CONTAINERCOL].value.strip():
+                    if Xcontainer.number==row[constants.CONTAINERCOL].value.strip().upper():
                         container=Xcontainer
                         break
                     
@@ -410,7 +411,100 @@ def setupExcel(filepPath, containers):
 #                 dims[cell.column] = max((dims.get(cell.column, 0), len(str(cell.value))))
 #     for col, value in dims.items():
 #         completed.column_dimensions[col].width = value+3
+def checkContainerNumbers(containers):
+    letterDictionary={"A":10,
+                      "B":12,
+                      "C":13,
+                      "D":14,
+                      "E":15,
+                      "F":16,
+                      "G":17,
+                      "H":18,
+                      "I":19,
+                      "J":20,
+                      "K":21,
+                      "L":23,
+                      "M":24,
+                      "N":25,
+                      "O":26,
+                      "P":27,
+                      "Q":28,
+                      "R":29,
+                      "S":30,
+                      "T":31,
+                      "U":32,
+                      "V":34,
+                      "W":35,
+                      "X":36,
+                      "Y":37,
+                      "Z":38}
+                      
     
+    invalidContainerNumbers=""
+    
+    for container in containers:
+        sumCheck=letterDictionary[container.number[0]]
+        sumCheck+=letterDictionary[container.number[1]]*2
+        sumCheck+=letterDictionary[container.number[2]]*4
+        sumCheck+=letterDictionary[container.number[3]]*8
+        sumCheck+=int(container.number[4])*16
+        sumCheck+=int(container.number[5])*32
+        sumCheck+=int(container.number[6])*64
+        sumCheck+=int(container.number[7])*128
+        sumCheck+=int(container.number[8])*256
+        sumCheck+=int(container.number[9])*512
+        
+        check = sumCheck%11
+        if check==10:
+            check=0
+#         print(container.number)
+        if not len(container.number)==11 or not check==int(container.number[10]):
+            invalidContainerNumbers+= container.number + "\n"
+        
+    if invalidContainerNumbers!="":
+#         popUpOK("Invalid container numbers (by check digit):\n"+invalidContainerNumbers)
+#         sys.exit()
+        
+        
+        top = Tk()
+        top.config(bg = "lavender")
+        L1 = Label(top, text="Invalid container numbers (by check digit):\n"+invalidContainerNumbers, bg="lavender", font=("serif", 16))
+        L1.grid(row=0, column=0, columnspan=2)
+        
+        def callbackEnd():
+            sys.exit()
+             
+        
+        def callbackContinue():
+            top.destroy()
+             
+        
+        MyButton4 = Button(top, text="Proceed anyway", width=14, command=lambda: callbackContinue(), bg="green", font=("serif", 16))
+        MyButton4.grid(row=2, column=0, padx=10, pady=10)
+        
+        MyButton5 = Button(top, text="Stop", width=25, command=lambda: callbackEnd(), bg="red", font=("serif", 16))
+        MyButton5.grid(row=2, column=1, padx=10, pady=10)
+        
+        top.update()
+
+        w = top.winfo_width() # width for the Tk root
+        h = top.winfo_height() # height for the Tk root
+           
+        ws = top.winfo_screenwidth() # width of the screen
+        hs = top.winfo_screenheight() # height of the screen
+        x = (ws/2) - (w/2)
+        y = (hs/2) - (h/2)
+        
+        top.geometry('%dx%d+%d+%d' % (w, h, x, y))
+        
+        top.update()
+
+        top.lift()
+        top.attributes('-topmost',True)
+        top.after_idle(top.attributes,'-topmost',False)
+#         moveTo(MyButton5.winfo_width()/2 + MyButton5.winfo_rootx(), MyButton5.winfo_height()/2 + MyButton5.winfo_rooty())
+        
+        top.mainloop()    
             
 if __name__ == '__main__':
 #     try:
@@ -420,6 +514,9 @@ if __name__ == '__main__':
     containers = []
     
     localContainersWb, localContainers = setupExcel(filePath, containers)
+    
+    checkContainerNumbers(containers)
+    
     driver = setupCP()
     readContainerInfo(driver, containers)
     putInfoinExcel(containers, localContainers)

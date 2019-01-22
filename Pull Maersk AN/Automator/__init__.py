@@ -106,8 +106,9 @@ def fetchANs(bols, client,workOrderLocation):
         
     for pdf in pdfs:
         os.remove(pdf)
-    
-    popUpOK("Could not find the following BOLs: " + failedPDFs)
+        
+    if failedPDFs!="":
+        popUpOK("Could not find the following BOLs: " + failedPDFs)
     
 if __name__ == '__main__':
 #     sys.argv=r"a C:\Users\ssleep\Documents\Maersk fetcher".split()

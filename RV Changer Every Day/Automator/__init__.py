@@ -145,8 +145,8 @@ def queryDatesAndTimes(allConts, malport):
         check = BooleanVar()
         checkButton = Checkbutton(top, text=date, variable=check, bg="royal blue", font=("serif", 12))
         checkButton.grid(row=i, column=0, sticky=constants.W+constants.E, pady=0)
-        if malport:
-            checkButton.grid(columnspan=2)
+#         if malport:
+#             checkButton.grid(columnspan=2)
         if i>1 and allConts:
             check.set(True)
         i+=1
@@ -157,16 +157,46 @@ def queryDatesAndTimes(allConts, malport):
     
     if not malport:
         time_Order = ["04", "05","06","07","08","09","10","11","12","13","14","16","18","19","20", "00"]
+    else:
+#         time_Order = ["06","11","14","16","18", "00"]
+#         f=open(r"C:\Automation\CNPort.txt", 'r')
+        time_Order=[]
+        f=open(r"J:\LOCAL DEPARTMENT\Automation - DO NOT MOVE\Malport Hours.txt", 'r')
+        #     read = f.readline()
+        #     m = re.search("username: *", read)
+        #     username = read[m.end():].rstrip()
         
+        read = f.readline()
+        while read != "":
+            if read == "\n":
+                continue
+            else:
+                read = read.strip()
+                if len(read)==1:
+                    read = "0"+read
+                if len(read)==2:
+                    read+=":00"
+                if len(read)==4 and not ":" in read:
+                    read=read[:2]+":"+read[2:]
+                elif len(read)==4:
+                    read = "0"+read
+            time_Order.append(read)
+            read = f.readline()
+        f.close()
+#         time_Order = ["06","08","10","12","14","16","18","20", "00"]
+
         
-        for i in range(len(time_Order)):
-            check=BooleanVar()
+    for i in range(len(time_Order)):
+        check=BooleanVar()
+        if len(time_Order[i])==2:
             cb = Checkbutton(text=time_Order[i]+":00",padx=0,pady=0,bd=0, variable=check, bg="dark violet", font=("serif", 12))
-            cb.grid(row = i+1, column = 1, sticky=constants.W+constants.E+constants.N+constants.S)
-            cb.bind("<Button-1>", lambda event: selectstart(start, timeButtons, event))
-            cb.bind("<Shift-Button-1>", lambda event: selectrange(start, timeButtons, event))
-            timeValues.append((check, time_Order[i]))
-            timeButtons.append(cb)
+        else:
+            cb = Checkbutton(text=time_Order[i],padx=0,pady=0,bd=0, variable=check, bg="dark violet", font=("serif", 12))
+        cb.grid(row = i+1, column = 1, sticky=constants.W+constants.E+constants.N+constants.S)
+        cb.bind("<Button-1>", lambda event: selectstart(start, timeButtons, event))
+        cb.bind("<Shift-Button-1>", lambda event: selectrange(start, timeButtons, event))
+        timeValues.append((check, time_Order[i]))
+        timeButtons.append(cb)
         
         
         
@@ -208,11 +238,14 @@ def queryDatesAndTimes(allConts, malport):
         moveTo(MyButton.winfo_width()/2 + MyButton.winfo_rootx(), MyButton.winfo_height()/2 + MyButton.winfo_rooty())
     
     top.mainloop()
-    if not malport:
-        if len(returnTimes)<1:
-            returnTimes = ["04", "05","06","07","08","09","10","11","12","13","14","16"]
-    else:
-        returnTimes = ["00"]
+#     if not malport:
+    if len(returnTimes)<1:
+        returnTimes = ["04", "05","06","07","08","09","10","11","12","13","14","16"]
+#     else:
+#         if len(returnTimes)<1:
+#             returnTimes = ["06","08","10","12","14","16"]
+#     else:
+#         returnTimes = ["00"]
     
     return returnDates, returnTimes
 
@@ -421,7 +454,7 @@ def getBetterRVs(driver, containers, date, acceptableTimes, targetDates, headles
         try:process.kill()
         except Exception:
             pass
-        exit()
+#         sys.exit()
     atexit.register(exit_hander)
     messages=False
     allConts = containers[0]=="ALL"

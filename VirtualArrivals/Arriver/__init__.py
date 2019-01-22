@@ -18,6 +18,7 @@ from PyPDF2 import PdfFileReader
 
 import re
 from os import devnull
+from HelperFunctions import done
 
 driver = ""
 testfile = ""
@@ -174,7 +175,7 @@ if __name__ == '__main__':
     
 #     argv = r"a J:\All motor routings\2017\Week 29\Hapag-Lloyd".split()
 #     argv = r"a C:\Users\ssleep\Documents\Programming\Hapag Dispatchmate\Thursday\LCBO\601331975 PARS MANIFESTS.pdf".split()
-    
+#     argv = r"a J:\All motor routings\2019\Week 1\HAPAG".split()
     driver = setupEterm()
     
     specificPath = ''
@@ -190,3 +191,8 @@ if __name__ == '__main__':
         recursiveArrive(specificPath)
     elif "PARS MANIFESTS" in specificPath and (specificPath[-4:] == ".pdf" or specificPath[-4:] == ".PDF"):
         arrive(specificPath)
+        
+    done()
+    driver.quit()
+    
+# pyinstaller "C:\Users\ssleep\workspace\VirtualArrivals\Arriver\__init__.py" --distpath "J:\Spencer\Virtual Arriver" -y --noconsole

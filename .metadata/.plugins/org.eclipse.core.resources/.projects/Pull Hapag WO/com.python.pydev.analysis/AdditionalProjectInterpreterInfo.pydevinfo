@@ -1,0 +1,22 @@
+-- VERSION_4
+-- START DISKCACHE_2
+C:\Users\ssleep\workspace\.metadata\.plugins\org.eclipse.core.resources\.projects\Pull Hapag WO\com.python.pydev.analysis\v2_indexcache
+Automator.__init__|1547657989637921000|C:\Users\ssleep\workspace\Pull Hapag WO\Automator\__init__.py
+-- END DISKCACHE
+-- START DICTIONARY
+1
+1=Automator.__init__
+-- END DICTIONARY
+-- START TREE 1
+7
+a|1|a!11@
+bol|1|bols!11@
+cli|1|client!11@
+fet|1|fetchANs!10@
+get|2|getBOLs!10@getPdf!10@
+ski|1|skipPopup!10@
+wor|1|workOrderLocation!11@
+-- END TREE
+-- START TREE 2
+0
+-- END TREE

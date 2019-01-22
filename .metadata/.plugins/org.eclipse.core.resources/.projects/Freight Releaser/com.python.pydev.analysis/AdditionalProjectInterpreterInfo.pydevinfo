@@ -1,0 +1,22 @@
+-- VERSION_4
+-- START DISKCACHE_2
+C:\Users\ssleep\workspace\.metadata\.plugins\org.eclipse.core.resources\.projects\Freight Releaser\com.python.pydev.analysis\v2_indexcache
+Automator.__init__|1544542953708256000|C:\Users\ssleep\workspace\Freight Releaser\Automator\__init__.py
+-- END DISKCACHE
+-- START DICTIONARY
+1
+1=Automator.__init__
+-- END DICTIONARY
+-- START TREE 1
+7
+acc|1|account!11@
+cnu|1|cNumbers!11@
+cre|1|credentials!11@
+dri|1|driver!11@
+get|1|getCNs!10@
+sen|1|sendRelease!10@
+set|1|setupEterm!10@
+-- END TREE
+-- START TREE 2
+0
+-- END TREE

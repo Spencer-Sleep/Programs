@@ -700,7 +700,7 @@ def arrive(container):
 if __name__ == '__main__':
     
 #     argv = r"a C:\Users\ssleep\Documents\Programming\Hapag Dispatchmate\601346204 PARS MANIFESTS.pdf".split()
-#     argv = r"a C:\Users\ssleep\Documents\Programming\Hapag Dispatchmate\Thursday\LCBO\601331975 PARS MANIFESTS.pdf".split()
+    argv = r"a J:\All motor routings\2018\Week 52\HAPAG".split()
     try:
         driver = setupEterm()
     except:

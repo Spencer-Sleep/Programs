@@ -658,6 +658,7 @@ def loadinfo(folderPath):
     if startAt[0] != "":
         for row in activeSheet.rows:
             if row[0].fill.fgColor == todaysFill.fgColor:
+                print(row[0].row)
                 if (not row[driverCol].value == None) and (not row[driverCol].value == "") and row[0].row>2 and (not startFound) and str(row[driverCol].value)==startAt[0]:
                     startFound = True
                 if startFound:
@@ -758,103 +759,104 @@ def loadinfo(folderPath):
     else:
         for row in activeSheet.rows:
             if row[0].fill.fgColor == todaysFill.fgColor:
-                    if (not row[driverCol].value == None) and (not row[driverCol].value == "") and row[0].row>2:
-                        driver1 = None
-                        driver2 = None
-                        if not "BAREFRAME" in row[containerNumberCol].value:
-                            driver1 = Driver()
-                            driver1.driver = str(row[driverCol].value).strip()
-                        if not "BAREFRAME" in row[containerNumber2Col].value:
-                            driver2 = Driver()
-                            driver2.driver = str(row[driverCol].value).strip()
+                print(row[0].row)
+                if (not row[driverCol].value == None) and (not row[driverCol].value == "") and row[0].row>2:
+                    driver1 = None
+                    driver2 = None
+                    if not "BAREFRAME" in row[containerNumberCol].value:
+                        driver1 = Driver()
+                        driver1.driver = str(row[driverCol].value).strip()
+                    if not "BAREFRAME" in row[containerNumber2Col].value:
+                        driver2 = Driver()
+                        driver2.driver = str(row[driverCol].value).strip()
+                    
+                    numberOfMoves = 0
+                    
+                    currentRow = row[0].row
+        #             print(currentRow)
+                    for i in range(-2,3):
+        #                 print(i)
+                        if not i==0:
+        #                     print("here")
+        #                     print(str(activeSheet[currentRow+i][driverCol].value))
+                            if str(activeSheet[currentRow+i][driverCol].value)==str(row[driverCol].value):
+        #                         print(activeSheet[containerNumberCol][currentRow+i].value)
+        #                         print(activeSheet[containerNumber2Col][currentRow+i].value)
+                                if "BAREFRAME" in str(activeSheet[currentRow+i][containerNumberCol].value) or "BAREFRAME" in str(activeSheet[currentRow+i][containerNumber2Col].value):
+                                    numberOfMoves+=1
+        #                             print("+1")
+                                else:
+        #                             print("+2") 
+                                    numberOfMoves+=2
+                                    
+                    if numberOfMoves>0:
+                        if "BAREFRAME" in row[containerNumber2Col].value or "BAREFRAME" in row[containerNumberCol].value:
+                            numberOfMoves+=1
+                        else:
+                            numberOfMoves+=2
+                    
+        #             print(numberOfMoves)
+                    if numberOfMoves==6:
+                        numberOfMoves=5
+                    
+                    if driver1 != None:
+                        driver1.PARS = str(row[parsCol].value)
                         
-                        numberOfMoves = 0
+                        if "BAREFRAME" in row[containerNumber2Col].value:
+                            driver1.bareframe=True
                         
-                        currentRow = row[0].row
-            #             print(currentRow)
-                        for i in range(-2,3):
-            #                 print(i)
-                            if not i==0:
-            #                     print("here")
-            #                     print(str(activeSheet[currentRow+i][driverCol].value))
-                                if str(activeSheet[currentRow+i][driverCol].value)==str(row[driverCol].value):
-            #                         print(activeSheet[containerNumberCol][currentRow+i].value)
-            #                         print(activeSheet[containerNumber2Col][currentRow+i].value)
-                                    if "BAREFRAME" in str(activeSheet[currentRow+i][containerNumberCol].value) or "BAREFRAME" in str(activeSheet[currentRow+i][containerNumber2Col].value):
-                                        numberOfMoves+=1
-            #                             print("+1")
-                                    else:
-            #                             print("+2") 
-                                        numberOfMoves+=2
-                                        
-                        if numberOfMoves>0:
-                            if "BAREFRAME" in row[containerNumber2Col].value or "BAREFRAME" in row[containerNumberCol].value:
-                                numberOfMoves+=1
-                            else:
-                                numberOfMoves+=2
+                        numberOfMoves1=numberOfMoves
+                        numberOfMoves2=numberOfMoves+6          
+                        if driver1.driver[:3]=="801":
+                            if numberOfMoves1==0 and "BAREFRAME" in row[containerNumber2Col].value:
+                                numberOfMoves1+=1
+                            driver1.payout=rates[numberOfMoves1]
+                        else:
+                            if numberOfMoves2==6 and "BAREFRAME" in row[containerNumber2Col].value:
+                                numberOfMoves2+=1
+                            driver1.payout=rates[numberOfMoves2]
+                            
                         
-            #             print(numberOfMoves)
-                        if numberOfMoves==6:
-                            numberOfMoves=5
+                        if len(driver1.driver) < 6:
+                            prefix = "801"
+                            while len(prefix)+len(driver1.driver)<6:
+                                prefix+="0"
+                            driver1.driver = prefix+driver1.driver
                         
-                        if driver1 != None:
-                            driver1.PARS = str(row[parsCol].value)
-                            
-                            if "BAREFRAME" in row[containerNumber2Col].value:
-                                driver1.bareframe=True
-                            
-                            numberOfMoves1=numberOfMoves
-                            numberOfMoves2=numberOfMoves+6          
-                            if driver1.driver[:3]=="801":
-                                if numberOfMoves1==0 and "BAREFRAME" in row[containerNumber2Col].value:
-                                    numberOfMoves1+=1
-                                driver1.payout=rates[numberOfMoves1]
-                            else:
-                                if numberOfMoves2==6 and "BAREFRAME" in row[containerNumber2Col].value:
-                                    numberOfMoves2+=1
-                                driver1.payout=rates[numberOfMoves2]
-                                
-                            
-                            if len(driver1.driver) < 6:
-                                prefix = "801"
-                                while len(prefix)+len(driver1.driver)<6:
-                                    prefix+="0"
-                                driver1.driver = prefix+driver1.driver
-                            
-                            driver1.containerNumber = str(row[containerNumberCol].value).strip()
-                            if row[notesCol].value == "SUNRISE METALS":
-                                driver1.sunrise=True
-                            drivers.append(driver1)
-                            
-                        if driver2 != None:
-                            driver2.PARS = str(row[pars2Col].value)
-                            
-                            if "BAREFRAME" in row[containerNumberCol].value:
-                                driver2.bareframe=True
-                            
-                            numberOfMoves1=numberOfMoves
-                            numberOfMoves2=numberOfMoves+6             
-                            if driver2.driver[:3]=="801":
-                                if numberOfMoves1==0 and "BAREFRAME" in row[containerNumberCol].value:
-                                    numberOfMoves1+=1
-                                driver2.payout=rates[numberOfMoves1]
-                            else:
-                                if numberOfMoves2==6 and "BAREFRAME" in row[containerNumberCol].value:
-                                    numberOfMoves2+=1
-                                print(numberOfMoves2)
-                                print(driver2.containerNumber)
-                                driver2.payout=rates[numberOfMoves2]
-                            
-                            if len(driver2.driver) < 6:
-                                prefix = "801"
-                                while len(prefix)+len(driver2.driver)<6:
-                                    prefix+="0"
-                                driver2.driver = prefix+driver2.driver
-                            
-                            driver2.containerNumber = str(row[containerNumber2Col].value).strip()
-                            if row[notes2Col].value == "SUNRISE METALS":
-                                driver2.sunrise=True
-                            drivers.append(driver2)
+                        driver1.containerNumber = str(row[containerNumberCol].value).strip()
+                        if row[notesCol].value == "SUNRISE METALS":
+                            driver1.sunrise=True
+                        drivers.append(driver1)
+                        
+                    if driver2 != None:
+                        driver2.PARS = str(row[pars2Col].value)
+                        
+                        if "BAREFRAME" in row[containerNumberCol].value:
+                            driver2.bareframe=True
+                        
+                        numberOfMoves1=numberOfMoves
+                        numberOfMoves2=numberOfMoves+6             
+                        if driver2.driver[:3]=="801":
+                            if numberOfMoves1==0 and "BAREFRAME" in row[containerNumberCol].value:
+                                numberOfMoves1+=1
+                            driver2.payout=rates[numberOfMoves1]
+                        else:
+                            if numberOfMoves2==6 and "BAREFRAME" in row[containerNumberCol].value:
+                                numberOfMoves2+=1
+#                             print(numberOfMoves2)
+#                             print(driver2.containerNumber)
+                            driver2.payout=rates[numberOfMoves2]
+                        
+                        if len(driver2.driver) < 6:
+                            prefix = "801"
+                            while len(prefix)+len(driver2.driver)<6:
+                                prefix+="0"
+                            driver2.driver = prefix+driver2.driver
+                        
+                        driver2.containerNumber = str(row[containerNumber2Col].value).strip()
+                        if row[notes2Col].value == "SUNRISE METALS":
+                            driver2.sunrise=True
+                        drivers.append(driver2)
     
     nameDict = {}
     
@@ -987,9 +989,9 @@ def loadinfo(folderPath):
 
 if __name__ == '__main__':
     
-#     folderPath = r"C:\Users\ssleep\Documents\Programming\2018\CSX Moves WEEK 10 Mar 4 to Mar 10 local.xlsx"
+#     folderPath = r"C:\Users\ssleep\Documents\Programming\2018\CSX Moves WEEK 46 NOVEMBER 11 TO NOVEMBER 17.xlsx"
     
-#     argv = r"a J:\Buffalo Weekly Reports\2018\CSX Moves WEEK 33 AUGUST 12 TO AUGUST 18.xlsx".split()
+    argv = r"a J:\Buffalo Weekly Reports\2018\CSX Moves WEEK 49 DECEMBER 2 TO  TO DECEMBER 8.xlsx".split(" ")
     
     folderPath = ''
     for i in range(len(argv)):

@@ -1,7 +1,7 @@
 -- VERSION_4
 -- START DISKCACHE_2
 C:\Users\ssleep\workspace\.metadata\.plugins\org.eclipse.core.resources\.projects\Put Drivers on PBs\com.python.pydev.analysis\v2_indexcache
-Automator.__init__|1539875924798730000|C:\Users\ssleep\workspace\Put Drivers on PBs\Automator\__init__.py
+Automator.__init__|1541014100199863000|C:\Users\ssleep\workspace\Put Drivers on PBs\Automator\__init__.py
 -- END DISKCACHE
 -- START DICTIONARY
 2
@@ -9,22 +9,12 @@ Automator.__init__|1539875924798730000|C:\Users\ssleep\workspace\Put Drivers on 
 1=Automator.__init__
 -- END DICTIONARY
 -- START TREE 1
-15
-app|1|app!11@
-but|1|buttonWrap!11@
-con|2|contents!11@contentsInner!11@
-dia|1|dialogs!11@
-dir|1|directoryPath!11@
-don|1|done!11@
+5
 dri|1|Driver!9@
 fol|1|folderPath!11@
 loa|1|loadinfo!10@
-out|2|outLookFolders!11@outlookPath!11@
 pop|1|popUp!10@
-sen|1|send!11@
 set|1|setupDM!10@
-top|2|topWindow!11@topWindowWrap!11@
-win|1|winChildren!11@
 -- END TREE
 -- START TREE 2
 4
