@@ -162,6 +162,7 @@ def queryDatesAndTimes(allConts, malport):
 #         f=open(r"C:\Automation\CNPort.txt", 'r')
         time_Order=[]
         f=open(r"J:\LOCAL DEPARTMENT\Automation - DO NOT MOVE\Malport Hours.txt", 'r')
+#         f=open(r"C:\Automation\Malport Hours.txt", 'r')
         #     read = f.readline()
         #     m = re.search("username: *", read)
         #     username = read[m.end():].rstrip()
@@ -709,6 +710,7 @@ def getBetterRVs(driver, containers, date, acceptableTimes, targetDates, headles
     
     
     def get_RV(rv):
+        found=False
         table = driver.find_element_by_css_selector("table[class='TableStandardBG']")
         rows = table.find_element_by_css_selector("table[id='listingTable']>tbody").find_elements_by_css_selector("tr")
         for row in rows:
@@ -761,7 +763,8 @@ def getBetterRVs(driver, containers, date, acceptableTimes, targetDates, headles
 #                 Select(driver.find_element_by_id("alternateDate")).select_by_visible_text(target_Date)
 #                 failed = True
                 except Exception:
-                    driver.refresh()
+#                     driver.refresh()
+                    pass
         try:
             Select(driver.find_element_by_id("alternateDate")).select_by_visible_text(target_Date)
         except Exception:
@@ -775,7 +778,7 @@ def getBetterRVs(driver, containers, date, acceptableTimes, targetDates, headles
                 elem.click()
                 failed=False
             except Exception:
-                driver.refresh()
+                pass
         
         driver.implicitly_wait(0)
         try:
@@ -1001,8 +1004,17 @@ def getBetterRVs(driver, containers, date, acceptableTimes, targetDates, headles
             targetDatesTemp = targetDates
             gotRV = False
             if not get_RV(rv):
+                messages=True
                 rvs.remove(rv)
-                rv=rvs[0]
+                if len(rvs)>0:
+                    rv = rvs[0]
+                else:
+                    if (messages):
+                        popUpOKLeft("Done, but check the console\nwindow for messages")
+                    else:
+                        popUpOKLeft("Done")
+#                             driver.quit()
+                    exit()
                 continue
             while not gotRV:
                 if datetime.now()-startTime>timedelta(seconds=60):
@@ -1039,8 +1051,8 @@ if __name__ == '__main__':
                 if containers[i][4]!=" ":
                     containers[i] = containers[i][:4]+" " + containers[i][4:]
                 containers[i] = containers[i][:11]
-                while containers[i][4]=="0":
-                    containers[i] = containers[i][:4]+containers[i][5:]
+                while containers[i][5]=="0":
+                    containers[i] = containers[i][:5]+containers[i][6:]
             else:
                 del containers[i]
     elif delivery:
@@ -1114,11 +1126,15 @@ if __name__ == '__main__':
             print("Encountered an error:")
             print(exc_info())
             if count>60:
+                print("Repeated error, quitting")
                 try:
                     driver.quit()
                 except Exception:pass
                 exit()
+            count+=1
             print("Restarting")
+            driver.quit()
+            driver, process, globalPort = setupCn(headless)
             
 #     except Exception:
 #         try:

@@ -68,4 +68,7 @@
     "org.eclipse.jface:java.io.IOException:Unable to resolve plug-in*",
     "org.eclipse.oomph.setup.core:$org.apache.http.ConnectionClosedException:",
     "org.eclipse.pde.core::The current target platform contains errors*",
-    "org.eclipse.ui::Conflicting
+    "org.eclipse.ui::Conflicting handlers for*"
+  ],
+  "problemsZipLastDownloadTimestamp": 0
+}

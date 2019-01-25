@@ -166,7 +166,7 @@ def fetchANs(bols, client,workOrderLocation):
     
 if __name__ == '__main__':
 #     sys.argv=r"a C:\Users\ssleep\Documents\Maersk fetcher".split()
-    sys.argv=r"a J:\All motor routings\2019\Week 3\HAPAG".split()
+#     sys.argv=r"a J:\All motor routings\2019\Week 3\HAPAG".split()
     workOrderLocation = ''
     for i in range(len(sys.argv)):
         if i!=0:
