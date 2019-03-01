@@ -88,8 +88,8 @@ def setupCn():
     driver.maximize_window()
     
     driver.implicitly_wait(40)
-#     f=open(r"J:\LOCAL DEPARTMENT\Automation - DO NOT MOVE\CN Login.txt", 'r')
-    f=open(r"C:\Automation\CN Login.txt", 'r')
+    f=open(r"J:\LOCAL DEPARTMENT\Automation - DO NOT MOVE\CN Login.txt", 'r')
+#     f=open(r"C:\Automation\CN Login.txt", 'r')
     read = f.readline()
     m = re.search("username: *", read)
     username = read[m.end():].rstrip()

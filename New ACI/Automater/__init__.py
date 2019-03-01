@@ -283,6 +283,7 @@ def loadInfo(folderPath):
             if row[0].fill.fgColor == todaysFill.fgColor:
                 container = Container()
                 container.containerNumber = str(row[containerCol].value).strip()
+                print(row[0].row)
                 container.driver = str(row[driverCol].value).strip()
                 container.PARS = str(row[parsCol].value).strip()
                 containers.append(container)
@@ -611,7 +612,7 @@ def makeACI(driver, container, saved, failed, dayoftheweek):
 #     
 
 if __name__ == '__main__':
-#     argv = r"a J:\Linehaul\Linehaul Drivers Weekly Reports\2019\2019\Week 2".split()
+    argv = r"a J:\Linehaul\Linehaul Drivers Weekly Reports\2019\2019\Week 6".split()
 #     argv = r"a C:\Users\ssleep\Documents\Week 29".split()
 #     print("IF RUNNING IN BACKGROUND DO NOT EXIT THIS WINDOW")
 #     print("HIT \"CONTROL-C\" TO END THE PROGRAM, AND THEN EXIT THE WINDOW") 

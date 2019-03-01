@@ -427,7 +427,7 @@ def loadContainerInfo(specificPath, startAt, skip, terminal, steamShipLine):
                                 top.mainloop()
                             
                             if not skipThisContainer[0]:
-                                if container.properties[INBOND].lower() != "pars" and container.properties[INBOND]!="NONE":
+                                if container.properties[INBOND].lower().strip() != "pars" and container.properties[INBOND]!="NONE":
                                     a8a.append(container)
                                 else:
                                     pars.append(container)
@@ -660,7 +660,6 @@ def bookPars(containers, terminal, steamShipLine):
             
             weight = int(float(container.properties[WEIGHT]))
             
-            
             if weight>contRates[size].P1weight:
                 overweight = True
             if "R" in size:
@@ -729,7 +728,6 @@ def bookPars(containers, terminal, steamShipLine):
     #             hotkey('ctrl', 'a')
     #             typewrite(contRates[size].reeferCharge)
                 rateCount+=1
-             
             if(overweight and container.properties[COFFEE]=="NONE"):
                 click(loc.CUSTOMERCHARGELOC[0], loc.CUSTOMERCHARGELOC[1]+ clickHeight)
                 clickHeight += 19
@@ -1099,7 +1097,6 @@ def bookA8A(containers, terminal, steamShipLine):
 #                 press("tab", 3)
 #                 hotkey('ctrl', 'a')
 #                 typewrite(str(contRates[size].reeferCharge))
-    #             print(contRates[size].reeferCharge)
                 rateCount+=1
             
             if(overweight and container.properties[COFFEE]=="NONE"):
@@ -1139,12 +1136,8 @@ def bookA8A(containers, terminal, steamShipLine):
 
 if __name__ == '__main__':
 #     argv = r"a J:\All motor routings\JPO CAPRICORNUS V.022N_HS_LH_NYC.xlsx".split()
-#     argv = r"a J:\All motor routings\SPIRIT OF HAMBURG HS.xlsx".split()
+    argv = r"a J:\All motor routings\LIMARI 0AM22N1MA.xlsx".split()
 
-#     print("NONE".split(" ")[0])
-#     print("1234 asd".split(" ")[0])
-#     print("1234asd".split(" ")[0])
-#     exit()
     specificPath = ''
     for i in range(len(argv)):
         if i!=0:

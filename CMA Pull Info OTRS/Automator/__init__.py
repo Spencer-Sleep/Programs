@@ -45,7 +45,8 @@ import datetime
 # except:
 #     print(sys.exc_info())
 class Container(object):
-    cnumber=""
+    def __init__(self, cnumber=""):
+        self.cnumber=cnumber
     bookingNumber = ""
     WONumber = ""
     receivedTime=""
@@ -143,8 +144,9 @@ def extractTextHapag(pdf):
         text += pageObj.extractText()
     
     return text
+
     
-def getRestOfLine(text, findString, instance=-1, ):
+def getRestOfLine(text, findString, instance=-1):
     if instance<1:
         startIndex = text.rfind(findString)
     elif instance >0:
@@ -276,6 +278,35 @@ def getContainerHapag(text):
     
     return containers
 
+def getContainerHam(text):
+    containers=[]
+    containersAdded={}
+    matches = re.findall("[A-Za-z]{4}[0-9]{7}", text)
+    for match in matches:
+        if not containersAdded.get(match):
+            newContainer=Container(match)
+            containers.append(newContainer)
+            containersAdded[match]=True
+
+    firstContainer = containers[0]
+    startIndex=text.find("_Voyage")+1
+    startIndex=text[startIndex:].find("_")+startIndex+1
+    endIndex=text[startIndex:].find("_")+startIndex
+    
+    firstContainer.WONumber=getRestOfLine(text, "_Order_")
+    firstContainer.vessel=text[startIndex:endIndex].strip()
+
+    for container in containers:
+        container.vessel=firstContainer.vessel
+        container.WONumber=firstContainer.WONumber
+    
+#     print(firstContainer.vessel)
+#     print(firstContainer.WONumber)
+#     print(firstContainer.cnumber)
+#     print(len(containers))
+    
+    return containers
+
 def putContainerInSheet(containers, sheetLocation, listBook, listSheet, lastFileNumber, code):
     containerDict = dict()
     i=1
@@ -359,7 +390,6 @@ def putContainerInSheet(containers, sheetLocation, listBook, listSheet, lastFile
 def putContainerInSheetHapag(containers, sheetLocation, listBook, listSheet, lastFileNumber):
     containerDict = dict()
     i=1
-    print(containers)
     for row in listSheet.rows:
         try:
             containerDict[row[3].value]=i
@@ -437,6 +467,86 @@ def putContainerInSheetHapag(containers, sheetLocation, listBook, listSheet, las
         except:
             i+=1
 
+def putContainerInSheetHam(containers, sheetLocation, listBook, listSheet, lastFileNumber):
+    containerDict = dict()
+    i=1
+    for row in listSheet.rows:
+        try:
+            containerDict[row[3].value]=i
+            i+=1
+        except:
+            pass
+#     i=1
+#     containers.reverse()
+    lastWO=""
+
+    for container in reversed(containers):
+        lastRow = listSheet.max_row+1
+        if container.WONumber==lastWO:
+            tempContainer = Container()
+            tempContainer.cnumber=container.cnumber
+            container=tempContainer
+
+        values = [container.cnumber, container.WONumber, container.vessel, container.receivedTime]
+        
+        if container in containerDict.keys():
+            lastRow=containerDict[container]
+            
+        if container.WONumber!="":
+            values.append("=HYPERLINK(\"J:\IMPORTS\HAM WOs\\"+container.WONumber+"-"+container.cnumber+".pdf\", \"Work Order\")")
+        else:
+            values.append("")
+            corrected = False
+            i=1
+            while not corrected and i<lastRow:
+                for j in range(len(values)):
+                    if "HYPER" in listSheet.cell(lastRow-i,j+1).value:
+                        listSheet.cell(lastRow-i,j+1).value = listSheet.cell(lastRow-i,j+1).value[0:listSheet.cell(lastRow-i,j+1).value.find(".")]+"-"+container.cnumber+listSheet.cell(lastRow-i,j+1).value[listSheet.cell(lastRow-i,j+1).value.find("."):]
+                        corrected=True
+                        break
+                i+=1
+            
+        i=1
+        for value in values:
+            listSheet.cell(lastRow,i).value = value
+            if "HYPER" in value:
+                listSheet.cell(lastRow,i).font = Font(u='single', color=colors.BLUE)
+            i+=1
+#         if container.WONumber!="":
+#             lastWO=container.WONumber
+#
+#         i+=1
+    if len(containers) != 0:
+        listSheet.cell(1,i+2).value = datetime.datetime.utcnow()
+    i=lastFileNumber
+    deleted = True
+    while deleted:
+        try:
+            os.remove(sheetLocation+"List"+str(i)+".xlsx")
+            i=i-1
+            if i<1:
+                deleted=False
+                i=1
+        except:
+            i+=1
+            deleted=False
+            
+    dims = {}
+    for row in listSheet.rows:
+        for cell in row:
+            if cell.value:
+                dims[cell.column] = max((dims.get(cell.column, 0), len(str(cell.value))))    
+    for col, value in dims.items():
+        listSheet.column_dimensions[col].width = value+2
+    listSheet.column_dimensions["E"].width=13
+    saved = False
+    while not saved:
+        try:
+            listBook.save(sheetLocation+"List"+str(i)+".xlsx")
+            saved = True
+        except:
+            i+=1
+
 def fetchCMAWOInfo(client, codes, sheetLocations):
     
     imports=[]
@@ -489,27 +599,6 @@ def fetchCMAWOInfo(client, codes, sheetLocations):
             listSheet.cell(1,i+2).value = None
             
             
-    #         listSheet.cell(1,1).value = "WO Number"
-    #         listSheet.cell(1,2).value = "Booking Number"
-    #         listSheet.cell(1,3).value = "Container Number"
-    #         listSheet.cell(1,4).value = "Vessel"
-    #         listSheet.cell(1,5).value = "Address 1"
-    #         listSheet.cell(1,6).value = "Address 2"
-    #         listSheet.cell(1,7).value = "Address 3"
-    #         listSheet.cell(1,8).value = "Cut"
-    #         listSheet.cell(1,9).value = "Date Received"
-            
-            
-            
-    #         listSheet.cell(1,11).value = "Last Checked:"
-        
-        
-        
-    #     tickets = client.ticket_search(Title="Transport Order: TCAN1817410")
-        
-    #     tickets = client.ticket_search(Title="Transport Order: " + code+"*")
-    #     if False:
-    #     tickets=""
         listBooks.append(listBook)
         listSheets.append(listSheet)
         lastCheckLoc = 10
@@ -518,9 +607,6 @@ def fetchCMAWOInfo(client, codes, sheetLocations):
         elif code=="TCAN":
             lastCheckLoc+=3
         if listSheet.cell(1,lastCheckLoc).value=="" or listSheet.cell(1,lastCheckLoc).value==None:
-#             if code=="TCAN":
-#                 tickets = client.ticket_search(Title="Transport Order: TCAN1815669")
-#             else:
             tickets=client.ticket_search(Title="Transport Order*" + code+"*")
         else:
             tickets=client.ticket_search(Title="Transport Order*" + code+"*", TicketCreateTimeNewerDate=listSheet.cell(1,lastCheckLoc).value)
@@ -530,10 +616,6 @@ def fetchCMAWOInfo(client, codes, sheetLocations):
             if not ticket:
                 continue
             ticket = (client.ticket_get_by_id(ticket, True, True))
-        #     ticket.articles[0].to_dct()
-            
-        
-            #     pdf = ticket.articles[0].attachments[0].Content
             for article in ticket.articles:
                 for attachment in article.attachments:
                     pdf = attachment
@@ -553,8 +635,6 @@ def fetchCMAWOInfo(client, codes, sheetLocations):
                                 container.cancelled="Cancellation" in ticket.articles[0].field_get("Subject")
                                 container.receivedTime=str(datetime.datetime.strptime(ticket.articles[0].field_get("CreateTime"), "%Y-%m-%d %H:%M:%S")-timedelta(hours=4))
                                 containers.append(container)
-#                     else:
-#                         print(attachment.Filename)
         if i==0:
             exports = list(containers)
         elif i==1:
@@ -665,7 +745,80 @@ def fetchHAPAG():
     putContainerInSheetHapag(containers, hapagSheetLocation, listBook, listSheet, lastFileNumber)
 #     exit()
     
+
+def fetchHAM(hamSheetLocation):
+    onlyfiles = [f for f in listdir(hamSheetLocation) if isfile(join(hamSheetLocation, f))]
+    lastFile = ""
+    lastFileNumber = 0
     
+    for file in onlyfiles:
+        if not file[0]=="~":
+            fileNumber = int(file[4:file.find(".")])
+            if fileNumber>lastFileNumber:
+                lastFile=file
+                lastFileNumber=fileNumber
+    
+    try:
+        listBook = load_workbook(hamSheetLocation+lastFile)
+        listSheet = listBook.active
+    except:
+        listBook=Workbook()
+        listSheet = listBook.active
+        
+        headers = ["Container Number", "WO Number", "Vessel", "Date Received", "WO Link"]
+        
+        
+        i=1
+        for header in headers:
+            listSheet.cell(1,i).value = header
+            i+=1
+            
+        listSheet.cell(1,i+1).value = "Last Checked:"
+        listSheet.cell(1,i+2).value = None
+            
+    if listSheet.cell(1,8).value=="" or listSheet.cell(1,8).value==None:
+#         tickets=client.ticket_search(Queues=["Import::DO::Hamburg POs"], TicketChangeTimeNewerDate="2018-09-22 00:00:00")
+        tickets=client.ticket_search(Queues=["Import::DO::Hamburg POs"], TicketChangeTimeNewerDate="2018-09-22 00:00:00")
+        
+# #         tickets=client.ticket_search(Title="*9PHL00ECIA*", TicketChangeTimeNewerDate="2018-09-22 00:00:00")
+#         tickets=client.ticket_search()
+#         print("a")
+    else:
+        tickets=client.ticket_search(Queues=["Import::DO::Hamburg POs"], TicketChangeTimeNewerDate=listSheet.cell(1,8).value)
+    
+    containers=[]
+    woNumbers=[]
+    for ticket in tickets:
+        if not ticket:
+            continue
+        ticket = (client.ticket_get_by_id(ticket, True, True))
+        for article in reversed(ticket.articles):
+            for attachment in article.attachments:
+                pdf = attachment
+                if ".pdf" in attachment.Filename:
+                    text = extractTextHapag(pdf)
+#                     print(text)
+#                     if not "Empty Repo" in text and text!="":
+#                     exit()
+                    containersParsed = getContainerHam(text)
+#                         if "TCAN" in ticket.articles[0].field_get("Subject"):
+                    if not containersParsed[0].WONumber in woNumbers:
+                        print(containersParsed[0].WONumber)
+                        for container in reversed(containersParsed):
+                            try:
+                                copyfile(r"J:\Spencer\CMA Work Orders\\"+pdf.Filename, "J:\IMPORTS\HAM WOs\\"+container.WONumber+"-"+container.cnumber+".pdf")
+                            except:
+                                print(sys.exc_info())
+                                pass
+                            woNumbers.append(container.WONumber)
+            #                 print(container.cnumber)
+#                                 container.cancelled="Cancellation" in ticket.articles[0].field_get("Subject")
+                            container.receivedTime=str(datetime.datetime.strptime(ticket.articles[0].field_get("ChangeTime"), "%Y-%m-%d %H:%M:%S")-timedelta(hours=4))
+                            containers.append(container)
+#                 else:
+#                     print(attachment.Filename)
+    putContainerInSheetHam(containers, hamSheetLocation, listBook, listSheet, lastFileNumber)
+
 if __name__ == '__main__':
     warnings.filterwarnings("ignore")
     
@@ -678,9 +831,11 @@ if __name__ == '__main__':
         Codes=["KCAN", "TCAN", "KNAM"]
     #     Codes=["TCAN"]
         sheetLocations=[r"J:\ANTONIO-Export Work\CMA WO Sheets\\", r"J:\LOCAL DEPARTMENT\CMA WO Sheets\\", r"J:\IMPORTS\CMA WO Sheets\\"]
+        hamSheetLocation=r"J:\IMPORTS\HAM CSX WO Sheets\\"
 #         sheetLocations=[r"C:\Users\ssleep\Documents\CMA WO\\", r"J:\LOCAL DEPARTMENT\CMA WO Sheets\\", r"J:\IMPORTS\CMA WO Sheets\\"]
         fetchCMAWOInfo(client, Codes, sheetLocations)
         fetchHAPAG()
+        fetchHAM(hamSheetLocation)
         print("Done")
         sleep(600)
     

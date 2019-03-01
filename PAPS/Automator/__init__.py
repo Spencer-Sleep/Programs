@@ -472,7 +472,7 @@ def callbackBookTE(driver):
         
 #         driver.find_element_by_id("PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_INBONDSHIPMENT_ESTDATEOFUSDEPARTURE").send_keys(date)
 #         driver.find_element_by_id("PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_INBONDSHIPMENT_FOREIGNPORTOFDESTINATION").click()
-        driver.find_element_by_id("PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_STANDARDSHIPMENT_BOARDEDQUANTITY").send_keys(container.pieces)
+#         driver.find_element_by_id("PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_STANDARDSHIPMENT_BOARDEDQUANTITY").send_keys(container.pieces)
 #         driver.execute_script("window.scrollTo(0, 1080)")
         elem = driver.find_element_by_css_selector("input[value='Save']") 
         driver.execute_script("arguments[0].scrollIntoView(true);", elem)

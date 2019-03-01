@@ -608,7 +608,7 @@ def makeCargoDocs(containers, driver):
     
 if __name__ == '__main__':
     
-#     argv = r"a J:\All motor routings\LIMARI V.174N_HS_NYC_PEND CD.xlsx".split()
+    argv = r"a J:\All motor routings\MAERSK_DENVER_1902_.xlsx".split()
 #     argv = r"a C:\Users\ssleep\Documents\MSC ANNICK N010.xlsx".split()
 #     argv = r"a J:\All motor routings\2019\Week 1\HAPAG".split()
     

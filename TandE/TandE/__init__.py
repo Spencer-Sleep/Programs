@@ -39,6 +39,7 @@ from sys import exc_info
 import HelperFunctions
 from os.path import devnull
 import atexit
+import sys
 
 boo = [False]
 
@@ -331,25 +332,40 @@ def callbackBookTE(driver):
             country = "USA"
             stateProv = "New Jersey"
             zipPost = "07201"
-          
-        driver.find_element_by_id("PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_STANDARDSHIPMENT_CONSIGNEE_ADDRESS_STREET").send_keys(address1)
-        driver.find_element_by_id("PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_STANDARDSHIPMENT_CONSIGNEE_ADDRESS_STREET2").send_keys(address2)
-        driver.find_element_by_id("PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_STANDARDSHIPMENT_CONSIGNEE_ADDRESS_CITY").send_keys(city)
-        Select(driver.find_element_by_id("PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_STANDARDSHIPMENT_CONSIGNEE_ADDRESS_COUNTRY")).select_by_visible_text(country)
-    #         try:
-        Select(driver.find_element_by_id("PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_STANDARDSHIPMENT_CONSIGNEE_ADDRESS_REGION")).select_by_visible_text(stateProv)
-    #         except:
-    #             wait = WebDriverWait(driver, 100000000)
-    #             wait.until(lambda driver: "Create Standard Shipment for another Carrier" in driver.page_source)
-    #             return
+        elif container.terminal=="304":
+            address1 = "C/O GLOBAL TERMINAL"
+            address2 = "302 PORT JERSEY BLVD."
+            city = "BAYONNE"
+            country = "USA"
+            stateProv = "New Jersey"
+            zipPost = "07305"
+        else:
+            address1 = ""
+            address2 = ""
+            city = ""
+            country = ""
+            stateProv = ""
+            zipPost = ""
+            
+        if not address1=="":
+            driver.find_element_by_id("PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_STANDARDSHIPMENT_CONSIGNEE_ADDRESS_STREET").send_keys(address1)
+            driver.find_element_by_id("PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_STANDARDSHIPMENT_CONSIGNEE_ADDRESS_STREET2").send_keys(address2)
+            driver.find_element_by_id("PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_STANDARDSHIPMENT_CONSIGNEE_ADDRESS_CITY").send_keys(city)
+            Select(driver.find_element_by_id("PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_STANDARDSHIPMENT_CONSIGNEE_ADDRESS_COUNTRY")).select_by_visible_text(country)
+        #         try:
+            Select(driver.find_element_by_id("PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_STANDARDSHIPMENT_CONSIGNEE_ADDRESS_REGION")).select_by_visible_text(stateProv)
+        #         except:
+        #             wait = WebDriverWait(driver, 100000000)
+        #             wait.until(lambda driver: "Create Standard Shipment for another Carrier" in driver.page_source)
+        #             return
         driver.find_element_by_id("PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_STANDARDSHIPMENT_CONSIGNEE_ADDRESS_ZIP").send_keys(zipPost)
         driver.find_element_by_id("PC_7_CHMCHJ3VMJ3L502FK9QRJ710G2000000_STANDARDSHIPMENT_CONSIGNEE_NAME").send_keys(Keys.ENTER)
          
         while not GetKeyState(13)<0:
             if GetKeyState(27)<0:
                 raise AssertionError
-                 
-    #             True
+             
+#             True
               
          
          
@@ -801,13 +817,17 @@ if __name__ == '__main__':
 #     
 #     container = Container()
 #     setupDM(container)
-    driver = setupPortal()
-         
-    while True:
-#         sleep(1)
-        wait = WebDriverWait(driver, 100000000)
-        wait.until(lambda driver: "Either an ID or Full Shipper information is required for a Shipper." in driver.page_source)
-        callbackBookTE(driver)
+    try:
+        driver = setupPortal()
+             
+        while True:
+    #         sleep(1)
+            wait = WebDriverWait(driver, 100000000)
+            wait.until(lambda driver: "Either an ID or Full Shipper information is required for a Shipper." in driver.page_source)
+            callbackBookTE(driver)
+    except:
+        print(sys.exc_info())
+        sleep(100)
 #     time.sleep(5)
 #     top = Tk()
 #     

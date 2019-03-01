@@ -301,7 +301,10 @@ def putInfoinExcel(containers, localContainers, switched):
                         container=Xcontainer
                         break
 #                 print(row[0].fill.start_color.index)
-                pastMalport = row[0].fill.start_color.index[2:] == "FFFF00" or row[0].fill.start_color.index[2:] == "FF0000" 
+                if row[0].fill.start_color.index==0:
+                    pastMalport=False
+                else:
+                    pastMalport = row[0].fill.start_color.index[2:] == "FFFF00" or row[0].fill.start_color.index[2:] == "FF0000" 
 #                 print(pastMalport)
                 backupRow = []
                 j=0
@@ -519,23 +522,26 @@ def checkContainerNumbers(containers):
     invalidContainerNumbers=""
     
     for container in containers:
+        numberWithLeadingZeroes=container.number
+        while len(numberWithLeadingZeroes)<10:
+            numberWithLeadingZeroes = numberWithLeadingZeroes[:4]+"0"+numberWithLeadingZeroes[4:]
         try:
-            sumCheck=letterDictionary[container.number[0]]
-            sumCheck+=letterDictionary[container.number[1]]*2
-            sumCheck+=letterDictionary[container.number[2]]*4
-            sumCheck+=letterDictionary[container.number[3]]*8
-            sumCheck+=int(container.number[4])*16
-            sumCheck+=int(container.number[5])*32
-            sumCheck+=int(container.number[6])*64
-            sumCheck+=int(container.number[7])*128
-            sumCheck+=int(container.number[8])*256
-            sumCheck+=int(container.number[9])*512
+            sumCheck=letterDictionary[numberWithLeadingZeroes[0]]
+            sumCheck+=letterDictionary[numberWithLeadingZeroes[1]]*2
+            sumCheck+=letterDictionary[numberWithLeadingZeroes[2]]*4
+            sumCheck+=letterDictionary[numberWithLeadingZeroes[3]]*8
+            sumCheck+=int(numberWithLeadingZeroes[4])*16
+            sumCheck+=int(numberWithLeadingZeroes[5])*32
+            sumCheck+=int(numberWithLeadingZeroes[6])*64
+            sumCheck+=int(numberWithLeadingZeroes[7])*128
+            sumCheck+=int(numberWithLeadingZeroes[8])*256
+            sumCheck+=int(numberWithLeadingZeroes[9])*512
             check = sumCheck%11
             if check==10:
                 check=0
-#         print(container.number)
+#         print(numberWithLeadingZeroes)
             if not check==int(container.checkDigit):
-                invalidContainerNumbers+= container.number + "\n"
+                invalidContainerNumbers+= numberWithLeadingZeroes + "\n"
         except:
             invalidContainerNumbers+= container.number + "\n"
     if invalidContainerNumbers!="":
@@ -586,7 +592,7 @@ def checkContainerNumbers(containers):
 if __name__ == '__main__':
 #     try:
     filePath = r"J:\LOCAL DEPARTMENT\Automation - DO NOT MOVE\Incoming Local Containers.xlsm"
-#     filePath = r"C:\Users\ssleep\Documents\Incoming Local Containers local.xlsm"
+#     filePath = r"C:\Users\ssleep\Documents\Incoming Local Containers.xlsm"
     containers = []
          
     localContainersWb, localContainers, switched = setupExcel(filePath, containers)
