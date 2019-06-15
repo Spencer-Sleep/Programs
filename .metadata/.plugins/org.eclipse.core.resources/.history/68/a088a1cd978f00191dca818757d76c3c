@@ -1,0 +1,266 @@
+from selenium.webdriver import Ie, ie
+from selenium.webdriver import Firefox
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import Select
+from selenium.webdriver.common.by import By
+from selenium.webdriver import FirefoxProfile
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+
+from re import search
+from threading import Thread
+from openpyxl.workbook import child
+from time import sleep
+from _datetime import date, datetime
+from selenium import webdriver
+import HelperFunctions
+from openpyxl.reader.excel import load_workbook
+from openpyxl.workbook.workbook import Workbook
+
+from sys import argv
+from math import ceil
+
+
+import atexit
+def exit_hander():
+    sleep(200)
+atexit.register(exit_hander)
+
+def setupPortal():
+
+    driver = Firefox()
+    driver.get("https://ace.cbp.dhs.gov/")
+#     driver.set_window_position(1920, 0)
+    driver.maximize_window()
+    
+    driver.implicitly_wait(100)
+    f=open(r"C:\Automation\ACE Login.txt", 'r')
+    read = f.readline()
+    m = search("username: *", read)
+    read = read[m.end():]
+
+    elem = driver.find_element_by_name('username')
+    
+    elem.clear()
+    elem.send_keys(read)
+    read = f.readline()
+    m = search("password: *", read)
+    read = read[m.end():]
+    driver.find_element_by_name('password').send_keys(read)
+    f.close()
+    driver.find_element_by_name('Login').click()
+    
+#     driver.find_element_by_class_name("wpsToolBar")
+    driver.find_element_by_css_selector("button[accesskey='T']").click()
+    driver.find_element_by_id("clayView:ns_7_M3ULU7BUVD0M2HFG8D10000000_00000:_idsc00001:_idsc00003_2:_idsc00007").click()
+    driver.find_element_by_id("clayView:ns_7_CHMCHJ3VMJ3L502FK9QRJ71003_00000:accountListForm:_idsc00058_0:_idsc00065").click()
+    driver.find_element_by_id("clayView:ns_7_CHMCHJ3VMJ3L502FK9QRJ71003_00000:accountListForm:_idsc00058_1:_idsc00068").click()
+    
+    driver.implicitly_wait(3)
+    try:
+        driver.find_element_by_css_selector('img[alt="Minimize Manifest"').click()
+    except:
+        True
+        
+    driver.find_element_by_id("clayView:ns_7_CHMCHJ3VMJ09C02FKPGKFF0004_00000:_idsc00001:_idsc00003_4:_idsc00007").click()
+    driver.implicitly_wait(100)
+    return driver
+
+
+def arriveContainers(port, driver):
+    driver.find_element_by_id("clayView:ns_7_40O00G3VMR0D00A4BG79CQ00A5_00000:_idsc00001:portId").clear()
+    driver.find_element_by_id("clayView:ns_7_40O00G3VMR0D00A4BG79CQ00A5_00000:_idsc00001:portId").send_keys(port)
+    driver.find_element_by_id("clayView:ns_7_40O00G3VMR0D00A4BG79CQ00A5_00000:_idsc00001:_idsc00020").click()
+    
+    todaysDate = date.today()
+    thisMonth = str(todaysDate.month)
+    if len(thisMonth)==1:
+        thisMonth ="0"+thisMonth
+    thisDay = str(todaysDate.day)
+    if len(thisDay)==1:
+        thisMonth ="0"+thisDay
+
+    todaysDate=thisMonth+"/"+thisDay+"/"+str(todaysDate.year)
+
+    done = False    
+    j=2
+    driver.implicitly_wait(0)
+    try:
+        driver.find_element_by_css_selector("span[title='Page 1']").click()
+    except:
+        pass
+    driver.implicitly_wait(60)  
+    while not done:
+        cells = driver.find_elements_by_css_selector("table[class='datat']>tbody>tr>td")
+#         print(len(cells))
+        i=0
+        while i<min(1300, len(cells)):
+            driver.execute_script("arguments[0].scrollIntoView();", cells[i])
+            if not todaysDate in cells[i+10].text:
+                cells[i].find_element_by_tag_name("input").click()
+                cells[i+1].find_element_by_tag_name("input").send_keys(todaysDate)
+                cells[i+2].find_element_by_tag_name("input").send_keys("08:00")
+                cells[i+3].find_element_by_tag_name("input").send_keys(port)
+                i+=13
+            else:
+                break
+        driver.implicitly_wait(0)
+        try:
+            driver.find_element_by_css_selector("span[title='Page " +str(j)+ "']").click()
+            j+=1
+        except:
+            done=True
+        driver.implicitly_wait(60)  
+    driver.find_element_by_id("clayView:ns_7_40O00G3VMR0D00A4BG79CQ00A5_00000:_idsc00001:_idsc00078").click()
+    if j>2:
+        sleepTime =(j-1)*30
+    else:
+        sleepTime= ceil(i/52) 
+    sleep(sleepTime)
+    
+def exportContainers(port, driver):
+    driver.find_element_by_id("clayView:ns_7_40O00G3VMR0D00A4BG79CQ0087_00000:_idsc00001:_idsc00003_6:_idsc00007").click()
+#     driver.find_element_by_id("clayView:ns_7_40O00G3VMR0D00A4BG79CQ00Q4_00000:_idsc00001:portId").send_keys(port)
+#     sleep(10)
+    driver.find_element_by_id("clayView:ns_7_40O00G3VMR0D00A4BG79CQ00Q4_00000:_idsc00001:_idsc00020").click()
+    
+    
+    todaysDate = date.today()
+    thisMonth = str(todaysDate.month)
+    if len(thisMonth)==1:
+        thisMonth ="0"+thisMonth
+    thisDay = str(todaysDate.day)
+    if len(thisDay)==1:
+        thisMonth ="0"+thisDay
+
+    todaysDate=thisMonth+"/"+thisDay+"/"+str(todaysDate.year)
+
+    done = False    
+    j=2
+    driver.implicitly_wait(0)
+    try:
+        driver.find_element_by_css_selector("span[title='Page 1']").click()
+    except:
+        pass
+    driver.implicitly_wait(60)  
+    while not done:
+        cells = driver.find_elements_by_css_selector("table[class='datat']>tbody>tr>td")
+        i=0
+        while i<min(1500, len(cells)):
+            driver.execute_script("arguments[0].scrollIntoView();", cells[i])
+            print(cells[i+10].text)
+            exit()
+            if not todaysDate in cells[i+10].text:
+#             if cells[i+3].text in bonds: 
+#             if not todaysDate in cells[i+10].text:
+                cells[i].find_element_by_tag_name("input").click()
+                cells[i+1].find_element_by_tag_name("input").send_keys(todaysDate)
+                cells[i+2].find_element_by_tag_name("input").send_keys("08:00")
+                Select(cells[i+8].find_element_by_tag_name("select")).select_by_visible_text("Vessel Containerized")
+#                 cells[i+3].find_element_by_tag_name("input").send_keys(port)
+            i+=15
+#             else:
+#                 break
+        driver.implicitly_wait(0)
+        try:
+            driver.find_element_by_css_selector("span[title='Page " +str(j)+ "']").click()
+            j+=1
+        except:
+            done=True
+        driver.implicitly_wait(60)  
+    driver.find_element_by_id("clayView:ns_7_40O00G3VMR0D00A4BG79CQ00Q4_00000:_idsc00001:_idsc00085").click()
+
+def checkHolds(port, driver):
+    driver.find_element_by_id("clayView:ns_7_40O00G3VMR0D00A4BG79CQ0087_00000:_idsc00001:_idsc00003_6:_idsc00007").click()
+#     driver.find_element_by_id("clayView:ns_7_40O00G3VMR0D00A4BG79CQ00Q4_00000:_idsc00001:portId").send_keys(port)
+    driver.find_element_by_id("clayView:ns_7_40O00G3VMR0D00A4BG79CQ00Q4_00000:_idsc00001:_idsc00020").click()
+    
+    onHold = []
+    bonds = []
+    done = False    
+    j=2
+    driver.implicitly_wait(0)
+    try:
+        driver.find_element_by_css_selector("span[title='Page 1']").click()
+    except:
+        pass
+    driver.implicitly_wait(60)  
+    while not done:
+        cells = driver.find_elements_by_css_selector("table[class='datat']>tbody>tr>td")
+        i=0
+        while i<min(1500, len(cells)):
+            driver.execute_script("arguments[0].scrollIntoView();", cells[i])
+            bonds.append(cells[i+3].text)
+#             if not todaysDate in cells[i+10].text:
+            if "Y" in cells[i+14].text:
+                onHold.append(cells[i+3].text)
+#                 cells[i+3].find_element_by_tag_name("input").send_keys(port)
+            i+=15
+#             else:
+#                 break
+        driver.implicitly_wait(0)
+        try:
+            driver.find_element_by_css_selector("span[title='Page " +str(j)+ "']").click()
+            j+=1
+        except:
+            done=True
+        driver.implicitly_wait(60)  
+    
+    if len(bonds)>0:
+        filepath = r"J:\INBOND CLOSURE TRACKING\Open Bonds - " + datetime.now().strftime("%Y-%m-%d %H-%M-%S") + ".xlsx"  
+        wb = Workbook()
+        ws = wb.active
+        for i in range(len(bonds)):
+            ws.cell(row=i+1, column=1).value = bonds[i]
+        wb.save(filepath)
+    
+    if len(onHold)>0:
+        print("IN-BOND #S ON HOLD:")
+        holdString = "IN-BOND #S ON HOLD:\n"
+        for bond in onHold:
+            print(bond)
+            holdString = holdString+bond + "\n"
+        
+        HelperFunctions.popUpOK(holdString)
+        
+        
+def loadBonds(path):
+    bondBook = load_workbook(specificPath)
+    bondSheet = bondBook.active
+        
+    bonds=[]
+    for row in bondSheet.rows:
+        try:
+            a = int(row[0].value)
+            bonds.append(str(a))
+        except:
+            pass
+#     print(bonds)
+    return bonds
+        
+if __name__ == '__main__':
+#     argv = r"a C:\Users\ssleep\Documents\CLOSE THESE.xlsx".split()
+
+    date.today()
+    
+    specificPath = ''
+    for i in range(len(argv)):
+        if i!=0:
+            specificPath+=argv[i]
+            if i != len(argv) - 1:
+                specificPath+=" "
+    
+#     if len(argv)!=1:
+#         bonds = loadBonds(specificPath)
+    
+    driver = setupPortal()
+    
+#     if len(argv)==1:
+#     arriveContainers("4601", driver)
+#     arriveContainers("1101", driver)
+#         checkHolds("", driver)
+    
+#     if len(argv)!=1:
+    exportContainers("", driver)
+
+# pyinstaller "C:\Users\ssleep\workspace\TandE Arriver and Closer\Automator\__init__.py" --distpath "J:\Spencer\T&E Arriver & Closer" -y
+# pyinstaller "C:\Users\ssleep\workspace\TandE Arriver and Closer\Automator\__init__.py" --distpath "J:\Spencer\T&E Closer" -y

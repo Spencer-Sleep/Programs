@@ -543,7 +543,7 @@ def setupDM(container):
     
     
     
-    click(50, 350)
+    click(50, 365)
     fore = win32gui.GetForegroundWindow()
     DMFore = "Dispatch-Mate" in win32gui.GetWindowText(fore)
     while not DMFore:
@@ -836,7 +836,7 @@ def readRects():
             rects.append(RECT(int(rect[0]), int(rect[1]), int(rect[2]), int(rect[3])))
         f.close()
     except:
-        rects = ([RECT(15, 344, 128, 357), RECT(2090, 146, 2219, 168), RECT(2089, 233, 2191, 255), RECT(755, 342, 842, 360)]) 
+        rects = ([RECT(15, 358, 178, 371), RECT(2090, 146, 2219, 168), RECT(2089, 233, 2191, 255), RECT(755, 356, 842, 374)])
     return rects
         
 def writeRects(rects):

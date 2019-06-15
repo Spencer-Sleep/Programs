@@ -156,6 +156,7 @@ def setupPortal():
 #     driver.find_element_by_class_name("wpsToolBar")
     driver.find_element_by_css_selector("button[accesskey='T']").send_keys(Keys.ENTER)
     driver.find_element_by_id("clayView:ns_7_M3ULU7BUVD0M2HFG8D10000000_00000:_idsc00001:_idsc00003_2:_idsc00007").send_keys(Keys.ENTER)
+#     clayView:ns_7_CHMCHJ3VMJ3L502FK9QRJ71003_00000:accountListForm:_idsc00058_0:_idsc00065
 #     sleep(5)
     driver.implicitly_wait(5)
 #     try:
@@ -169,6 +170,7 @@ def setupPortal():
         minimized = True
     except:
         True
+    sleep(2)
     driver.implicitly_wait(100)
     driver.find_element_by_id("clayView:ns_7_CHMCHJ3VMJ3L502FK9QRJ71003_00000:accountListForm:_idsc00058_0:_idsc00065").send_keys(Keys.ENTER)
     driver.find_element_by_id("clayView:ns_7_CHMCHJ3VMJ3L502FK9QRJ71003_00000:accountListForm:_idsc00058_1:_idsc00068").send_keys(Keys.ENTER)
@@ -542,7 +544,7 @@ def setupDM(container):
     
     
     
-    click(50, 350)
+    click(50, 365)
     fore = win32gui.GetForegroundWindow()
     DMFore = "Dispatch-Mate" in win32gui.GetWindowText(fore)
     while not DMFore:
@@ -671,16 +673,17 @@ def setupDM(container):
             container.extraText = handleprops.text(x)
         
 #         Pb 362000 is used for widths
-#         if handleprops.text(x)=="MAEU 463991 2":
-#             print("desc")
+#         if handleprops.text(x)=="MSKU 016857 7":
+#             print("CONT")
 #             print(handleprops.rectangle(x))
-#         elif handleprops.text(x)=="7,660.00":
-#             print("we")
-#             print(handleprops.rectangle(x))
-#         elif handleprops.text(x)=="6":
+# #         elif handleprops.text(x)=="7,660.00":
+# #             print("we")
+# #             print(handleprops.rectangle(x))
+#         elif handleprops.text(x)=="1":
 #             print("pi")
 #             print(handleprops.rectangle(x))
-#         elif handleprops.text(x)=="MAEU 411606 4":
+#         elif handleprops.text(x)=="MOULDED PLASTIC CLOSURES":
+#             print("desc")
 #             print(handleprops.rectangle(x))
 #     print(container.containerNumber)
     container.containerNumber = container.containerNumber.replace(' ', '')
@@ -799,7 +802,7 @@ def readRects():
         f.close()
     except:
 #         rects = ([RECT(15, 344, 128, 357), RECT(2090, 146, 2219, 168), RECT(2089, 233, 2191, 255), RECT(755, 342, 842, 360)])
-        rects = ([RECT(15, 344, 178, 357), RECT(2090, 146, 2219, 168), RECT(2089, 233, 2191, 255), RECT(755, 342, 842, 360)])
+        rects = ([RECT(15, 358, 178, 371), RECT(2090, 146, 2219, 168), RECT(2089, 233, 2191, 255), RECT(755, 356, 842, 374)])
     return rects
         
 def writeRects(rects):

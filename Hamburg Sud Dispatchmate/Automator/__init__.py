@@ -516,7 +516,10 @@ def bookPars(containers, terminal, steamShipLine):
      
     click(loc.CUSTOMERCODELOC)
     if steamShipLine=="HAMBURG":
-        typewrite("117")
+        if terminal=="CSX":
+            typewrite("1788")
+        else:        
+            typewrite("117")
     elif steamShipLine=="MSC":
         if terminal=="CSX":
             typewrite("1635")
@@ -536,7 +539,7 @@ def bookPars(containers, terminal, steamShipLine):
         typewrite("IMPORT")
     press("tab", 8)
     typewrite("r")
-    if((steamShipLine =="MSC" or steamShipLine=="HAMBURG") and terminal=="CSX"):
+    if(steamShipLine =="MSC" or (steamShipLine=="HAMBURG" and terminal=="CSX")):
         typewrite("t")
     
     press("tab", 4)
@@ -562,6 +565,19 @@ def bookPars(containers, terminal, steamShipLine):
         typewrite("LONG")
     
     lastContainerRates = 0
+    
+    if steamShipLine=="HAMBURG" and terminal=="CSX":
+        click(loc.RATINGTABLOC)
+     
+        clickHeight = 0
+    
+        click(loc.CUSTOMERCHARGELOC[0], loc.CUSTOMERCHARGELOC[1]+ clickHeight)
+        clickHeight += 19
+        hotkey('ctrl', 'a')
+        typewrite("ga")
+        press("tab")
+        
+        click(loc.OKLOC)
     
     for container in containers:
         click(loc.OVERVIEWTABLOC)
@@ -596,7 +612,9 @@ def bookPars(containers, terminal, steamShipLine):
             typewrite(container.properties[PONUMBER])
         
         click(loc.DESCRIPTIONLOC)
-        press("tab", 7)
+        press("tab", 1)
+        typewrite(container.properties[WEIGHT])
+        press("tab", 6)
         typewrite("1")
         
         press("tab", 2)
@@ -741,6 +759,8 @@ def bookPars(containers, terminal, steamShipLine):
                 
                 rateCount+=1
                 
+                           
+                
             if terminalNum=="664":
                 click(loc.CUSTOMERCHARGELOC[0], loc.CUSTOMERCHARGELOC[1]+ clickHeight)
                 clickHeight += 19
@@ -759,7 +779,13 @@ def bookPars(containers, terminal, steamShipLine):
                     press("del")
     
             lastContainerRates = rateCount
+            
+           
+#             rateCount+=1
+                            
         click(loc.OKLOC)
+        
+        
         
 def bookA8A(containers, terminal, steamShipLine):
     terminalNum = ""
@@ -788,7 +814,10 @@ def bookA8A(containers, terminal, steamShipLine):
     
     click(loc.CUSTOMERCODELOC)
     if steamShipLine=="HAMBURG":
-        typewrite("117")
+        if terminal=="CSX":
+            typewrite("1788")
+        else:
+            typewrite("117")
     elif steamShipLine=="MSC":
         if terminal=="CSX":
             typewrite("1635")
@@ -875,6 +904,23 @@ def bookA8A(containers, terminal, steamShipLine):
         lastContainerRates=4
     else:
         lastContainerRates=1
+        
+        
+        
+        
+    if steamShipLine=="HAMBURG" and terminal=="CSX":
+        click(loc.RATINGTABLOC)
+     
+        clickHeight = 0
+    
+        click(loc.CUSTOMERCHARGELOC[0], loc.CUSTOMERCHARGELOC[1]+ clickHeight)
+        clickHeight += 19
+        hotkey('ctrl', 'a')
+        typewrite("ga")
+        press("tab")
+        
+        click(loc.OKLOC)
+        
     for container in containers:
         click(loc.OVERVIEWTABLOC)
         
@@ -932,7 +978,7 @@ def bookA8A(containers, terminal, steamShipLine):
         
         press("tab")
         typewrite("r")
-        if(steamShipLine =="MSC" and terminal=="CSX"):
+        if(steamShipLine =="MSC" or (steamShipLine=="HAMBURG" and terminal=="CSX")):
             typewrite("t")
 #         press("tab", 6)
         
@@ -1130,13 +1176,26 @@ def bookA8A(containers, terminal, steamShipLine):
                     press("del")
     
             lastContainerRates = rateCount
+            
+        elif steamShipLine=="HAMBURG" and terminal=="CSX":
+            click(loc.RATINGTABLOC)
+         
+            clickHeight = 0
         
+            click(loc.CUSTOMERCHARGELOC[0], loc.CUSTOMERCHARGELOC[1]+ clickHeight)
+            clickHeight += 19
+            hotkey('ctrl', 'a')
+            typewrite("ga")
+            press("tab")
+            
+#             rateCount+=1
+            
         click(loc.OKLOC)
 
 
 if __name__ == '__main__':
 #     argv = r"a J:\All motor routings\JPO CAPRICORNUS V.022N_HS_LH_NYC.xlsx".split()
-    argv = r"a J:\All motor routings\LIMARI 0AM22N1MA.xlsx".split()
+    argv = r"a J:\Running Routing by Vessel\MAERSK MEMPHIS V-920N BUFF.xlsx".split()
 
     specificPath = ''
     for i in range(len(argv)):

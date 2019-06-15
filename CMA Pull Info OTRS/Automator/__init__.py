@@ -25,6 +25,8 @@ from pdfminer.pdfdevice import PDFDevice
 from pdfminer.layout import LAParams
 from pdfminer.converter import PDFPageAggregator
 
+import Cryptodome
+import ssl
 import re
 
 import pdfminer
@@ -131,18 +133,36 @@ def extractTextHapag(pdf):
     try:
         pdf.save_to_dir(r"J:\Spencer\CMA Work Orders")
     except:pass
-    
     name = r"J:\Spencer\CMA Work Orders\\"+pdf.Filename
     pdfFileObj = open(name, 'rb')
     pdfReader = PyPDF2.PdfFileReader(pdfFileObj)
-    
     text = ''
     if pdfReader.isEncrypted:
         pdfReader.decrypt('')
     for i in range(pdfReader.getNumPages()):
         pageObj = pdfReader.getPage(i)
         text += pageObj.extractText()
-    
+    text = text.replace("__", "_")
+    return text
+
+def extractTextHam(pdf):
+#     print("1")
+    try:
+        pdf.save_to_dir(r"J:\Spencer\CMA Work Orders")
+    except:pass
+#     print("2")
+    name = r"J:\Spencer\CMA Work Orders\\"+pdf.Filename
+    pdfFileObj = open(name, 'rb')
+    pdfReader = PyPDF2.PdfFileReader(pdfFileObj)
+#     print("3")
+    text = ''
+    if pdfReader.isEncrypted:
+        pdfReader.decrypt('')
+    for i in range(pdfReader.getNumPages()):
+        pageObj = pdfReader.getPage(i)
+        text += pageObj.extractText()
+    text = text.replace("______", "_")
+#     print("4")
     return text
 
     
@@ -287,19 +307,19 @@ def getContainerHam(text):
             newContainer=Container(match)
             containers.append(newContainer)
             containersAdded[match]=True
-
-    firstContainer = containers[0]
-    startIndex=text.find("_Voyage")+1
-    startIndex=text[startIndex:].find("_")+startIndex+1
-    endIndex=text[startIndex:].find("_")+startIndex
+    if len(containers) > 0:
+        firstContainer = containers[0]
+        startIndex=text.find("_Voyage")+1
+        startIndex=text[startIndex:].find("_")+startIndex+1
+        endIndex=text[startIndex:].find("_")+startIndex
+        
+        firstContainer.WONumber=getRestOfLine(text, "_Order_")
+        firstContainer.vessel=text[startIndex:endIndex].strip()
     
-    firstContainer.WONumber=getRestOfLine(text, "_Order_")
-    firstContainer.vessel=text[startIndex:endIndex].strip()
-
-    for container in containers:
-        container.vessel=firstContainer.vessel
-        container.WONumber=firstContainer.WONumber
-    
+        for container in containers:
+            container.vessel=firstContainer.vessel
+            container.WONumber=firstContainer.WONumber
+        
 #     print(firstContainer.vessel)
 #     print(firstContainer.WONumber)
 #     print(firstContainer.cnumber)
@@ -563,7 +583,8 @@ def fetchCMAWOInfo(client, codes, sheetLocations):
         lastFileNumber = 0
         
         for file in onlyfiles:
-            if not file[0]=="~":
+            if not file[0]=="~" and file[0:4]=="List":
+#                 print(file)
                 fileNumber = int(file[4:file.find(".")])
                 if fileNumber>lastFileNumber:
                     lastFile=file
@@ -607,7 +628,7 @@ def fetchCMAWOInfo(client, codes, sheetLocations):
         elif code=="TCAN":
             lastCheckLoc+=3
         if listSheet.cell(1,lastCheckLoc).value=="" or listSheet.cell(1,lastCheckLoc).value==None:
-            tickets=client.ticket_search(Title="Transport Order*" + code+"*")
+            tickets=client.ticket_search(Title="Transport Order*" + code+"*", TicketChangeTimeNewerDate="2019-02-01 00:00:00")
         else:
             tickets=client.ticket_search(Title="Transport Order*" + code+"*", TicketCreateTimeNewerDate=listSheet.cell(1,lastCheckLoc).value)
         containers=[]
@@ -620,7 +641,10 @@ def fetchCMAWOInfo(client, codes, sheetLocations):
                 for attachment in article.attachments:
                     pdf = attachment
                     if ".pdf" in attachment.Filename:
-                        text = extractText(pdf)
+                        try:
+                            text = extractText(pdf)
+                        except:
+                            continue
                         if not "Empty Repo" in text and text!="":
                             container = getContainer(text)
                             print(container.WONumber)
@@ -700,7 +724,7 @@ def fetchHAPAG():
             
     if listSheet.cell(1,14).value=="" or listSheet.cell(1,14).value==None:
 #         tickets=client.ticket_search(Title="*602758250")
-        tickets=client.ticket_search(Title="WOSD0001*", TicketChangeTimeNewerDate="2018-09-22 00:00:00")
+        tickets=client.ticket_search(Title="WOSD0001*", TicketChangeTimeNewerDate="2019-02-01 00:00:00")
     else:
         tickets=client.ticket_search(Title="WOSD0001*", TicketChangeTimeNewerDate=listSheet.cell(1,14).value)
     
@@ -718,9 +742,15 @@ def fetchHAPAG():
                 if ".pdf" in attachment.Filename and "WOSD0001" in attachment.Filename:
                     text = extractTextHapag(pdf)
 #                     if not "Empty Repo" in text and text!="":
+#                     print("after")
+
                     containersParsed = getContainerHapag(text)
+#                     print("after2")
+#                     print(containersParsed)
 #                         if "TCAN" in ticket.articles[0].field_get("Subject"):
                     if not containersParsed[0].WONumber in woNumbers:
+#                         print("before")
+#                         print(containersParsed[0].WONumber)
                         try:
                             if len(containersParsed)==1:
                                 copyfile(r"J:\Spencer\CMA Work Orders\\"+pdf.Filename, "J:\LOCAL DEPARTMENT\Hapag WO\\"+containersParsed[0].WONumber+"-"+containersParsed[0].cnumber+".pdf")
@@ -778,7 +808,7 @@ def fetchHAM(hamSheetLocation):
             
     if listSheet.cell(1,8).value=="" or listSheet.cell(1,8).value==None:
 #         tickets=client.ticket_search(Queues=["Import::DO::Hamburg POs"], TicketChangeTimeNewerDate="2018-09-22 00:00:00")
-        tickets=client.ticket_search(Queues=["Import::DO::Hamburg POs"], TicketChangeTimeNewerDate="2018-09-22 00:00:00")
+        tickets=client.ticket_search(Queues=["Import::DO::Hamburg POs"], TicketChangeTimeNewerDate="2019-02-01 00:00:00")
         
 # #         tickets=client.ticket_search(Title="*9PHL00ECIA*", TicketChangeTimeNewerDate="2018-09-22 00:00:00")
 #         tickets=client.ticket_search()
@@ -796,13 +826,17 @@ def fetchHAM(hamSheetLocation):
             for attachment in article.attachments:
                 pdf = attachment
                 if ".pdf" in attachment.Filename:
-                    text = extractTextHapag(pdf)
+                    text = extractTextHam(pdf)
+#                     print(text)
+#                     sleep(30)
 #                     print(text)
 #                     if not "Empty Repo" in text and text!="":
 #                     exit()
+#                     print(text)
                     containersParsed = getContainerHam(text)
+#                     print(containersParsed)
 #                         if "TCAN" in ticket.articles[0].field_get("Subject"):
-                    if not containersParsed[0].WONumber in woNumbers:
+                    if len(containersParsed)>0 and not containersParsed[0].WONumber in woNumbers:
                         print(containersParsed[0].WONumber)
                         for container in reversed(containersParsed):
                             try:
@@ -821,8 +855,11 @@ def fetchHAM(hamSheetLocation):
 
 if __name__ == '__main__':
     warnings.filterwarnings("ignore")
-    
+#     _create_unverified_https_context = ssl._create_unverified_context
+#     ssl._create_default_https_context = _create_unverified_https_context
+#     PYOTRS_HTTPS_VERIFY = False
     client = Client("https://core.seaportint.com/", "testadmin", "testpass")
+#     config=client.
     a = client.session_create()
     if(a):
         print("Connected to OTRS as Testadmin")
@@ -830,7 +867,7 @@ if __name__ == '__main__':
         print("Fetching")
         Codes=["KCAN", "TCAN", "KNAM"]
     #     Codes=["TCAN"]
-        sheetLocations=[r"J:\ANTONIO-Export Work\CMA WO Sheets\\", r"J:\LOCAL DEPARTMENT\CMA WO Sheets\\", r"J:\IMPORTS\CMA WO Sheets\\"]
+        sheetLocations=[r"J:\ANTONIO -Export Work\CMA WO Sheets\\", r"J:\LOCAL DEPARTMENT\CMA WO Sheets\\", r"J:\IMPORTS\CMA WO Sheets\\"]
         hamSheetLocation=r"J:\IMPORTS\HAM CSX WO Sheets\\"
 #         sheetLocations=[r"C:\Users\ssleep\Documents\CMA WO\\", r"J:\LOCAL DEPARTMENT\CMA WO Sheets\\", r"J:\IMPORTS\CMA WO Sheets\\"]
         fetchCMAWOInfo(client, Codes, sheetLocations)
@@ -839,6 +876,6 @@ if __name__ == '__main__':
         print("Done")
         sleep(600)
     
-    
+#pyinstaller "C:\Users\spencer\workspaceseaport\programs\CMA Pull Info OTRS\Automator\__init__.py" --distpath "c:\users\Spencer\OTRS Daemon" -y    
 #pyinstaller "C:\Users\ssleep\workspace\CMA Pull Info OTRS\Automator\__init__.py" --distpath "J:\Spencer\OTRS Daemon" -y
     

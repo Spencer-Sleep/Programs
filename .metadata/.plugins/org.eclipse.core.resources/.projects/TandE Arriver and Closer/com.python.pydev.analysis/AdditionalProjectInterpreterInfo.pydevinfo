@@ -1,22 +1,21 @@
 -- VERSION_4
 -- START DISKCACHE_2
 C:\Users\ssleep\workspace\.metadata\.plugins\org.eclipse.core.resources\.projects\TandE Arriver and Closer\com.python.pydev.analysis\v2_indexcache
-Automator.__init__|1535653636359431000|C:\Users\ssleep\workspace\TandE Arriver and Closer\Automator\__init__.py
 -- END DISKCACHE
 -- START DICTIONARY
-1
-1=Automator.__init__
+0
 -- END DICTIONARY
 -- START TREE 1
-8
-arr|1|arriveContainers!10@
-bon|1|bonds!11@
-che|1|checkHolds!10@
-dri|1|driver!11@
-exp|1|exportContainers!10@
-loa|1|loadBonds!10@
-set|1|setupPortal!10@
-spe|1|specificPath!11@
+9
+arr|0|
+bon|0|
+che|0|
+dri|0|
+exi|0|
+exp|0|
+loa|0|
+set|0|
+spe|0|
 -- END TREE
 -- START TREE 2
 0

@@ -1,7 +1,7 @@
 -- VERSION_4
 -- START DISKCACHE_2
 C:\Users\ssleep\workspace\.metadata\.plugins\org.eclipse.core.resources\.projects\CMA Pull Info OTRS\com.python.pydev.analysis\v2_indexcache
-Automator.__init__|1551389863781641000|C:\Users\ssleep\workspace\CMA Pull Info OTRS\Automator\__init__.py
+Automator.__init__|1560615273645876000|C:\Users\ssleep\workspace\CMA Pull Info OTRS\Automator\__init__.py
 -- END DISKCACHE
 -- START DICTIONARY
 3
@@ -16,7 +16,7 @@ cli|1|client!11@
 cod|1|Codes!11@
 con|1|Container!9@
 exi|1|exit_hander!10@
-ext|2|extractTextHapag!10@extractText!10@
+ext|3|extractTextHapag!10@extractText!10@extractTextHam!10@
 fet|3|fetchHAPAG!10@fetchCMAWOInfo!10@fetchHAM!10@
 get|4|getContainerHapag!10@getContainerHam!10@getRestOfLine!10@getContainer!10@
 ham|1|hamSheetLocation!11@
