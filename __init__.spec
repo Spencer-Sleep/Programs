@@ -3,8 +3,8 @@
 block_cipher = None
 
 
-a = Analysis(['C:\\Users\\ssleep\\workspace\\RV Changer\\Automator\\__init__.py'],
-             pathex=['C:\\Users\\ssleep\\workspace'],
+a = Analysis(['C:\\Users\\Spencer\\workspaceSeaport\\Programs\\Hamburg Sud Dispatchmate\\Automator\\__init__.py'],
+             pathex=['C:\\Users\\Spencer\\workspaceSeaport\\Programs'],
              binaries=[],
              datas=[],
              hiddenimports=[],
@@ -13,17 +13,14 @@ a = Analysis(['C:\\Users\\ssleep\\workspace\\RV Changer\\Automator\\__init__.py'
              excludes=[],
              win_no_prefer_redirects=False,
              win_private_assemblies=False,
-             cipher=block_cipher,
-             noarchive=False)
+             cipher=block_cipher)
 pyz = PYZ(a.pure, a.zipped_data,
              cipher=block_cipher)
 exe = EXE(pyz,
           a.scripts,
-          [],
           exclude_binaries=True,
           name='__init__',
           debug=False,
-          bootloader_ignore_signals=False,
           strip=False,
           upx=True,
           console=False )

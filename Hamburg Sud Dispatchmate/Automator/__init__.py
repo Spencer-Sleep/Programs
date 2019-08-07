@@ -1195,7 +1195,7 @@ def bookA8A(containers, terminal, steamShipLine):
 
 if __name__ == '__main__':
 #     argv = r"a J:\All motor routings\JPO CAPRICORNUS V.022N_HS_LH_NYC.xlsx".split()
-    argv = r"a J:\Running Routing by Vessel\MAERSK MEMPHIS V-920N BUFF.xlsx".split()
+#     argv = r"a C:\Users\Spencer\Downloads\NORDISABELLA_923N.xlsx".split()
 
     specificPath = ''
     for i in range(len(argv)):
@@ -1222,12 +1222,12 @@ if __name__ == '__main__':
     laneCodesThru = values[3]
     
     pars, A8A = loadContainerInfo(specificPath, startAt, skip, terminal, steamShipLine)
-    
+
     if (typeOfManifest[0] == 0 or typeOfManifest[0] == 2) and len(pars)>0:
         bookPars(pars, terminal, steamShipLine)
     if typeOfManifest[0] > 0 and len(A8A)>0:
         bookA8A(A8A, terminal, steamShipLine)
     
     done()
-    
+# pyinstaller "C:\Users\Spencer\workspaceSeaport\Programs\Hamburg Sud Dispatchmate\Automator\__init__.py" --distpath "C:\Users\Spencer\Documents\Compiled\Hamburg Sud Dispatchmate" --noconsole -y    
 # pyinstaller "C:\Users\ssleep\workspace\Hamburg Sud Dispatchmate\Automator\__init__.py" --distpath "J:\Spencer\Hamburg Sud Dispatchmate" --noconsole -y

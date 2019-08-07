@@ -1,24 +1,25 @@
--- VERSION_4
+-- VERSION_5
 -- START DISKCACHE_2
-C:\Users\ssleep\workspace\.metadata\.plugins\org.eclipse.core.resources\.projects\POD Fetcher\com.python.pydev.analysis\v2_indexcache
-Automator.__init__|1547656000857053000|C:\Users\ssleep\workspace\POD Fetcher\Automator\__init__.py
+C:\Users\Spencer\workspaceSeaport\Programs\.metadata\.plugins\org.eclipse.core.resources\.projects\POD Fetcher\com.python.pydev.analysis\v2_indexcache
+Automator.__init__|1549236357916653000|C:\Users\Spencer\workspaceSeaport\Programs\POD Fetcher\Automator\__init__.py
 -- END DISKCACHE
 -- START DICTIONARY
-1
-1=Automator.__init__
+2
+1=C:\Users\Spencer\workspaceSeaport\Programs\POD Fetcher\Automator\__init__.py
+2=Automator.__init__
 -- END DICTIONARY
 -- START TREE 1
 10
-acc|1|account!11@
-att|2|attachmentsContent!11@attach!11@
-con|1|contNumIndex!11@
-cre|1|credentials!11@
-f1|1|f1!11@
-fil|1|fileName!11@
-i|1|i!11@
-inp|1|input_streams!11@
-loc|1|local_path!11@
-wri|1|writer!11@
+acc|1|account!1^29#5*19@
+att|2|attachmentsContent!1^66#17*19@attach!1^69#21*19@
+con|1|contNumIndex!1^53#13*19@
+cre|1|credentials!1^23#5*19@
+f1|1|f1!1^87#25*19@
+fil|1|fileName!1^54#13*19@
+i|1|i!1^57#17*19@
+inp|1|input_streams!1^75#17*19@
+loc|1|local_path!1^55#13*19@
+wri|1|writer!1^92#21*19@
 -- END TREE
 -- START TREE 2
 0
