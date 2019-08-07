@@ -1,12 +1,1 @@
-INSTUPAutomator.__init__
-C:\Users\ssleep\workspace\TandE Arriver and Closer\Automator\__init__.py
-INFOS:&&2|1|2|0&&2|3|2|0&&2|4|2|0&&2|5|2|0&&2|6|2|0&&2|7|2|0&&3|8|2|0&&3|9|2|0
-loadBonds=7
-exportContainers=5
-driver=9
-setupPortal=3
-checkHolds=6
-Automator.__init__=2
-arriveContainers=4
-exit_hander=1
-specificPath=8
+DELSTRAutomator.__init__

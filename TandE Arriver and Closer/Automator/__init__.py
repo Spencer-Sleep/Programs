@@ -91,7 +91,6 @@ def arriveContainers(port, driver):
     driver.implicitly_wait(60)  
     while not done:
         cells = driver.find_elements_by_css_selector("table[class='datat']>tbody>tr>td")
-#         print(len(cells))
         i=0
         while i<min(1300, len(cells)):
             driver.execute_script("arguments[0].scrollIntoView();", cells[i])
@@ -268,12 +267,12 @@ if __name__ == '__main__':
     driver = setupPortal()
     
 #     if len(argv)==1:
-#     arriveContainers("4601", driver)
-#     arriveContainers("1101", driver)
-#         checkHolds("", driver)
+    arriveContainers("4601", driver)
+    arriveContainers("1101", driver)
+    checkHolds("", driver)
     
 #     if len(argv)!=1:
-    exportContainers("", driver)
+#     exportContainers("", driver)
 
 # pyinstaller "C:\Users\ssleep\workspace\TandE Arriver and Closer\Automator\__init__.py" --distpath "J:\Spencer\T&E Arriver & Closer" -y
 # pyinstaller "C:\Users\ssleep\workspace\TandE Arriver and Closer\Automator\__init__.py" --distpath "J:\Spencer\T&E Closer" -y

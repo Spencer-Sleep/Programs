@@ -1195,7 +1195,7 @@ def bookA8A(containers, terminal, steamShipLine):
 
 if __name__ == '__main__':
 #     argv = r"a J:\All motor routings\JPO CAPRICORNUS V.022N_HS_LH_NYC.xlsx".split()
-    argv = r"a J:\Running Routing by Vessel\MAERSK MEMPHIS V-920N BUFF.xlsx".split()
+#     argv = r"a J:\Running Routing by Vessel\MAERSK MEMPHIS V-920N BUFF.xlsx".split()
 
     specificPath = ''
     for i in range(len(argv)):
