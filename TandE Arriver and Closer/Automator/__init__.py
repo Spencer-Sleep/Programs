@@ -269,7 +269,7 @@ if __name__ == '__main__':
 #     if len(argv)==1:
     arriveContainers("4601", driver)
     arriveContainers("1101", driver)
-    checkHolds("", driver)
+#     checkHolds("", driver)
     
 #     if len(argv)!=1:
 #     exportContainers("", driver)

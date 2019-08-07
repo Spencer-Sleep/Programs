@@ -1,35 +1,36 @@
--- VERSION_4
+-- VERSION_5
 -- START DISKCACHE_2
-C:\Users\ssleep\workspace\.metadata\.plugins\org.eclipse.core.resources\.projects\Barcodes\com.python.pydev.analysis\v2_indexcache
-Paster.__init__|1545176632367876000|C:\Users\ssleep\workspace\Barcodes\Paster\__init__.py
+C:\Users\Spencer\workspaceSeaport\Programs\.metadata\.plugins\org.eclipse.core.resources\.projects\Barcodes\com.python.pydev.analysis\v2_indexcache
+Paster.__init__|1549236357904644000|C:\Users\Spencer\workspaceSeaport\Programs\Barcodes\Paster\__init__.py
 -- END DISKCACHE
 -- START DICTIONARY
-6
-6=Input
-1=Paster.__init__
-2=KeyBdInput
-3=HardwareInput
-5=Input_I
-4=MouseInput
+7
+7=Input
+2=Paster.__init__
+3=KeyBdInput
+4=HardwareInput
+6=Input_I
+1=C:\Users\Spencer\workspaceSeaport\Programs\Barcodes\Paster\__init__.py
+5=MouseInput
 -- END DICTIONARY
 -- START TREE 1
 14
-bar|1|barcodeCol!11@
-cod|2|codeBook!11@codeSheet!11@
-fir|1|first!11@
-har|1|HardwareInput!9@
-inp|2|Input!9@Input_I!9@
-ite|1|itemCol!11@
-key|3|KEYEVENTF_UNICODE!11@KEYEVENTF_KEYUP!11@KeyBdInput!9@
-mou|1|MouseInput!9@
-par|2|pars!11@parsX!11@
-pre|1|PressKey!10@
-pul|1|PUL!11@
-rel|1|ReleaseKey!10@
-s|1|s!11@
-sen|1|SendInput!11@
+bar|1|barcodeCol!1^180#13*19@
+cod|2|codeBook!1^172#5*19@codeSheet!1^174#5*19@
+fir|1|first!1^184#5*19@
+har|1|HardwareInput!1^28#7*17@
+inp|2|Input!1^46#7*17@Input_I!1^41#7*17@
+ite|1|itemCol!1^178#13*19@
+key|3|KEYEVENTF_UNICODE!1^50#1*19@KEYEVENTF_KEYUP!1^51#1*19@KeyBdInput!1^21#7*17@
+mou|1|MouseInput!1^33#7*17@
+par|2|pars!1^182#5*19@parsX!1^218#9*19@
+pre|1|PressKey!1^53#5*18@
+pul|1|PUL!1^20#1*19@
+rel|1|ReleaseKey!1^61#5*18@
+s|1|s!1^227#13*19@
+sen|1|SendInput!1^18#1*19@
 -- END TREE
 -- START TREE 2
 1
-_fi|5|_fields_!2&11@_fields_!3&11@_fields_!4&11@_fields_!5&11@_fields_!6&11@
+_fi|5|_fields_!3&1^26#5*19@_fields_!4&1^31#5*19@_fields_!5&1^39#5*19@_fields_!6&1^44#5*19@_fields_!7&1^48#5*19@
 -- END TREE

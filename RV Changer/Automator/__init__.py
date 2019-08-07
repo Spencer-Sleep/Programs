@@ -88,8 +88,8 @@ def setupCn():
     driver.maximize_window()
     
     driver.implicitly_wait(40)
-    f=open(r"J:\LOCAL DEPARTMENT\Automation - DO NOT MOVE\CN Login.txt", 'r')
-#     f=open(r"C:\Automation\CN Login.txt", 'r')
+#     f=open(r"J:\LOCAL DEPARTMENT\Automation - DO NOT MOVE\CN Login.txt", 'r')
+    f=open(r"C:\Automation\CN Login.txt", 'r')
     read = f.readline()
     m = re.search("username: *", read)
     username = read[m.end():].rstrip()
@@ -184,47 +184,57 @@ def queryDate():
 def getBetterRVs(driver, date):
     driver.implicitly_wait(500)
 #     sleep(30)
-    driver.switch_to.frame("menuHeader")
+    driver.implicitly_wait(5)
+    try:
+        driver.find_element_by_css_selector("fa-icon[class='fa-fw ng-fa-icon'").click()
+    except:
+        print("no")
+        pass
+
+#     driver.switch_to.frame("menuHeader")
 #     driver.find_element_by_id("id41").click()
     driver.implicitly_wait(1)
-    try:
-        driver.find_element_by_id("id41").click()
-    except:
-        driver.implicitly_wait(600)
+#     try:
+#         driver.find_element_by_id("id41").click()
+#     except:
+#         driver.implicitly_wait(600)
+# #         driver.find_element_by_id("tools").click()
 #         driver.find_element_by_id("tools").click()
-        driver.find_element_by_id("tools").click()
-        driver.find_element_by_id("tools").click()
-        driver.find_element_by_id("tools").click()
-#         sleep(5)
-#         driver.find_element_by_class_name("tools selected").click()
-        driver.switch_to_default_content()
-        driver.switch_to_frame("content1")
-#         sleep(500)
-#         driver.find_element_by_css_selector(r'a[href^="top.frames[0].openTab(\'id41\');"]').click()
-#         print(driver.find_element_by_css_selector('a[onclick*="top.frames[0].openTab(\'id41\');"]').text)
-        driver.find_element_by_css_selector('a[onclick*="top.frames[0].openTab(\'id41\');"]').click()
-        driver.switch_to_default_content()
-        driver.switch_to.frame("menuHeader")
-        driver.find_element_by_id("id41").click()
+#         driver.find_element_by_id("tools").click()
+#         driver.find_element_by_id("tools").click()
+# #         sleep(5)
+# #         driver.find_element_by_class_name("tools selected").click()
+#         driver.switch_to_default_content()
+#         driver.switch_to_frame("content1")
+# #         sleep(500)
+# #         driver.find_element_by_css_selector(r'a[href^="top.frames[0].openTab(\'id41\');"]').click()
+# #         print(driver.find_element_by_css_selector('a[onclick*="top.frames[0].openTab(\'id41\');"]').text)
+#         driver.find_element_by_css_selector('a[onclick*="top.frames[0].openTab(\'id41\');"]').click()
+#         driver.switch_to_default_content()
+#         driver.switch_to.frame("menuHeader")
+#         driver.find_element_by_id("id41").click()
+    try:
+        driver.find_element_by_css_selector("ci-tools-standalone-menu[class='ci-recent-tools-container ng-tns-c5-3 ng-star-inserted']").click()
+        driver.find_element_by_css_selector("a[href='#/tools/gate-appointment-inquiry']").click()
+    except:
+        pass
 
-#     driver.find_element_by_css_selector('a[id*="id18"][class*="label"]').click()
-    driver.switch_to_default_content()
-    driver.switch_to_frame(driver.find_element_by_css_selector("frame[name='content1']"))
-    i = 2
-    found = False
-    driver.implicitly_wait(0)
-    while not found:
-        try:
-            driver.switch_to_default_content()
-            currentFrame = driver.find_element_by_css_selector("frame[name='content" + str(i) + "']")
-            driver.switch_to_frame(currentFrame)
-            driver.find_element_by_css_selector("form[action='AppointmentQuery']")
-            found = True
-        except:
-            if i<30:
-                i+=1
-            else:
-                i=2
+    driver.switch_to_frame(driver.find_element_by_css_selector("iframe[name='ci-tools-frame']"))
+#     i = 2
+#     found = False
+#     driver.implicitly_wait(0)
+#     while not found:
+#         try:
+#             driver.switch_to_default_content()
+#             currentFrame = driver.find_element_by_css_selector("frame[name='content" + str(i) + "']")
+#             driver.switch_to_frame(currentFrame)
+#             driver.find_element_by_css_selector("form[action='AppointmentQuery']")
+#             found = True
+#         except:
+#             if i<30:
+#                 i+=1
+#             else:
+#                 i=2
     driver.implicitly_wait(600)
 #     print(sel.first_selected_option())
 #     print(sel.first_selected_option().name())
@@ -458,23 +468,23 @@ def getBetterRVs(driver, date):
                 driver.find_element_by_css_selector("img[src='/ImxEbusWeb/images/english/Back.gif']").click()
             if switch:
                 driver.switch_to_default_content()
-                driver.switch_to_frame(driver.find_element_by_css_selector("frame[name='content1']"))
-                i = 2
-                found = False
-                driver.implicitly_wait(0)
-                while not found:
-                    try:
-                        driver.switch_to_default_content()
-                        currentFrame = driver.find_element_by_css_selector("frame[name='content" + str(i) + "']")
-                        driver.switch_to_frame(currentFrame)
-        #                 driver.find_element_by_css_selector("form[action='AppointmentQuery']")
-                        driver.find_element_by_css_selector("img[src='/ImxEbusWeb/images/english/Back.gif']")
-                        found = True
-                    except:
-                        if i<30:
-                            i+=1
-                        else:
-                            i=2
+                driver.switch_to_frame(driver.find_element_by_css_selector("iframe[name='ci-tools-frame']"))
+#                 i = 2
+#                 found = False
+#                 driver.implicitly_wait(0)
+#                 while not found:
+#                     try:
+#                         driver.switch_to_default_content()
+#                         currentFrame = driver.find_element_by_css_selector("frame[name='content" + str(i) + "']")
+#                         driver.switch_to_frame(currentFrame)
+#         #                 driver.find_element_by_css_selector("form[action='AppointmentQuery']")
+#                         driver.find_element_by_css_selector("img[src='/ImxEbusWeb/images/english/Back.gif']")
+#                         found = True
+#                     except:
+#                         if i<30:
+#                             i+=1
+#                         else:
+#                             i=2
                             
                 
                 driver.implicitly_wait(600)
@@ -541,7 +551,7 @@ def time_test():
     time2 = datetime.now()
     print(time1)
     print(time2)
-    print(time2.microsecond-time1.microsecond) 
+    print(time2.microsecond-time1.microsecond)
     
     exit()
     
@@ -555,4 +565,4 @@ if __name__ == '__main__':
     getBetterRVs(driver, date)
     
 # pyinstaller "C:\Users\ssleep\workspace\RV Changer\Automator\__init__.py" --distpath "J:\Spencer\RV Changer" --noconsole -y
-#      
+# pyinstaller "C:\Users\spencer\workspaceseaport\programs\RV Changer\Automator\__init__.py" --distpath "c:\users\Spencer\RV Changer" -y  

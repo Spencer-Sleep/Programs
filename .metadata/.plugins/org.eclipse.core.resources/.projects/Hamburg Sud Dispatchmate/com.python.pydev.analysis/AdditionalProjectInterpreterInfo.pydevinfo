@@ -1,14 +1,21 @@
--- VERSION_4
+-- VERSION_5
 -- START DISKCACHE_2
+<<<<<<< HEAD
 C:\Users\ssleep\workspace\.metadata\.plugins\org.eclipse.core.resources\.projects\Hamburg Sud Dispatchmate\com.python.pydev.analysis\v2_indexcache
 Automator.__init__|1560787445654289000|C:\Users\ssleep\workspace\Hamburg Sud Dispatchmate\Automator\__init__.py
+=======
+C:\Users\Spencer\workspaceSeaport\Programs\.metadata\.plugins\org.eclipse.core.resources\.projects\Hamburg Sud Dispatchmate\com.python.pydev.analysis\v2_indexcache
+Automator.__init__|1560788982617661000|C:\Users\Spencer\workspaceSeaport\Programs\Hamburg Sud Dispatchmate\Automator\__init__.py
+>>>>>>> cf9108b291f087742a3f851d18d4d39a756fa8e6
 -- END DISKCACHE
 -- START DICTIONARY
-1
-1=Automator.__init__
+2
+2=Automator.__init__
+1=C:\Users\Spencer\workspaceSeaport\Programs\Hamburg Sud Dispatchmate\Automator\__init__.py
 -- END DICTIONARY
 -- START TREE 1
 15
+<<<<<<< HEAD
 boo|3|bookA8A!10@bookPars!10@BOOKING!11@
 cof|1|COFFEE!11@
 con|2|contRates!11@CONTAINERNUMBER!11@
@@ -24,6 +31,23 @@ spe|1|specificPath!11@
 val|1|values!11@
 ves|1|VESSEL!11@
 wei|1|WEIGHT!11@
+=======
+boo|3|bookA8A!1^790#5*18@bookPars!1^486#5*18@BOOKING!1^39#1*19@
+cof|1|COFFEE!1^38#1*19@
+con|2|contRates!1^26#1*19@CONTAINERNUMBER!1^31#1*19@
+inb|1|INBOND!1^37#1*19@
+inf|1|infoPopups!1^78#5*18@
+lan|3|laneCodesCoffee!1^28#1*19@laneCodes!1^27#1*19@laneCodesThru!1^1222#5*19@
+loa|1|loadContainerInfo!1^232#5*18@
+pie|1|PIECES!1^35#1*19@
+pon|1|PONUMBER!1^32#1*19@
+pop|1|popUpOKLeft!1^42#5*18@
+siz|1|SIZE!1^36#1*19@
+spe|1|specificPath!1^1200#5*19@
+val|1|values!1^1218#5*19@
+ves|1|VESSEL!1^40#1*19@
+wei|1|WEIGHT!1^34#1*19@
+>>>>>>> cf9108b291f087742a3f851d18d4d39a756fa8e6
 -- END TREE
 -- START TREE 2
 0

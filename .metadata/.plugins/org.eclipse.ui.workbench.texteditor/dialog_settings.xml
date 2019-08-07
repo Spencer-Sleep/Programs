@@ -6,12 +6,17 @@
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
+<<<<<<< HEAD
 		<item value="J:" key="selection"/>
+=======
+		<item value="print(button" key="selection"/>
+>>>>>>> cf9108b291f087742a3f851d18d4d39a756fa8e6
 		<item value="false" key="casesensitive"/>
 		<item value="true" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+<<<<<<< HEAD
 			<item value="J:"/>
 			<item value="rects = "/>
 			<item value="typewrite(&quot;t"/>
@@ -20,6 +25,16 @@
 			<item value="queue"/>
 			<item value="r\CMA Work Orders"/>
 			<item value="wo"/>
+=======
+			<item value="print(button"/>
+			<item value="restar"/>
+			<item value="print"/>
+			<item value="prit"/>
+			<item value="acceptabletimes"/>
+			<item value="acceptable"/>
+			<item value="j:"/>
+			<item value="sleep(100000"/>
+>>>>>>> cf9108b291f087742a3f851d18d4d39a756fa8e6
 		</list>
 		<list key="replacehistory">
 			<item value="numberWithLeadingZeroes"/>
@@ -33,10 +48,18 @@
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
+<<<<<<< HEAD
 		<item value="376" key="DIALOG_WIDTH"/>
 		<item value="1|Segoe UI|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI" key="DIALOG_FONT_NAME"/>
 		<item value="400" key="DIALOG_HEIGHT"/>
 		<item value="54" key="DIALOG_X_ORIGIN"/>
 		<item value="543" key="DIALOG_Y_ORIGIN"/>
+=======
+		<item value="327" key="DIALOG_WIDTH"/>
+		<item value="1|Segoe UI|9.0|0|WINDOWS|1|-30|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI" key="DIALOG_FONT_NAME"/>
+		<item value="436" key="DIALOG_HEIGHT"/>
+		<item value="1547" key="DIALOG_X_ORIGIN"/>
+		<item value="537" key="DIALOG_Y_ORIGIN"/>
+>>>>>>> cf9108b291f087742a3f851d18d4d39a756fa8e6
 	</section>
 </section>

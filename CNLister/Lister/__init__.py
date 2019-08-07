@@ -82,6 +82,7 @@ def setupCn():
     driver.implicitly_wait(40)
     
     f=open(r"J:\LOCAL DEPARTMENT\Automation - DO NOT MOVE\CN Login.txt", 'r')
+#     f=open(r"C:\Automation\CN Login.txt", 'r')
     read = f.readline()
     m = re.search("username: *", read)
     username = read[m.end():].rstrip()
@@ -96,50 +97,69 @@ def setupCn():
     driver.find_element_by_id("login_passwordNew").send_keys(password)
     driver.find_element_by_id("loginform_enterbutton").click()
     
+    driver.implicitly_wait(10)
+    
+    try:
+        driver.find_element_by_css_selector("fa-icon[class='fa-fw ng-fa-icon'").click()
+    except:
+        print("no")
+        pass
+    
+    driver.implicitly_wait(100)
+    
     return driver
         
 def readContainerInfo(driver, containers):
     driver.implicitly_wait(500)
 #     sleep(30)
-    driver.switch_to.frame("menuHeader")
+#     driver.switch_to.frame("menuHeader")
 #     driver.find_element_by_id("id18").click()
     driver.implicitly_wait(1)
     try:
-        driver.find_element_by_id("id18").click()
+        driver.find_element_by_css_selector("ci-tools-standalone-menu[class='ci-recent-tools-container ng-tns-c5-3 ng-star-inserted']").click()
+        driver.find_element_by_css_selector("a[href='#/tools/intermodal-shipment-status']").click()
     except:
-        driver.implicitly_wait(600)
+        pass
+
+    driver.switch_to_frame(driver.find_element_by_css_selector("iframe[name='ci-tools-frame']"))
+    driver.switch_to_frame(driver.find_element_by_name("main"))
+    
+#     try:
+#         driver.find_element_by_id("id18").click()
+#     except:
+#         driver.implicitly_wait(600)
+# #         driver.find_element_by_id("tools").click()
 #         driver.find_element_by_id("tools").click()
-        driver.find_element_by_id("tools").click()
-        driver.find_element_by_id("tools").click()
-        driver.find_element_by_id("tools").click()
-#         sleep(5)
-#         driver.find_element_by_class_name("tools selected").click()
-        driver.switch_to_default_content()
-        driver.switch_to_frame("content1")
-#         sleep(500)
-#         driver.find_element_by_css_selector(r'a[href^="top.frames[0].openTab(\'id41\');"]').click()
-#         print(driver.find_element_by_css_selector('a[onclick*="top.frames[0].openTab(\'id41\');"]').text)
-        driver.find_element_by_css_selector('a[onclick*="top.frames[0].openTab(\'id18\');"]').click()
-        driver.switch_to_default_content()
-        driver.switch_to.frame("menuHeader")
-        driver.find_element_by_id("id18").click()
-#     driver.find_element_by_css_selector('a[id*="id18"][class*="label"]').click()
-    driver.switch_to_default_content()
-    driver.switch_to_frame(driver.find_element_by_css_selector("frame[name='content1']"))
-    i = 2
-    found = False
-    driver.implicitly_wait(0)
-    while not found:
-        try:
-            driver.switch_to_default_content()
-            driver.switch_to_frame(driver.find_element_by_css_selector("frame[name='content" + str(i) + "']"))
-            driver.switch_to_frame(driver.find_element_by_css_selector("frame[src*='CFF_ImdShipmentStatus']"))
-            found = True
-        except:
-            if i<30:
-                i+=1
-            else:
-                i=2
+#         driver.find_element_by_id("tools").click()
+#         driver.find_element_by_id("tools").click()
+# #         sleep(5)
+# #         driver.find_element_by_class_name("tools selected").click()
+#         driver.switch_to_default_content()
+#         driver.switch_to_frame("content1")
+# #         sleep(500)
+# #         driver.find_element_by_css_selector(r'a[href^="top.frames[0].openTab(\'id41\');"]').click()
+# #         print(driver.find_element_by_css_selector('a[onclick*="top.frames[0].openTab(\'id41\');"]').text)
+#         driver.find_element_by_css_selector('a[onclick*="top.frames[0].openTab(\'id18\');"]').click()
+#         driver.switch_to_default_content()
+#         driver.switch_to.frame("menuHeader")
+#         driver.find_element_by_id("id18").click()
+# #     driver.find_element_by_css_selector('a[id*="id18"][class*="label"]').click()
+#     driver.switch_to_default_content()
+#     driver.switch_to_frame(driver.find_element_by_css_selector("frame[name='content1']"))
+#     i = 2
+#     found = False
+#     driver.implicitly_wait(0)
+#     while not found:
+#         try:
+#             driver.switch_to_default_content()
+#             driver.switch_to_frame(driver.find_element_by_css_selector("frame[name='content" + str(i) + "']"))
+#             driver.switch_to_frame(driver.find_element_by_css_selector("frame[src*='CFF_ImdShipmentStatus']"))
+#             found = True
+#         except:
+#             if i<30:
+#                 i+=1
+#             else:
+#                 i=2
     driver.implicitly_wait(600)
 #     driver.switch_to.frame("content3")
 #     driver.switch_to.frame("main")
@@ -196,49 +216,56 @@ def readContainerInfo(driver, containers):
 #                 print(cell.get_attribute("value"))
 #                 print(cell.tag_name)
         i+=1
-        
-#     sleep(600)    
-    driver.switch_to_default_content()
-    driver.switch_to.frame("menuHeader")
-#     driver.find_element_by_id("id41").click()
-    driver.implicitly_wait(1)
     try:
-        driver.find_element_by_id("id41").click()
+        driver.switch_to_default_content()
+        driver.find_element_by_css_selector("ci-tools-standalone-menu[class='ci-recent-tools-container ng-tns-c5-3 ng-star-inserted']").click()
+        driver.find_element_by_css_selector("a[href='#/tools/gate-appointment-inquiry']").click()
     except:
-        driver.implicitly_wait(600)
+        pass
+
+    driver.switch_to_frame(driver.find_element_by_css_selector("iframe[name='ci-tools-frame']"))
+#     sleep(600)    
+#     driver.switch_to_default_content()
+#     driver.switch_to.frame("menuHeader")
+# #     driver.find_element_by_id("id41").click()
+#     driver.implicitly_wait(1)
+#     try:
+#         driver.find_element_by_id("id41").click()
+#     except:
+#         driver.implicitly_wait(600)
+# #         driver.find_element_by_id("tools").click()
 #         driver.find_element_by_id("tools").click()
-        driver.find_element_by_id("tools").click()
-        driver.find_element_by_id("tools").click()
-        driver.find_element_by_id("tools").click()
-#         sleep(5)
-#         driver.find_element_by_class_name("tools selected").click()
-        driver.switch_to_default_content()
-        driver.switch_to_frame("content1")
-#         sleep(500)
-#         driver.find_element_by_css_selector(r'a[href^="top.frames[0].openTab(\'id41\');"]').click()
-#         print(driver.find_element_by_css_selector('a[onclick*="top.frames[0].openTab(\'id41\');"]').text)
-        driver.find_element_by_css_selector('a[onclick*="top.frames[0].openTab(\'id41\');"]').click()
-        driver.switch_to_default_content()
-        driver.switch_to.frame("menuHeader")
-        driver.find_element_by_id("id41").click()
-
-
-    driver.switch_to_default_content()
-    driver.switch_to_frame(driver.find_element_by_css_selector("frame[name='content1']"))
-    i = 2
-    found = False
-    driver.implicitly_wait(0)
-    while not found:
-        try:
-            driver.switch_to_default_content()
-            driver.switch_to_frame(driver.find_element_by_css_selector("frame[name='content" + str(i) + "']"))
-            driver.find_element_by_css_selector("form[action='AppointmentQuery']")
-            found = True
-        except:
-            if i<30:
-                i+=1
-            else:
-                i=2
+#         driver.find_element_by_id("tools").click()
+#         driver.find_element_by_id("tools").click()
+# #         sleep(5)
+# #         driver.find_element_by_class_name("tools selected").click()
+#         driver.switch_to_default_content()
+#         driver.switch_to_frame("content1")
+# #         sleep(500)
+# #         driver.find_element_by_css_selector(r'a[href^="top.frames[0].openTab(\'id41\');"]').click()
+# #         print(driver.find_element_by_css_selector('a[onclick*="top.frames[0].openTab(\'id41\');"]').text)
+#         driver.find_element_by_css_selector('a[onclick*="top.frames[0].openTab(\'id41\');"]').click()
+#         driver.switch_to_default_content()
+#         driver.switch_to.frame("menuHeader")
+#         driver.find_element_by_id("id41").click()
+# 
+# 
+#     driver.switch_to_default_content()
+#     driver.switch_to_frame(driver.find_element_by_css_selector("frame[name='content1']"))
+#     i = 2
+#     found = False
+#     driver.implicitly_wait(0)
+#     while not found:
+#         try:
+#             driver.switch_to_default_content()
+#             driver.switch_to_frame(driver.find_element_by_css_selector("frame[name='content" + str(i) + "']"))
+#             driver.find_element_by_css_selector("form[action='AppointmentQuery']")
+#             found = True
+#         except:
+#             if i<30:
+#                 i+=1
+#             else:
+#                 i=2
     driver.implicitly_wait(600)
     for k in range(int(len(containers)/20)+1):
         driver.find_element_by_css_selector("input[value='equipment']").click()
@@ -593,6 +620,8 @@ if __name__ == '__main__':
 #     try:
     filePath = r"J:\LOCAL DEPARTMENT\Automation - DO NOT MOVE\Incoming Local Containers.xlsm"
 #     filePath = r"C:\Users\ssleep\Documents\Incoming Local Containers.xlsm"
+#     filePath = r"C:\Users\Spencer\Documents\Incoming Local Containers.xlsm"
+    
     containers = []
          
     localContainersWb, localContainers, switched = setupExcel(filePath, containers)
@@ -660,3 +689,5 @@ if __name__ == '__main__':
     system('start excel.exe "'+ filePath + '"')
     
 # pyinstaller "C:\Users\ssleep\workspace\CNLister\Lister\__init__.py" --distpath "J:\Spencer\CNLister" --noconsole -y
+
+# pyinstaller "C:\Users\spencer\workspaceseaport\programs\CNLister\Lister\__init__.py" --distpath "c:\users\Spencer\CNLister" -y

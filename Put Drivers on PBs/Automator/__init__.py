@@ -124,7 +124,7 @@ def setupDM(folderPath, drivers):
     
         click(327, 33)
          
-        sleep(1)
+        sleep(3)
          
         click(399, 281)
         
@@ -357,22 +357,23 @@ def setupDM(folderPath, drivers):
 #                 print(handleprops.text(x) + "   " + handleprops.classname(x))
                 if handleprops.text(x)=="&Send":
                     send = x
-                if handleprops.text(x)=="Fro&m":
-                    buttonWrap = topWindowWrap.child_window(handle=x).wrapper_object()
-                    buttonWrap.click()
-                    
                     done = True
+#                 if handleprops.text(x)=="Fro&m":
+#                     buttonWrap = topWindowWrap.child_window(handle=x).wrapper_object()
+#                     buttonWrap.click()
+#                     
                     
-                    if not clickTuple:
-                        moveTo(114, 221)
-                         
-                        while not GetKeyState(145)<0:
-                            True
-                         
-                        clickTuple = position()
-                     
-#                         else:                        
-                    click(clickTuple)
+#                     
+#                     if not clickTuple:
+#                         moveTo(114, 221)
+#                          
+#                         while not GetKeyState(145)<0:
+#                             True
+#                          
+#                         clickTuple = position()
+#                      
+# #                         else:                        
+#                     click(clickTuple)
             
             if done==True:            
                 buttonWrap = topWindowWrap.child_window(handle=send).wrapper_object()
@@ -643,7 +644,8 @@ def loadinfo(folderPath):
 
 if __name__ == '__main__':
     
-#     argv = r"a J:\Linehaul Drivers Weekly Reports\2018\2018\WEEK 40\Imports week 40.xlsx".split()
+#     argv = r"a J:\Linehaul\Linehaul Drivers Weekly Reports\2019\2019\Week 32\Imports week 32.xlsx".split()
+
 #     done=False
 #     while not done:
 #         try:
@@ -756,4 +758,4 @@ if __name__ == '__main__':
 #         print(sys.exc_info())
 #         sleep(100)
 #     pyinstaller "C:\Users\ssleep\workspace\Put Drivers on PBs\Automator\__init__.py" --distpath "J:\Spencer\Linehaul Drivers on PBs" -y
-    # pyinstaller "C:\Users\ssleep\workspace\Put Drivers on PBs\Automator\__init__.py" --distpath "J:\Spencer\Linehaul Drivers on PBs" --noconsole -y
+#     pyinstaller "C:\Users\ssleep\workspace\Put Drivers on PBs\Automator\__init__.py" --distpath "J:\Spencer\Linehaul Drivers on PBs" --noconsole -y

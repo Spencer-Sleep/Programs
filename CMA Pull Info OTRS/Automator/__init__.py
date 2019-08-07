@@ -201,6 +201,9 @@ def getContainer(text):
         container.cut=getRestOfLine(text, "Available From:_")
     elif "KNAM" in text:
         container.WONumber=getRestOfLine(text, "KNAM", 0)
+    elif "KAFV" in text:
+        container.WONumber=getRestOfLine(text, "KAFV", 0)
+        container.cut=getRestOfLine(text, "Restitution Date:_")
     
     voyage = getRestOfLine(text, "_Vessel: _")
     container.vessel=getRestOfLine(text, voyage+"_")+" "+voyage
@@ -210,9 +213,9 @@ def getContainer(text):
     container.address3 = getRestOfLine(text, "_Address:_",3)
     
     container.cnumber=getRestOfLine(text, "_Container _")
-    m = re.match("((?!TCAN)(?!KCAN)(?!KNAM)[A-Za-z]{4}[0-9]{7})", container.cnumber)
+    m = re.match("((?!TCAN)(?!KCAN)(?!KNAM)(?!KAFV)[A-Za-z]{4}[0-9]{7})", container.cnumber)
     if not m:
-        m = re.search("((?!TCAN)(?!KCAN)(?!KNAM)[A-Za-z]{4}[0-9]{7})", text)
+        m = re.search("((?!TCAN)(?!KCAN)(?!KNAM)(?!KAFV)[A-Za-z]{4}[0-9]{7})", text)
         if m:
             container.cnumber=m.group(0)
         else:
@@ -341,7 +344,7 @@ def putContainerInSheet(containers, sheetLocation, listBook, listSheet, lastFile
     for container in containers:
         lastRow = listSheet.max_row+1
         values = [container.cnumber, container.WONumber, container.bookingNumber, container.vessel, container.address1, container.address2]
-        
+#         
         if code=="TCAN":
             values.append(container.address3)
         if code!="KNAM":
@@ -633,10 +636,10 @@ def fetchCMAWOInfo(client, codes, sheetLocations):
             tickets=client.ticket_search(Title="Transport Order*" + code+"*", TicketCreateTimeNewerDate=listSheet.cell(1,lastCheckLoc).value)
         containers=[]
         containerNumbers=[]
-        for ticket in tickets:
-            if not ticket:
+        for ticket_id in tickets:
+            if not ticket_id:
                 continue
-            ticket = (client.ticket_get_by_id(ticket, True, True))
+            ticket = (client.ticket_get_by_id(ticket_id, True, True))
             for article in ticket.articles:
                 for attachment in article.attachments:
                     pdf = attachment
@@ -659,6 +662,8 @@ def fetchCMAWOInfo(client, codes, sheetLocations):
                                 container.cancelled="Cancellation" in ticket.articles[0].field_get("Subject")
                                 container.receivedTime=str(datetime.datetime.strptime(ticket.articles[0].field_get("CreateTime"), "%Y-%m-%d %H:%M:%S")-timedelta(hours=4))
                                 containers.append(container)
+            if not code=="TCAN":
+                client.ticket_update_set_pending(ticket_id, "closed successful")
         if i==0:
             exports = list(containers)
         elif i==1:
@@ -687,6 +692,100 @@ def fetchCMAWOInfo(client, codes, sheetLocations):
     putContainerInSheet(exports, sheetLocations[0], listBooks[0], listSheets[0], lastFileNumbers[0],codes[0])
     putContainerInSheet(local, sheetLocations[1], listBooks[1], listSheets[1], lastFileNumbers[1],codes[1])
     putContainerInSheet(imports, sheetLocations[2], listBooks[2], listSheets[2], lastFileNumbers[2],codes[2])
+
+def fetchAPLWOInfo(sheetLocation):
+    
+    listBook=""
+    listSheet=""
+    code="KAFV"
+    onlyfiles = [f for f in listdir(sheetLocation) if isfile(join(sheetLocation, f))]
+    lastFile = ""
+    lastFileNumber = 0
+    
+    for file in onlyfiles:
+        if not file[0]=="~" and file[0:4]=="List":
+#                 print(file)
+            fileNumber = int(file[4:file.find(".")])
+            if fileNumber>lastFileNumber:
+                lastFile=file
+                lastFileNumber=fileNumber
+    
+            
+    try:
+        listBook = load_workbook(sheetLocation+lastFile)
+        listSheet = listBook.active
+    except:
+        listBook=Workbook()
+        listSheet = listBook.active
+        
+        headers = ["Container Number", "WO Number", "Booking Number", "Vessel", "Address 1", "Address 2", "Cut", "Date Received"]
+        
+        
+        
+        i=1
+        for header in headers:
+            listSheet.cell(1,i).value = header
+            i+=1
+            
+        listSheet.cell(1,i+1).value = "Last Checked:"
+        listSheet.cell(1,i+2).value = None
+        
+        
+#     listBook
+#     listSheets.append(listSheet
+    lastCheckLoc = 11
+#     if code=="KCAN":
+#         lastCheckLoc+=1
+#     elif code=="TCAN":
+#         lastCheckLoc+=3
+    if listSheet.cell(1,lastCheckLoc).value=="" or listSheet.cell(1,lastCheckLoc).value==None:
+        tickets=client.ticket_search(Title="Transport Order*" + code+"*", TicketChangeTimeNewerDate="2019-02-01 00:00:00")
+    else:
+        tickets=client.ticket_search(Title="Transport Order*" + code+"*", TicketCreateTimeNewerDate=listSheet.cell(1,lastCheckLoc).value)
+    containers=[]
+    containerNumbers=[]
+    for ticket_id in tickets:
+        if not ticket_id:
+            continue
+        
+        ticket = (client.ticket_get_by_id(ticket_id, True, True))
+        for article in ticket.articles:
+            for attachment in article.attachments:
+                pdf = attachment
+                if ".pdf" in attachment.Filename:
+                    try:
+                        text = extractText(pdf)
+                    except:
+                        continue
+                    if not "Empty Repo" in text and text!="":
+#                         print(text)
+                        container = getContainer(text)
+                        print(container.WONumber)
+                        if "TCAN" in ticket.articles[0].field_get("Subject"):
+                            try:
+                                copyfile(r"J:\Spencer\CMA Work Orders\\"+pdf.Filename, "J:\LOCAL DEPARTMENT\CMA WO\\"+container.WONumber+"-"+container.cnumber+".pdf")
+                            except:
+                                pass
+                        
+                        if not container.cnumber in containerNumbers:
+                            containerNumbers.append(container.cnumber)
+                            container.cancelled="Cancellation" in ticket.articles[0].field_get("Subject")
+                            container.receivedTime=str(datetime.datetime.strptime(ticket.articles[0].field_get("CreateTime"), "%Y-%m-%d %H:%M:%S")-timedelta(hours=4))
+                            containers.append(container)
+        client.ticket_update_set_pending(ticket_id, "closed successful")
+    exports = list(containers)
+        
+    
+    toDelete=[]
+        
+    for container in exports:
+        if (not "CSX-BUFFALO" in container.address2) or (not "Seaport Intermodal" in container.address1):
+            toDelete.append(container)
+    
+    for container in toDelete:
+        exports.remove(container)
+                
+    putContainerInSheet(exports, sheetLocation, listBook, listSheet, lastFileNumber,"KAFV")
 
 def fetchHAPAG():
     hapagLocation = r"J:\LOCAL DEPARTMENT\Hapag WO"
@@ -858,7 +957,8 @@ if __name__ == '__main__':
 #     _create_unverified_https_context = ssl._create_unverified_context
 #     ssl._create_default_https_context = _create_unverified_https_context
 #     PYOTRS_HTTPS_VERIFY = False
-    client = Client("https://core.seaportint.com/", "testadmin", "testpass")
+#     client = Client("https://core.seaportint.com/", "testadmin", "testpass")
+    client = Client("https://core.seaportint.com/", "spencer", "ss#99PASS")
 #     config=client.
     a = client.session_create()
     if(a):
@@ -869,8 +969,10 @@ if __name__ == '__main__':
     #     Codes=["TCAN"]
         sheetLocations=[r"J:\ANTONIO -Export Work\CMA WO Sheets\\", r"J:\LOCAL DEPARTMENT\CMA WO Sheets\\", r"J:\IMPORTS\CMA WO Sheets\\"]
         hamSheetLocation=r"J:\IMPORTS\HAM CSX WO Sheets\\"
+        sheetLocation=r"J:\ANTONIO -Export Work\APL WO Sheets\\"
 #         sheetLocations=[r"C:\Users\ssleep\Documents\CMA WO\\", r"J:\LOCAL DEPARTMENT\CMA WO Sheets\\", r"J:\IMPORTS\CMA WO Sheets\\"]
         fetchCMAWOInfo(client, Codes, sheetLocations)
+        fetchAPLWOInfo(sheetLocation)
         fetchHAPAG()
         fetchHAM(hamSheetLocation)
         print("Done")
